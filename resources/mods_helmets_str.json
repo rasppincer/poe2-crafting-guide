@@ -1,0 +1,200 @@
+{
+  "item_category": "helmet_str",
+  "source": "https://poe2db.tw/us/Helmets_str",
+  "extracted": "2026-06-09",
+  "base_prefixes": [
+    {
+      "group": "1IncreasedLife",
+      "description": "# to maximum Life",
+      "tags": ["life"],
+      "weight": 10000,
+      "maxIlvl": 65,
+      "tierCount": 10,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedMana",
+      "description": "# to maximum Mana",
+      "tags": ["mana"],
+      "weight": 10000,
+      "maxIlvl": 65,
+      "tierCount": 10,
+      "slot": "prefix"
+    },
+    {
+      "group": "1BaseLocalDefences",
+      "description": "# to Armour",
+      "tags": ["armour"],
+      "weight": 8000,
+      "maxIlvl": 60,
+      "tierCount": 8,
+      "slot": "prefix"
+    },
+    {
+      "group": "1DefencesPercent",
+      "description": "#% increased Armour",
+      "tags": ["armour"],
+      "weight": 7000,
+      "maxIlvl": 65,
+      "tierCount": 7,
+      "slot": "prefix"
+    },
+    {
+      "group": "1BaseLocalDefencesAndLife",
+      "description": "#% increased Armour, # to maximum Life",
+      "tags": ["life", "armour"],
+      "weight": 6000,
+      "maxIlvl": 78,
+      "tierCount": 6,
+      "slot": "prefix"
+    },
+    {
+      "group": "1BaseLocalDefencesAndMana",
+      "description": "#% increased Armour, # to maximum Mana",
+      "tags": ["mana", "armour"],
+      "weight": 6000,
+      "maxIlvl": 78,
+      "tierCount": 6,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedAccuracy",
+      "description": "# to Accuracy Rating",
+      "tags": ["attack"],
+      "weight": 6200,
+      "maxIlvl": 76,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1ItemFoundRarityIncreasePrefix",
+      "description": "#% increased Rarity of Items found",
+      "tags": [],
+      "weight": 3000,
+      "maxIlvl": 47,
+      "tierCount": 3,
+      "slot": "prefix"
+    }
+  ],
+  "base_suffixes": [
+    {
+      "group": "2Strength",
+      "description": "# to Strength",
+      "tags": ["attribute"],
+      "weight": 8000,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2Intelligence",
+      "description": "# to Intelligence",
+      "tags": ["attribute"],
+      "weight": 9000,
+      "maxIlvl": 81,
+      "tierCount": 9,
+      "slot": "suffix"
+    },
+    {
+      "group": "2FireResistance",
+      "description": "#% to Fire Resistance",
+      "tags": ["elemental", "fire", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ColdResistance",
+      "description": "#% to Cold Resistance",
+      "tags": ["elemental", "cold", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LightningResistance",
+      "description": "#% to Lightning Resistance",
+      "tags": ["elemental", "lightning", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ChaosResistance",
+      "description": "#% to Chaos Resistance",
+      "tags": ["chaos", "resistance"],
+      "weight": 1500,
+      "maxIlvl": 81,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LocalAttributeRequirements",
+      "description": "#% reduced Attribute Requirements",
+      "tags": [],
+      "weight": 4000,
+      "maxIlvl": 60,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2IncreaseSocketedGemLevel",
+      "description": "# to Level of all Minion Skills",
+      "tags": ["minion", "gem"],
+      "weight": 750,
+      "maxIlvl": 41,
+      "tierCount": 2,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeRegeneration",
+      "description": "# Life Regeneration per second",
+      "tags": ["life"],
+      "weight": 8000,
+      "maxIlvl": 58,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2CriticalStrikeChanceIncrease",
+      "description": "#% increased Critical Hit Chance",
+      "tags": ["critical"],
+      "weight": 3750,
+      "maxIlvl": 58,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ItemFoundRarityIncrease",
+      "description": "#% increased Rarity of Items found",
+      "tags": [],
+      "weight": 3000,
+      "maxIlvl": 40,
+      "tierCount": 3,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LightRadiusAndAccuracy",
+      "description": "# to Accuracy Rating, #% increased Light Radius",
+      "tags": ["attack"],
+      "weight": 3000,
+      "maxIlvl": 30,
+      "tierCount": 3,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ArmourAppliesToElementalDamage",
+      "description": "#% of Armour also applies to Elemental Damage",
+      "tags": ["armour", "elemental"],
+      "weight": 5000,
+      "maxIlvl": 66,
+      "tierCount": 5,
+      "slot": "suffix"
+    }
+  ],
+  "weight_sum_prefixes": 56200,
+  "weight_sum_suffixes": 70000
+}

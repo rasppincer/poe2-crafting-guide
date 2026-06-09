@@ -1,0 +1,180 @@
+{
+  "alloy_mechanic_overview": {
+    "description": "Alloys are a crafting currency introduced in Path of Exile 2 patch 0.5. They replace the old Entities and Recombination Tools systems. There are 13 alloy types total.",
+    "how_it_works": "Applying an Alloy to a Rare (yellow) item will randomly remove one existing property and replace it with a guaranteed mod dictated by the alloy type. The removed mod is chosen at random - you cannot control which existing mod gets removed.",
+    "restrictions": [
+      "Target item must be rare (yellow). Magic and normal items are not eligible.",
+      "The removed mod is chosen at random from whatever is currently on the item.",
+      "The injected mod is fixed: the alloy type dictates it completely.",
+      "Some alloys carry hidden secondary effects not listed in the tooltip."
+    ],
+    "crafting_interaction": "Alloys function similarly to Perfect Essences. They are deterministic crafting that swaps one random mod for a guaranteed one. Best used on near-perfect rares where you want to replace a weak mod. The guaranteed mods cannot be obtained through normal crafting methods.",
+    "obtaining_alloys": "Unlocked through Remnant encounters after completing Farrow's quest in Act 2. Can also be crafted using rune recipes.",
+    "total_alloy_types": 13
+  },
+  "alloys": [
+    {
+      "name": "Runic Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed Runic Ward modifier.",
+      "mod_pool_changes": {
+        "Ring": "+(37-49) to maximum Runic Ward",
+        "Amulet": "(6-10)% increased maximum Runic Ward",
+        "Belt": "(15-20)% increased Runic Ward Regeneration Rate"
+      },
+      "value_exalted_orbs": 0.5,
+      "crafting_recipe": "Adaptive Rune + Rebirth Rune (x1) OR Vision Rune + Rebirth Rune + Prismatic Rune (x2)"
+    },
+    {
+      "name": "Adaptive Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on Runic Ward-missing synergies and minion command skills.",
+      "mod_pool_changes": {
+        "Staff": "Gain (42-52)% of Damage as Extra Fire Damage while you are missing Runic Ward",
+        "Wand": "Gain (21-26)% of Damage as Extra Fire Damage while you are missing Runic Ward",
+        "Sceptre": "(30-50)% Surpassing Chance to gain a Puppet Master stack whenever you use a Command Skill",
+        "Gloves": "(10-15)% increased Attack Speed while missing Runic Ward"
+      },
+      "value_exalted_orbs": 3.45,
+      "crafting_recipe": "Earth Rune + Rebirth Rune + Stone Rune"
+    },
+    {
+      "name": "Protective Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on Runic Ward recovery and defense.",
+      "mod_pool_changes": {
+        "Belt": "Recover (32-45) Runic Ward when a Charm is used",
+        "Weapons": "+(51-74) to maximum Runic Ward",
+        "Shield": "Recover (10-15) Runic Ward when you Block"
+      },
+      "value_exalted_orbs": 4.93,
+      "crafting_recipe": "Sky Rune + Rebirth Rune + Bloodletting Rune"
+    },
+    {
+      "name": "Expansive Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on area of effect, mana efficiency, and minion limits.",
+      "mod_pool_changes": {
+        "Gloves": "Remnants can be collected from (35-50)% further away",
+        "Body Armour": "(35-50)% increased Presence Area of Effect",
+        "Helmet": "(18-29)% increased Mana Cost Efficiency",
+        "Boots": "Temporary Minion Skills have +(1-2) to Limit of Minions summoned"
+      },
+      "value_exalted_orbs": 1.09,
+      "crafting_recipe": "Volcanic Rune + Rebirth Rune + Tidal Rune OR Adaptive Rune + Rebirth Rune + Soul Rune + Rebirth Rune"
+    },
+    {
+      "name": "Swift Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on speed stats: attack speed, cast speed, flask charges, and totem placement.",
+      "mod_pool_changes": {
+        "Gloves": "(9-12)% increased Cast Speed",
+        "Ring": "(7-9)% increased Attack Speed",
+        "Belt": "Flasks gain (0.75-1) charges per Second",
+        "Shield or Focus": "(30-49)% increased Totem Placement speed"
+      },
+      "value_exalted_orbs": null,
+      "crafting_recipe": "Unknown"
+    },
+    {
+      "name": "Cyclonic Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on debuff reduction, skill/ailment duration, and Archon buffs.",
+      "mod_pool_changes": {
+        "Body Armour": "(15-30)% reduced Slowing Potency of Debuffs on You",
+        "Boots": "(15-19)% increased Skill Effect Duration",
+        "Gloves": "(20-25)% increased Duration of Damaging Ailments on Enemies",
+        "Helmet": "(35-42)% increased Archon Buff duration"
+      },
+      "value_exalted_orbs": 2.66,
+      "crafting_recipe": "Rage Rune + Rebirth Rune + Tidal Rune + Cyclonic Rune"
+    },
+    {
+      "name": "Prismatic Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on elemental penetration, ailment magnitude, and exposure.",
+      "mod_pool_changes": {
+        "Gloves": "Damage Penetrates (9-15)% Elemental Resistances",
+        "Martial Weapon": "(20-30)% increased Magnitude of Ailments you inflict",
+        "Focus, Staff or Wand": "(40-50)% increased Exposure Effect",
+        "Sceptre": "Minions have (40-49)% increased Magnitude of Damaging Ailments"
+      },
+      "value_exalted_orbs": 4.44,
+      "crafting_recipe": "Prismatic Rune + Rebirth Rune + Adaptive Rune + Opulent Rune + Bond Rune"
+    },
+    {
+      "name": "Mystic Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on area of effect, spirit, chain, and elemental infusions.",
+      "mod_pool_changes": {
+        "Helmet": "Spell Skills have (10-15)% increased Area of Effect",
+        "Gloves": "(10-15)% increased Area of Effect for Attacks",
+        "Boots": "+(10-15) to Spirit",
+        "Quiver": "(25-35)% chance to Chain an additional time",
+        "Caster Weapon": "+1 to maximum number of Elemental Infusions"
+      },
+      "value_exalted_orbs": 3.26,
+      "crafting_recipe": "Adaptive Rune + Rebirth Rune + Time Rune + Arcane Rune + Electrocuting Rune"
+    },
+    {
+      "name": "Sovereign Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on socketed item effect, Runic Ward, and resistance magnitudes.",
+      "mod_pool_changes": {
+        "Weapons": "(20-30)% increased effect of Socketed Augment Items",
+        "Armour": "(24-30)% increased Runic Ward",
+        "Jewellery or Belt": "(20-30)% increased Explicit Resistance Modifier magnitudes"
+      },
+      "value_exalted_orbs": 20.6,
+      "crafting_recipe": "Adaptive Rune + Rebirth Rune + Moon Rune + Toxic Rune + Power Rune + Oath Rune"
+    },
+    {
+      "name": "Celestial Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on spell skill levels, mana, accuracy, and attack speed.",
+      "mod_pool_changes": {
+        "Staff or Wand": "+(142-188) to maximum Mana AND +1 to Level of all Spell Skills",
+        "Martial Weapon": "+(327-427) to Accuracy Rating AND (5-8)% increased Attack Speed"
+      },
+      "value_exalted_orbs": 8.02,
+      "crafting_recipe": "Earth Rune + Rebirth Rune + Celestial Rune + Adaptive Rune + Power Rune + Soul Rune + Cyclonic Rune"
+    },
+    {
+      "name": "Transcendent Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on cast speed, elemental damage as extra cold, physical damage, and attributes.",
+      "mod_pool_changes": {
+        "Focus, Staff or Wand": "(39-47)% increased Cast Speed AND Gain (11-16)% of Elemental Damage as Extra Cold Damage",
+        "Martial Weapon": "(15-20)% increased Physical Damage AND +(7-10) to all Attributes"
+      },
+      "value_exalted_orbs": 185,
+      "crafting_recipe": "Sky Rune + Rebirth Rune + Momentum Rune + Rage Rune + Power Rune + Electrocuting Rune + Death Rune"
+    },
+    {
+      "name": "The Runebinder's Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on skill-specific enhancements for various weapon types.",
+      "mod_pool_changes": {
+        "Staff": "(25-50)% chance to gain Nature's Archon when your Plants Overgrow",
+        "Wand": "+1 to Limit for Elemental Skills",
+        "Sceptre": "+(4-5) maximum stacks of Puppet Master",
+        "Crossbow": "+2 to maximum number of Summoned Ballista Totems",
+        "Bow": "(40-50)% increased Effect of your Mark Skills"
+      },
+      "value_exalted_orbs": 375,
+      "crafting_recipe": "Ward Rune + Rebirth Rune + Soul Rune + Cyclonic Rune + Power Rune + Lightning Rune + Bloodletting Rune"
+    },
+    {
+      "name": "The Runefather's Alloy",
+      "effect": "Removes a random modifier and augments a Rare item with a new guaranteed modifier. Focuses on weapon-specific combat enhancements.",
+      "mod_pool_changes": {
+        "Mace": "(60-75)% chance for Skills to retain 40% of Glory on use",
+        "Quarterstaff": "Tempest Bells are destroyed after an additional (4-5) Hits",
+        "Spear": "+(8-10) to Weapon Range",
+        "Talisman": "Lightning Damage from Hits also Contributes to Flammability and Ignite Magnitudes"
+      },
+      "value_exalted_orbs": 33.5,
+      "crafting_recipe": "Ward Rune + Rebirth Rune + Time Rune + Cold Rune + Power Rune + Prismatic Rune + Moon Rune"
+    }
+  ],
+  "metadata": {
+    "patch_version": "0.5",
+    "sources": [
+      "https://boostmatch.gg/blog/poe-2/articles/path-of-exile-2-alloys-guide-patch-05",
+      "https://www.u4n.com/news/poe-2-list-of-alloy-currency-items-how-to-get-and-use.html",
+      "https://pathofexile2.wiki.fextralife.com/The+Runebinders+Alloy",
+      "https://pathofexile2.wiki.fextralife.com/Adaptive+Alloy",
+      "https://pathofexile2.wiki.fextralife.com/Expansive+Alloy",
+      "https://pathofexile2.wiki.fextralife.com/Swift+Alloy"
+    ],
+    "last_updated": "2026-06-09"
+  }
+}

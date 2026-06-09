@@ -1,0 +1,317 @@
+{
+  "item_category": "body_armour_str",
+  "source": "https://poe2db.tw/us/Body_Armours_str",
+  "extracted": "2026-06-09",
+  "notes": "PoE 2 body armour (str base) modifiers from poe2db crafting calculator",
+  "weight_sum_prefixes": 54000,
+  "weight_sum_suffixes": 70500,
+  "crafting_tags_available": [
+    "Ulaman",
+    "Amanamu",
+    "Kurgal",
+    "Armour",
+    "Gem",
+    "Caster",
+    "Fire",
+    "Cold",
+    "Lightning",
+    "Chaos",
+    "Physical",
+    "Life",
+    "Elemental",
+    "Attack",
+    "Minion",
+    "Aura",
+    "Mana",
+    "Speed",
+    "Critical",
+    "Evasion",
+    "Energy Shield",
+    "Damage",
+    "Resistance",
+    "Attribute",
+    "Ailment",
+    "Curse",
+    "Charm"
+  ],
+  "base_prefixes": [
+    {
+      "group": "1IncreasedLife",
+      "description": "+# to maximum Life",
+      "tags": [
+        "life"
+      ],
+      "weight": 13000,
+      "weight_pct": "24.074%",
+      "maxIlvl": 80,
+      "tierCount": 13,
+      "slot": "prefix",
+      "poe2db_id": "1IncreasedLife"
+    },
+    {
+      "group": "1BaseLocalDefences",
+      "description": "+# to Armour",
+      "tags": [
+        "armour"
+      ],
+      "weight": 11000,
+      "weight_pct": "20.370%",
+      "maxIlvl": 79,
+      "tierCount": 11,
+      "slot": "prefix",
+      "poe2db_id": "1BaseLocalDefences"
+    },
+    {
+      "group": "1DefencesPercent",
+      "description": "#% increased Armour",
+      "tags": [
+        "armour"
+      ],
+      "weight": 8000,
+      "weight_pct": "14.815%",
+      "maxIlvl": 75,
+      "tierCount": 8,
+      "slot": "prefix",
+      "poe2db_id": "1DefencesPercent"
+    },
+    {
+      "group": "1BaseLocalDefencesAndLife",
+      "description": "#% increased Armour / +# to maximum Life (hybrid)",
+      "tags": [
+        "life",
+        "armour"
+      ],
+      "weight": 6000,
+      "weight_pct": "11.111%",
+      "maxIlvl": 78,
+      "tierCount": 6,
+      "slot": "prefix",
+      "poe2db_id": "1BaseLocalDefencesAndLife"
+    },
+    {
+      "group": "1BaseLocalDefencesAndDefencePercent",
+      "description": "+# to Armour / #% increased Armour (hybrid)",
+      "tags": [
+        "armour"
+      ],
+      "weight": 6000,
+      "weight_pct": "11.111%",
+      "maxIlvl": 78,
+      "tierCount": 6,
+      "slot": "prefix",
+      "poe2db_id": "1BaseLocalDefencesAndDefencePercent"
+    },
+    {
+      "group": "1Thorns",
+      "description": "+# to # Physical Thorns damage",
+      "tags": [
+        "damage",
+        "physical"
+      ],
+      "weight": 7000,
+      "weight_pct": "12.963%",
+      "maxIlvl": 74,
+      "tierCount": 7,
+      "slot": "prefix",
+      "poe2db_id": "1Thorns"
+    },
+    {
+      "group": "1BaseSpirit",
+      "description": "+# to Spirit",
+      "tags": [],
+      "weight": 3000,
+      "weight_pct": "5.556%",
+      "maxIlvl": 78,
+      "tierCount": 8,
+      "slot": "prefix",
+      "poe2db_id": "1BaseSpirit"
+    }
+  ],
+  "base_suffixes": [
+    {
+      "group": "2Strength",
+      "description": "+# to Strength",
+      "tags": [
+        "attribute"
+      ],
+      "weight": 8000,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2FireResistance",
+      "description": "#% to Fire Resistance",
+      "tags": [
+        "elemental",
+        "fire",
+        "resistance"
+      ],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ColdResistance",
+      "description": "#% to Cold Resistance",
+      "tags": [
+        "elemental",
+        "cold",
+        "resistance"
+      ],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LightningResistance",
+      "description": "#% to Lightning Resistance",
+      "tags": [
+        "elemental",
+        "lightning",
+        "resistance"
+      ],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ChaosResistance",
+      "description": "#% to Chaos Resistance",
+      "tags": [
+        "chaos",
+        "resistance"
+      ],
+      "weight": 1500,
+      "maxIlvl": 81,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LocalAttributeRequirements",
+      "description": "#% reduced Attribute Requirements",
+      "tags": [],
+      "weight": 4500,
+      "maxIlvl": 60,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2StunThreshold",
+      "description": "+# to Stun Threshold",
+      "tags": [],
+      "weight": 8000,
+      "maxIlvl": 72,
+      "tierCount": 10,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeRegeneration",
+      "description": "# Life Regeneration per second",
+      "tags": [
+        "life"
+      ],
+      "weight": 11000,
+      "maxIlvl": 81,
+      "tierCount": 11,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ReducedAilmentDuration",
+      "description": "#% reduced Duration of Bleeding/Poison/Ignite on You",
+      "tags": [
+        "physical",
+        "ailment",
+        "chaos",
+        "elemental",
+        "fire"
+      ],
+      "weight": 7500,
+      "maxIlvl": 76,
+      "tierCount": 15,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ArmourAppliesToElementalDamage",
+      "description": "#% of Armour also applies to Elemental Damage",
+      "tags": [
+        "armour",
+        "elemental"
+      ],
+      "weight": 6000,
+      "maxIlvl": 81,
+      "tierCount": 6,
+      "slot": "suffix"
+    }
+  ],
+  "life_prefix_tiers": {
+    "T13": {
+      "name": "Hale",
+      "ilvl": 1,
+      "range": "+10-19"
+    },
+    "T12": {
+      "name": "Healthy",
+      "ilvl": 5,
+      "range": "+20-29"
+    },
+    "T11": {
+      "name": "Vigorous",
+      "ilvl": 11,
+      "range": "+30-39"
+    },
+    "T10": {
+      "name": "Rugged",
+      "ilvl": 18,
+      "range": "+40-49"
+    },
+    "T9": {
+      "name": "Robust",
+      "ilvl": 24,
+      "range": "+50-59"
+    },
+    "T8": {
+      "name": "Stalwart",
+      "ilvl": 30,
+      "range": "+60-69"
+    },
+    "T7": {
+      "name": "Sturdy",
+      "ilvl": 36,
+      "range": "+70-79"
+    },
+    "T6": {
+      "name": "Hearty",
+      "ilvl": 42,
+      "range": "+80-89"
+    },
+    "T5": {
+      "name": "Fiery",
+      "ilvl": 48,
+      "range": "+90-99"
+    },
+    "T4": {
+      "name": "Strapping",
+      "ilvl": 54,
+      "range": "+100-109"
+    },
+    "T3": {
+      "name": "Athlete's",
+      "ilvl": 60,
+      "range": "+110-129"
+    },
+    "T2": {
+      "name": "Fecund",
+      "ilvl": 70,
+      "range": "+130-169"
+    },
+    "T1": {
+      "name": "Prime",
+      "ilvl": 80,
+      "range": "+170-214"
+    }
+  }
+}

@@ -1,0 +1,282 @@
+{
+  "item_category": "amulet",
+  "source": "https://poe2db.tw/us/Amulets",
+  "extracted": "2026-06-09",
+  "base_prefixes": [
+    {
+      "group": "1IncreasedLife",
+      "description": "# to maximum Life",
+      "tags": ["life"],
+      "weight": 9000,
+      "maxIlvl": 60,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1MaximumLifeIncreasePercent",
+      "description": "#% increased maximum Life",
+      "tags": ["life"],
+      "weight": 900,
+      "maxIlvl": 75,
+      "tierCount": 3,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedMana",
+      "description": "# to maximum Mana",
+      "tags": ["mana"],
+      "weight": 13000,
+      "maxIlvl": 82,
+      "tierCount": 13,
+      "slot": "prefix"
+    },
+    {
+      "group": "1MaximumManaIncreasePercent",
+      "description": "#% increased maximum Mana",
+      "tags": ["mana"],
+      "weight": 900,
+      "maxIlvl": 75,
+      "tierCount": 3,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedEnergyShield",
+      "description": "# to maximum Energy Shield",
+      "tags": ["energy_shield"],
+      "weight": 10000,
+      "maxIlvl": 80,
+      "tierCount": 10,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedPhysicalDamageReductionRatingPercent",
+      "description": "#% increased Armour",
+      "tags": ["armour"],
+      "weight": 7000,
+      "maxIlvl": 75,
+      "tierCount": 7,
+      "slot": "prefix"
+    },
+    {
+      "group": "1EvasionRatingPercent",
+      "description": "#% increased Evasion Rating",
+      "tags": ["evasion"],
+      "weight": 7000,
+      "maxIlvl": 77,
+      "tierCount": 7,
+      "slot": "prefix"
+    },
+    {
+      "group": "1EnergyShieldPercent",
+      "description": "#% increased maximum Energy Shield",
+      "tags": ["energy_shield"],
+      "weight": 7000,
+      "maxIlvl": 75,
+      "tierCount": 7,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedAccuracy",
+      "description": "# to Accuracy Rating",
+      "tags": ["attack"],
+      "weight": 6000,
+      "maxIlvl": 67,
+      "tierCount": 8,
+      "slot": "prefix"
+    },
+    {
+      "group": "1ItemFoundRarityIncreasePrefix",
+      "description": "#% increased Rarity of Items found",
+      "tags": [],
+      "weight": 3000,
+      "maxIlvl": 47,
+      "tierCount": 3,
+      "slot": "prefix"
+    },
+    {
+      "group": "1BaseSpirit",
+      "description": "# to Spirit",
+      "tags": [],
+      "weight": 2400,
+      "maxIlvl": 54,
+      "tierCount": 5,
+      "slot": "prefix"
+    },
+    {
+      "group": "1SpellDamage",
+      "description": "#% increased Spell Damage",
+      "tags": ["damage", "caster"],
+      "weight": 6000,
+      "maxIlvl": 75,
+      "tierCount": 6,
+      "slot": "prefix"
+    }
+  ],
+  "base_suffixes": [
+    {
+      "group": "2Strength",
+      "description": "# to Strength",
+      "tags": ["attribute"],
+      "weight": 8000,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2Dexterity",
+      "description": "# to Dexterity",
+      "tags": ["attribute"],
+      "weight": 8000,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2Intelligence",
+      "description": "# to Intelligence",
+      "tags": ["attribute"],
+      "weight": 8000,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2AllAttributes",
+      "description": "# to all Attributes",
+      "tags": ["attribute"],
+      "weight": 7200,
+      "maxIlvl": 82,
+      "tierCount": 9,
+      "slot": "suffix"
+    },
+    {
+      "group": "2FireResistance",
+      "description": "#% to Fire Resistance",
+      "tags": ["elemental", "fire", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ColdResistance",
+      "description": "#% to Cold Resistance",
+      "tags": ["elemental", "cold", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LightningResistance",
+      "description": "#% to Lightning Resistance",
+      "tags": ["elemental", "lightning", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2AllResistances",
+      "description": "#% to all Elemental Resistances",
+      "tags": ["elemental", "fire", "cold", "lightning", "resistance"],
+      "weight": 4800,
+      "maxIlvl": 80,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ChaosResistance",
+      "description": "#% to Chaos Resistance",
+      "tags": ["chaos", "resistance"],
+      "weight": 1500,
+      "maxIlvl": 81,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2IncreaseSocketedGemLevel",
+      "description": "# to Level of all Spell Skills",
+      "tags": ["caster", "gem", "minion", "gem", "attack"],
+      "weight": 3400,
+      "maxIlvl": 75,
+      "tierCount": 12,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeRegeneration",
+      "description": "# Life Regeneration per second",
+      "tags": ["life"],
+      "weight": 10000,
+      "maxIlvl": 75,
+      "tierCount": 10,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ManaRegeneration",
+      "description": "#% increased Mana Regeneration Rate",
+      "tags": ["mana"],
+      "weight": 6000,
+      "maxIlvl": 79,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2CriticalStrikeChanceIncrease",
+      "description": "#% increased Critical Hit Chance",
+      "tags": ["critical"],
+      "weight": 3875,
+      "maxIlvl": 72,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2CriticalStrikeMultiplier",
+      "description": "#% increased Critical Damage Bonus",
+      "tags": ["damage", "critical"],
+      "weight": 3875,
+      "maxIlvl": 74,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ItemFoundRarityIncrease",
+      "description": "#% increased Rarity of Items found",
+      "tags": [],
+      "weight": 3000,
+      "maxIlvl": 40,
+      "tierCount": 3,
+      "slot": "suffix"
+    },
+    {
+      "group": "2DamageTakenGainedAsLife",
+      "description": "#% of Damage taken Recouped as Life",
+      "tags": ["life"],
+      "weight": 2500,
+      "maxIlvl": 79,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2PercentDamageGoesToMana",
+      "description": "#% of Damage taken Recouped as Mana",
+      "tags": ["life", "mana"],
+      "weight": 2500,
+      "maxIlvl": 80,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2IncreasedCastSpeed",
+      "description": "#% increased Cast Speed",
+      "tags": ["caster", "speed"],
+      "weight": 6,
+      "maxIlvl": 66,
+      "tierCount": 6,
+      "slot": "suffix"
+    }
+  ],
+  "weight_sum_prefixes": 72200,
+  "weight_sum_suffixes": 96656,
+  "crafting_tags_available": ["life", "mana", "energy_shield", "armour", "evasion", "attack", "damage", "caster", "attribute", "elemental", "fire", "resistance", "cold", "lightning", "chaos", "gem", "minion", "critical", "speed", "physical", "curse", "amanamu_mod", "kurgal_mod", "ulaman_mod", "charm"]
+}

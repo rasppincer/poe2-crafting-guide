@@ -1,0 +1,254 @@
+{
+  "item_category": "gloves_str",
+  "source": "https://poe2db.tw/us/Gloves_str",
+  "extracted": "2026-06-09",
+  "base_prefixes": [
+    {
+      "group": "1IncreasedLife",
+      "description": "# to maximum Life",
+      "tags": ["life"],
+      "weight": 9000,
+      "maxIlvl": 60,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedMana",
+      "description": "# to maximum Mana",
+      "tags": ["mana"],
+      "weight": 9000,
+      "maxIlvl": 60,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1BaseLocalDefences",
+      "description": "# to Armour",
+      "tags": ["armour"],
+      "weight": 7000,
+      "maxIlvl": 54,
+      "tierCount": 7,
+      "slot": "prefix"
+    },
+    {
+      "group": "1DefencesPercent",
+      "description": "#% increased Armour",
+      "tags": ["armour"],
+      "weight": 7000,
+      "maxIlvl": 65,
+      "tierCount": 7,
+      "slot": "prefix"
+    },
+    {
+      "group": "1BaseLocalDefencesAndLife",
+      "description": "#% increased Armour, # to maximum Life",
+      "tags": ["life", "armour"],
+      "weight": 6000,
+      "maxIlvl": 78,
+      "tierCount": 6,
+      "slot": "prefix"
+    },
+    {
+      "group": "1PhysicalDamage",
+      "description": "Adds # to # Physical Damage to Attacks",
+      "tags": ["damage", "physical", "attack"],
+      "weight": 7800,
+      "maxIlvl": 75,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1FireDamage",
+      "description": "Adds # to # Fire damage to Attacks",
+      "tags": ["damage", "elemental", "fire", "attack"],
+      "weight": 3900,
+      "maxIlvl": 75,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1ColdDamage",
+      "description": "Adds # to # Cold damage to Attacks",
+      "tags": ["damage", "elemental", "cold", "attack"],
+      "weight": 3900,
+      "maxIlvl": 75,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1LightningDamage",
+      "description": "Adds # to # Lightning damage to Attacks",
+      "tags": ["damage", "elemental", "lightning", "attack"],
+      "weight": 3900,
+      "maxIlvl": 75,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedAccuracy",
+      "description": "# to Accuracy Rating",
+      "tags": ["attack"],
+      "weight": 6200,
+      "maxIlvl": 76,
+      "tierCount": 9,
+      "slot": "prefix"
+    }
+  ],
+  "base_suffixes": [
+    {
+      "group": "2Strength",
+      "description": "# to Strength",
+      "tags": ["attribute"],
+      "weight": 8000,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2Dexterity",
+      "description": "# to Dexterity",
+      "tags": ["attribute"],
+      "weight": 9000,
+      "maxIlvl": 81,
+      "tierCount": 9,
+      "slot": "suffix"
+    },
+    {
+      "group": "2FireResistance",
+      "description": "#% to Fire Resistance",
+      "tags": ["elemental", "fire", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ColdResistance",
+      "description": "#% to Cold Resistance",
+      "tags": ["elemental", "cold", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LightningResistance",
+      "description": "#% to Lightning Resistance",
+      "tags": ["elemental", "lightning", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ChaosResistance",
+      "description": "#% to Chaos Resistance",
+      "tags": ["chaos", "resistance"],
+      "weight": 1500,
+      "maxIlvl": 81,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LocalAttributeRequirements",
+      "description": "#% reduced Attribute Requirements",
+      "tags": [],
+      "weight": 3500,
+      "maxIlvl": 60,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2IncreaseSocketedGemLevel",
+      "description": "# to Level of all Melee Skills",
+      "tags": ["attack"],
+      "weight": 750,
+      "maxIlvl": 41,
+      "tierCount": 2,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeLeech",
+      "description": "Leech #% of Physical Attack Damage as Life",
+      "tags": ["life", "physical", "attack"],
+      "weight": 4000,
+      "maxIlvl": 65,
+      "tierCount": 4,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ManaLeech",
+      "description": "Leech #% of Physical Attack Damage as Mana",
+      "tags": ["mana", "physical", "attack"],
+      "weight": 4000,
+      "maxIlvl": 65,
+      "tierCount": 4,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeGainedFromEnemyDeath",
+      "description": "Gain # Life per enemy killed",
+      "tags": ["life"],
+      "weight": 6000,
+      "maxIlvl": 77,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ManaGainedFromEnemyDeath",
+      "description": "Gain # Mana per enemy killed",
+      "tags": ["mana"],
+      "weight": 6000,
+      "maxIlvl": 78,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeGainPerTarget",
+      "description": "Gain # Life per Enemy Hit with Attacks",
+      "tags": ["life", "attack"],
+      "weight": 4000,
+      "maxIlvl": 40,
+      "tierCount": 4,
+      "slot": "suffix"
+    },
+    {
+      "group": "2IncreasedAttackSpeed",
+      "description": "#% increased Attack Speed",
+      "tags": ["attack", "speed"],
+      "weight": 2000,
+      "maxIlvl": 60,
+      "tierCount": 4,
+      "slot": "suffix"
+    },
+    {
+      "group": "2CriticalStrikeMultiplier",
+      "description": "#% increased Critical Damage Bonus",
+      "tags": ["damage", "critical"],
+      "weight": 3750,
+      "maxIlvl": 59,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ItemFoundRarityIncrease",
+      "description": "#% increased Rarity of Items found",
+      "tags": [],
+      "weight": 3000,
+      "maxIlvl": 40,
+      "tierCount": 3,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ArmourAppliesToElementalDamage",
+      "description": "#% of Armour also applies to Elemental Damage",
+      "tags": ["armour", "elemental"],
+      "weight": 5000,
+      "maxIlvl": 66,
+      "tierCount": 5,
+      "slot": "suffix"
+    }
+  ],
+  "weight_sum_prefixes": 63700,
+  "weight_sum_suffixes": 84500
+}

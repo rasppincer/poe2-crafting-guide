@@ -1,0 +1,17 @@
+[project]
+name = "poe2-crafting-guide"
+version = "0.1.0"
+description = "Formal crafting knowledge base and recipe verifier for Path of Exile 2"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+prolog = ["pyswip>=1.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"

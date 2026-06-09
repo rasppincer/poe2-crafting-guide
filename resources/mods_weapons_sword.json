@@ -1,0 +1,234 @@
+{
+  "item_category": "weapon_sword",
+  "source": "https://poe2db.tw/us/One_Hand_Swords",
+  "extracted": "2026-06-09",
+  "base_prefixes": [
+    {
+      "group": "1PhysicalDamage",
+      "description": "Adds # to # Physical Damage",
+      "tags": ["damage", "physical", "attack"],
+      "weight": 9,
+      "maxIlvl": 75,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1FireDamage",
+      "description": "Adds # to # Fire Damage",
+      "tags": ["damage", "elemental", "fire", "attack"],
+      "weight": 10,
+      "maxIlvl": 81,
+      "tierCount": 10,
+      "slot": "prefix"
+    },
+    {
+      "group": "1ColdDamage",
+      "description": "Adds # to # Cold Damage",
+      "tags": ["damage", "elemental", "cold", "attack"],
+      "weight": 10,
+      "maxIlvl": 81,
+      "tierCount": 10,
+      "slot": "prefix"
+    },
+    {
+      "group": "1LightningDamage",
+      "description": "Adds # to # Lightning Damage",
+      "tags": ["damage", "elemental", "lightning", "attack"],
+      "weight": 10,
+      "maxIlvl": 81,
+      "tierCount": 10,
+      "slot": "prefix"
+    },
+    {
+      "group": "1LocalPhysicalDamagePercent",
+      "description": "#% increased Physical Damage",
+      "tags": ["damage", "physical", "attack"],
+      "weight": 8,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "prefix"
+    },
+    {
+      "group": "1LocalIncreasedPhysicalDamagePercentAndAccuracyRating",
+      "description": "#% increased Physical Damage# to Accuracy Rating",
+      "tags": ["damage", "physical", "attack"],
+      "weight": 8,
+      "maxIlvl": 81,
+      "tierCount": 8,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedAccuracy",
+      "description": "# to Accuracy Rating",
+      "tags": ["attack"],
+      "weight": 9,
+      "maxIlvl": 76,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedWeaponElementalDamagePercent",
+      "description": "#% increased Elemental Damage with Attacks",
+      "tags": ["damage", "elemental", "fire", "cold", "lightning"],
+      "weight": 6,
+      "maxIlvl": 81,
+      "tierCount": 6,
+      "slot": "prefix"
+    }
+  ],
+  "base_suffixes": [
+    {
+      "group": "2Strength",
+      "description": "# to Strength",
+      "tags": ["attribute"],
+      "weight": 8,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2Dexterity",
+      "description": "# to Dexterity",
+      "tags": ["attribute"],
+      "weight": 8,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LocalAttributeRequirements",
+      "description": "#% reduced Attribute Requirements",
+      "tags": [],
+      "weight": 5,
+      "maxIlvl": 60,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2IncreaseSocketedGemLevel",
+      "description": "# to Level of all Melee Skills",
+      "tags": ["attack"],
+      "weight": 4,
+      "maxIlvl": 81,
+      "tierCount": 4,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeLeech",
+      "description": "Leeches #% of Physical Damage as Life",
+      "tags": ["life", "physical", "attack"],
+      "weight": 4,
+      "maxIlvl": 65,
+      "tierCount": 4,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ManaLeech",
+      "description": "Leeches #% of Physical Damage as Mana",
+      "tags": ["mana", "physical", "attack"],
+      "weight": 4,
+      "maxIlvl": 65,
+      "tierCount": 4,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeGainedFromEnemyDeath",
+      "description": "Gain # Life per enemy killed",
+      "tags": ["life"],
+      "weight": 8,
+      "maxIlvl": 77,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ManaGainedFromEnemyDeath",
+      "description": "Gain # Mana per enemy killed",
+      "tags": ["mana"],
+      "weight": 8,
+      "maxIlvl": 78,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeGainPerTarget",
+      "description": "Grants # Life per Enemy Hit",
+      "tags": ["life", "attack"],
+      "weight": 4,
+      "maxIlvl": 40,
+      "tierCount": 4,
+      "slot": "suffix"
+    },
+    {
+      "group": "2IncreasedAttackSpeed",
+      "description": "#% increased Attack Speed",
+      "tags": ["attack", "speed"],
+      "weight": 8,
+      "maxIlvl": 77,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2CriticalStrikeChanceIncrease",
+      "description": "#% to Critical Hit Chance",
+      "tags": ["attack", "critical"],
+      "weight": 6,
+      "maxIlvl": 73,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2CriticalStrikeMultiplier",
+      "description": "#% to Critical Damage Bonus",
+      "tags": ["damage", "attack", "critical"],
+      "weight": 6,
+      "maxIlvl": 73,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LightRadiusAndAccuracy",
+      "description": "# to Accuracy Rating#% increased Light Radius",
+      "tags": ["attack"],
+      "weight": 3,
+      "maxIlvl": 30,
+      "tierCount": 3,
+      "slot": "suffix"
+    },
+    {
+      "group": "2StunDurationIncreasePercent",
+      "description": "#% increased Stun Duration",
+      "tags": [],
+      "weight": 6,
+      "maxIlvl": 71,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2StunDamageIncrease",
+      "description": "Causes #% increased Stun Buildup",
+      "tags": [],
+      "weight": 6,
+      "maxIlvl": 74,
+      "tierCount": 6,
+      "slot": "suffix"
+    }
+  ],
+  "weight_sum_prefixes": 70,
+  "weight_sum_suffixes": 88,
+  "crafting_tags_available": [
+    "ailment",
+    "attack",
+    "attribute",
+    "chaos",
+    "cold",
+    "critical",
+    "damage",
+    "elemental",
+    "fire",
+    "life",
+    "lightning",
+    "mana",
+    "physical",
+    "speed"
+  ]
+}

@@ -1,0 +1,334 @@
+{
+  "omens": [
+    {
+      "name": "Aldur's Saga",
+      "effect": "Your next Logbook adds special modifiers to revealed Grand Expedition areas",
+      "currency_target": "Logbook (Expedition)",
+      "mechanical_description": "While active in inventory, your next Logbook adds special modifiers to revealed Grand Expedition areas"
+    },
+    {
+      "name": "Medved's Saga",
+      "effect": "Your next Logbook guarantees a Medved encounter in the revealed Biome",
+      "currency_target": "Logbook (Expedition)",
+      "mechanical_description": "While active in inventory, your next Logbook guarantees a Medved encounter in the revealed Biome"
+    },
+    {
+      "name": "Vorana's Saga",
+      "effect": "Your next Logbook guarantees a Vorana encounter in the revealed Biome",
+      "currency_target": "Logbook (Expedition)",
+      "mechanical_description": "While active in inventory, your next Logbook guarantees a Vorana encounter in the revealed Biome"
+    },
+    {
+      "name": "Uhtred's Saga",
+      "effect": "Your next Logbook guarantees an Uhtred encounter in the revealed Biome",
+      "currency_target": "Logbook (Expedition)",
+      "mechanical_description": "While active in inventory, your next Logbook guarantees an Uhtred encounter in the revealed Biome"
+    },
+    {
+      "name": "Olroth's Saga",
+      "effect": "Your next Logbook guarantees an Olroth encounter in the revealed Biome",
+      "currency_target": "Logbook (Expedition)",
+      "mechanical_description": "While active in inventory, your next Logbook guarantees an Olroth encounter in the revealed Biome"
+    },
+    {
+      "name": "Omen of Refreshment",
+      "effect": "Fully recover your flask and charm charges when you reach Low Life",
+      "currency_target": "None (passive trigger)",
+      "mechanical_description": "While active in inventory, fully recovers flask and charm charges when you reach Low Life"
+    },
+    {
+      "name": "Omen of Resurgence",
+      "effect": "Fully recover your Life, Mana and Energy Shield when you reach Low Life",
+      "currency_target": "None (passive trigger)",
+      "mechanical_description": "While active in inventory, fully recovers Life, Mana and Energy Shield when you reach Low Life"
+    },
+    {
+      "name": "Omen of Amelioration",
+      "effect": "Prevent 75% of Experience loss when you die",
+      "currency_target": "None (passive trigger)",
+      "mechanical_description": "While active in inventory, prevents 75% of Experience loss when you die"
+    },
+    {
+      "name": "Omen of Whittling",
+      "effect": "Your next Chaos Orb will remove the lowest level modifier",
+      "currency_target": "Chaos Orb",
+      "mechanical_description": "While active in inventory, your next Chaos Orb will remove the lowest level modifier instead of a random one"
+    },
+    {
+      "name": "Omen of Sinistral Erasure",
+      "effect": "Your next Chaos Orb will remove only prefix modifiers",
+      "currency_target": "Chaos Orb",
+      "mechanical_description": "While active in inventory, your next Chaos Orb will remove only prefix modifiers"
+    },
+    {
+      "name": "Omen of Dextral Erasure",
+      "effect": "Your next Chaos Orb will remove only suffix modifiers",
+      "currency_target": "Chaos Orb",
+      "mechanical_description": "While active in inventory, your next Chaos Orb will remove only suffix modifiers"
+    },
+    {
+      "name": "Omen of Sinistral Alchemy",
+      "effect": "Your next Orb of Alchemy will result in the maximum number of prefix modifiers",
+      "currency_target": "Orb of Alchemy",
+      "mechanical_description": "While active in inventory, your next Orb of Alchemy will result in the maximum number of prefix modifiers"
+    },
+    {
+      "name": "Omen of Dextral Alchemy",
+      "effect": "Your next Orb of Alchemy will result in the maximum number of suffix modifiers",
+      "currency_target": "Orb of Alchemy",
+      "mechanical_description": "While active in inventory, your next Orb of Alchemy will result in the maximum number of suffix modifiers"
+    },
+    {
+      "name": "Omen of Sinistral Coronation",
+      "effect": "Your next Regal Orb will add only prefix modifiers",
+      "currency_target": "Regal Orb",
+      "mechanical_description": "While active in inventory, your next Regal Orb will add only prefix modifiers"
+    },
+    {
+      "name": "Omen of Dextral Coronation",
+      "effect": "Your next Regal Orb will add only suffix modifiers",
+      "currency_target": "Regal Orb",
+      "mechanical_description": "While active in inventory, your next Regal Orb will add only suffix modifiers"
+    },
+    {
+      "name": "Omen of Corruption",
+      "effect": "Your next Vaal Orb will always result in change",
+      "currency_target": "Vaal Orb",
+      "mechanical_description": "While active in inventory, your next Vaal Orb will always result in change (prevents 'no change' outcome)"
+    },
+    {
+      "name": "Omen of Greater Exaltation",
+      "effect": "Your next Exalted Orb will add two random modifiers",
+      "currency_target": "Exalted Orb",
+      "mechanical_description": "While active in inventory, your next Exalted Orb will add two random modifiers instead of one"
+    },
+    {
+      "name": "Omen of Sinistral Exaltation",
+      "effect": "Your next Exalted Orb will add only prefix modifiers",
+      "currency_target": "Exalted Orb",
+      "mechanical_description": "While active in inventory, your next Exalted Orb will add only prefix modifiers"
+    },
+    {
+      "name": "Omen of Dextral Exaltation",
+      "effect": "Your next Exalted Orb will add only suffix modifiers",
+      "currency_target": "Exalted Orb",
+      "mechanical_description": "While active in inventory, your next Exalted Orb will add only suffix modifiers"
+    },
+    {
+      "name": "Omen of Greater Annulment",
+      "effect": "Your next Orb of Annulment will remove two modifiers",
+      "currency_target": "Orb of Annulment",
+      "mechanical_description": "While active in inventory, your next Orb of Annulment will remove two modifiers instead of one"
+    },
+    {
+      "name": "Omen of Sinistral Annulment",
+      "effect": "Your next Orb of Annulment will remove only prefix modifiers",
+      "currency_target": "Orb of Annulment",
+      "mechanical_description": "While active in inventory, your next Orb of Annulment will remove only prefix modifiers"
+    },
+    {
+      "name": "Omen of Dextral Annulment",
+      "effect": "Your next Orb of Annulment will remove only suffix modifiers",
+      "currency_target": "Orb of Annulment",
+      "mechanical_description": "While active in inventory, your next Orb of Annulment will remove only suffix modifiers"
+    },
+    {
+      "name": "Omen of Answered Prayers",
+      "effect": "The next Shrine you click on will grant an additional Effect",
+      "currency_target": "None (Shrine interaction)",
+      "mechanical_description": "While active in inventory, the next Shrine you click on will grant an additional Effect"
+    },
+    {
+      "name": "Omen of Secret Compartments",
+      "effect": "The next Strongbox you click on will be reopenable",
+      "currency_target": "None (Strongbox interaction)",
+      "mechanical_description": "While active in inventory, the next Strongbox you click on will be reopenable"
+    },
+    {
+      "name": "Omen of the Hunt",
+      "effect": "The next Possessed monster you kill will release its Azmeri Spirit",
+      "currency_target": "None (combat trigger)",
+      "mechanical_description": "While active in inventory, the next Possessed monster you kill will release its Azmeri Spirit"
+    },
+    {
+      "name": "Omen of Reinforcements",
+      "effect": "The next Rogue Exile you encounter will summon an ally",
+      "currency_target": "None (encounter modifier)",
+      "mechanical_description": "While active in inventory, the next Rogue Exile you encounter will summon an ally"
+    },
+    {
+      "name": "Omen of Homogenising Exaltation",
+      "effect": "Your next Exalted Orb will add a Modifier of the same type as an existing Modifier on the Item",
+      "currency_target": "Exalted Orb",
+      "mechanical_description": "While active in inventory, your next Exalted Orb will add a Modifier of the same type (tag) as an existing Modifier on the Item"
+    },
+    {
+      "name": "Omen of Homogenising Coronation",
+      "effect": "Your next Regal Orb will add a Modifier of the same type as an existing Modifier on the Item",
+      "currency_target": "Regal Orb",
+      "mechanical_description": "While active in inventory, your next Regal Orb will add a Modifier of the same type (tag) as an existing Modifier on the Item"
+    },
+    {
+      "name": "Omen of Gambling",
+      "effect": "Your next Gamble purchase will have a 50% chance of costing no Gold and not consuming this Omen",
+      "currency_target": "Gold (gambling vendor)",
+      "mechanical_description": "While active in inventory, your next Gamble purchase will have a 50% chance of costing no Gold and not consuming this Omen"
+    },
+    {
+      "name": "Omen of Bartering",
+      "effect": "Your next sold item's Gold value will be incorrectly assessed by the Vendor",
+      "currency_target": "Gold (vendor sale)",
+      "mechanical_description": "While active in inventory, your next sold item's Gold value will be incorrectly assessed by the Vendor (increased sale value)"
+    },
+    {
+      "name": "Omen of Recombination",
+      "effect": "Enables recombination crafting on the next attempt",
+      "currency_target": "Recombinator",
+      "mechanical_description": "While active in inventory, modifies the next recombination attempt"
+    },
+    {
+      "name": "Omen of the Blessed",
+      "effect": "Your next Divine Orb will only reroll Implicit Modifiers",
+      "currency_target": "Divine Orb",
+      "mechanical_description": "While active in inventory, your next Divine Orb will only reroll Implicit Modifiers (not explicit modifiers)"
+    },
+    {
+      "name": "Omen of Chaotic Rarity",
+      "effect": "Your next Chaos Orb will replace all Modifiers on a Waystone with Modifiers that do not grant Item Rarity",
+      "currency_target": "Chaos Orb (Waystones)",
+      "mechanical_description": "While active in inventory, your next Chaos Orb will replace all Modifiers on a Waystone with Modifiers that do not grant Item Rarity"
+    },
+    {
+      "name": "Omen of Chaotic Quantity",
+      "effect": "Your next Chaos Orb will replace all Modifiers on a Waystone with Modifiers that do not grant Pack Size",
+      "currency_target": "Chaos Orb (Waystones)",
+      "mechanical_description": "While active in inventory, your next Chaos Orb will replace all Modifiers on a Waystone with Modifiers that do not grant Pack Size"
+    },
+    {
+      "name": "Omen of Chaotic Monsters",
+      "effect": "Your next Chaos Orb will replace all Modifiers on a Waystone with Modifiers that do not grant Monster Rarity",
+      "currency_target": "Chaos Orb (Waystones)",
+      "mechanical_description": "While active in inventory, your next Chaos Orb will replace all Modifiers on a Waystone with Modifiers that do not grant Monster Rarity"
+    },
+    {
+      "name": "Omen of Chaotic Effectiveness",
+      "effect": "Your next Chaos Orb will replace all Modifiers on a Waystone with Modifiers that do not grant Monster Effectiveness",
+      "currency_target": "Chaos Orb (Waystones)",
+      "mechanical_description": "While active in inventory, your next Chaos Orb will replace all Modifiers on a Waystone with Modifiers that do not grant Monster Effectiveness"
+    },
+    {
+      "name": "Omen of Chance",
+      "effect": "Your next Orb of Chance will not destroy the Item",
+      "currency_target": "Orb of Chance",
+      "mechanical_description": "While active in inventory, your next Orb of Chance will not destroy the Item on failure (prevents item deletion)"
+    },
+    {
+      "name": "Omen of the Ancients",
+      "effect": "Your next Orb of Chance will upgrade the Item to a random Unique of the same Item Class",
+      "currency_target": "Orb of Chance",
+      "mechanical_description": "While active in inventory, your next Orb of Chance will upgrade the Item to a random Unique of the same Item Class instead of a specific one"
+    },
+    {
+      "name": "Omen of Sanctification",
+      "effect": "Your next Divine Orb used on a Rare item will Sanctify it",
+      "currency_target": "Divine Orb",
+      "mechanical_description": "While active in inventory, your next Divine Orb used on a Rare item will Sanctify it (grants sanctified modifiers)"
+    },
+    {
+      "name": "Omen of Dextral Crystallisation",
+      "effect": "Your next Perfect or Corrupted Essence will remove only Suffix modifiers",
+      "currency_target": "Perfect/Corrupted Essence",
+      "mechanical_description": "While active in inventory, your next Perfect or Corrupted Essence will remove only Suffix modifiers"
+    },
+    {
+      "name": "Omen of Sinistral Crystallisation",
+      "effect": "Your next Perfect or Corrupted Essence will remove only Prefix modifiers",
+      "currency_target": "Perfect/Corrupted Essence",
+      "mechanical_description": "While active in inventory, your next Perfect or Corrupted Essence will remove only Prefix modifiers"
+    },
+    {
+      "name": "Omen of Catalysing Exaltation",
+      "effect": "Your next Exalted Orb will consume all Catalyst Quality to increase the chance of the corresponding type of Modifier",
+      "currency_target": "Exalted Orb",
+      "mechanical_description": "While active in inventory, your next Exalted Orb will consume all Catalyst Quality on the item to increase the chance of the corresponding type of Modifier being added"
+    },
+    {
+      "name": "Omen of Abyssal Echoes",
+      "effect": "The next time you reveal Desecrated modifiers you can reroll the options once",
+      "currency_target": "Desecration (Abyss crafting)",
+      "mechanical_description": "While active in inventory, the next time you reveal Desecrated modifiers you can reroll the options once"
+    },
+    {
+      "name": "Omen of the Sovereign",
+      "effect": "Your next Weapon or Jewellery Desecration attempt will guarantee a random Ulaman modifier",
+      "currency_target": "Desecration (Abyss crafting)",
+      "mechanical_description": "While active in inventory, your next Weapon or Jewellery Desecration attempt will guarantee a random Ulaman modifier"
+    },
+    {
+      "name": "Omen of the Liege",
+      "effect": "Your next Weapon or Jewellery Desecration attempt will guarantee a random Amanamu modifier",
+      "currency_target": "Desecration (Abyss crafting)",
+      "mechanical_description": "While active in inventory, your next Weapon or Jewellery Desecration attempt will guarantee a random Amanamu modifier"
+    },
+    {
+      "name": "Omen of the Blackblooded",
+      "effect": "Your next Weapon or Jewellery Desecration attempt will guarantee a random Kurgal modifier",
+      "currency_target": "Desecration (Abyss crafting)",
+      "mechanical_description": "While active in inventory, your next Weapon or Jewellery Desecration attempt will guarantee a random Kurgal modifier"
+    },
+    {
+      "name": "Omen of Putrefaction",
+      "effect": "Your next Desecration attempt will replace all modifiers on the item creating an item with up to 6 Unrevealed modifiers and Corrupting the item",
+      "currency_target": "Desecration (Abyss crafting)",
+      "mechanical_description": "While active in inventory, your next Desecration attempt will replace all modifiers on the item creating an item with up to 6 Unrevealed modifiers and Corrupting the item"
+    },
+    {
+      "name": "Omen of Light",
+      "effect": "Your next Orb of Annulment will remove only Desecrated modifiers",
+      "currency_target": "Orb of Annulment",
+      "mechanical_description": "While active in inventory, your next Orb of Annulment will remove only Desecrated modifiers"
+    },
+    {
+      "name": "Omen of Sinistral Necromancy",
+      "effect": "Your next Desecration attempt will add only prefix modifiers",
+      "currency_target": "Desecration (Abyss crafting)",
+      "mechanical_description": "While active in inventory, your next Desecration attempt will add only prefix modifiers"
+    },
+    {
+      "name": "Omen of Dextral Necromancy",
+      "effect": "Your next Desecration attempt will add only suffix modifiers",
+      "currency_target": "Desecration (Abyss crafting)",
+      "mechanical_description": "While active in inventory, your next Desecration attempt will add only suffix modifiers"
+    }
+  ],
+  "metadata": {
+    "source": "poe2db.tw/us/Omen",
+    "total_count": 50,
+    "last_updated": "2026-06-09",
+    "categories": {
+      "crafting_currency_omens": [
+        "Sinistral = prefix (left), Dextral = suffix (right)",
+        "Erasure = Chaos Orb removal targeting",
+        "Alchemy = Orb of Alchemy affix targeting",
+        "Coronation = Regal Orb affix targeting",
+        "Exaltation = Exalted Orb affix targeting",
+        "Annulment = Orb of Annulment removal targeting",
+        "Crystallisation = Essence removal targeting",
+        "Necromancy = Desecration affix targeting"
+      ],
+      "utility_omens": [
+        "Refreshment, Resurgence, Amelioration = survival triggers",
+        "Answered Prayers, Secret Compartments, the Hunt, Reinforcements = encounter modifiers",
+        "Gambling, Bartering = gold economy modifiers"
+      ],
+      "restrictions": [
+        "Only one omen of each type can be active at a time",
+        "Omens are consumed on trigger",
+        "Stack Size: 1/10",
+        "Most obtained from Ritual encounters via Tribute",
+        "Some (Abyssal Omens) drop from Abyss content",
+        "Omens must be right-clicked to activate, then remain in inventory until triggered"
+      ]
+    }
+  }
+}

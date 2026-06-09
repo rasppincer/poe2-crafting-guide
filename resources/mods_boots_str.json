@@ -1,0 +1,164 @@
+{
+  "item_category": "boots_str",
+  "source": "https://poe2db.tw/us/Boots_str",
+  "extracted": "2026-06-09",
+  "base_prefixes": [
+    {
+      "group": "1IncreasedLife",
+      "description": "# to maximum Life",
+      "tags": ["life"],
+      "weight": 9000,
+      "maxIlvl": 60,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1IncreasedMana",
+      "description": "# to maximum Mana",
+      "tags": ["mana"],
+      "weight": 9000,
+      "maxIlvl": 60,
+      "tierCount": 9,
+      "slot": "prefix"
+    },
+    {
+      "group": "1BaseLocalDefences",
+      "description": "# to Armour",
+      "tags": ["armour"],
+      "weight": 7000,
+      "maxIlvl": 54,
+      "tierCount": 7,
+      "slot": "prefix"
+    },
+    {
+      "group": "1DefencesPercent",
+      "description": "#% increased Armour",
+      "tags": ["armour"],
+      "weight": 7000,
+      "maxIlvl": 65,
+      "tierCount": 7,
+      "slot": "prefix"
+    },
+    {
+      "group": "1DefencesPercentAndStunThreshold",
+      "description": "#% increased Armour, # to Stun Threshold",
+      "tags": ["armour"],
+      "weight": 6000,
+      "maxIlvl": 74,
+      "tierCount": 6,
+      "slot": "prefix"
+    },
+    {
+      "group": "1MovementVelocity",
+      "description": "#% increased Movement Speed",
+      "tags": ["speed"],
+      "weight": 6000,
+      "maxIlvl": 82,
+      "tierCount": 6,
+      "slot": "prefix"
+    }
+  ],
+  "base_suffixes": [
+    {
+      "group": "2Strength",
+      "description": "# to Strength",
+      "tags": ["attribute"],
+      "weight": 8000,
+      "maxIlvl": 74,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2FireResistance",
+      "description": "#% to Fire Resistance",
+      "tags": ["elemental", "fire", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ColdResistance",
+      "description": "#% to Cold Resistance",
+      "tags": ["elemental", "cold", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LightningResistance",
+      "description": "#% to Lightning Resistance",
+      "tags": ["elemental", "lightning", "resistance"],
+      "weight": 8000,
+      "maxIlvl": 82,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ChaosResistance",
+      "description": "#% to Chaos Resistance",
+      "tags": ["chaos", "resistance"],
+      "weight": 1500,
+      "maxIlvl": 81,
+      "tierCount": 6,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LocalAttributeRequirements",
+      "description": "#% reduced Attribute Requirements",
+      "tags": [],
+      "weight": 3750,
+      "maxIlvl": 60,
+      "tierCount": 5,
+      "slot": "suffix"
+    },
+    {
+      "group": "2StunThreshold",
+      "description": "# to Stun Threshold",
+      "tags": [],
+      "weight": 8800,
+      "maxIlvl": 80,
+      "tierCount": 11,
+      "slot": "suffix"
+    },
+    {
+      "group": "2LifeRegeneration",
+      "description": "# Life Regeneration per second",
+      "tags": ["life"],
+      "weight": 8000,
+      "maxIlvl": 58,
+      "tierCount": 8,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ItemFoundRarityIncrease",
+      "description": "#% increased Rarity of Items found",
+      "tags": [],
+      "weight": 3000,
+      "maxIlvl": 40,
+      "tierCount": 3,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ReducedAilmentDuration",
+      "description": "#% reduced Shock/Chill/Freeze Duration on you",
+      "tags": ["elemental", "lightning", "cold", "ailment"],
+      "weight": 7500,
+      "maxIlvl": 75,
+      "tierCount": 15,
+      "slot": "suffix"
+    },
+    {
+      "group": "2ArmourAppliesToElementalDamage",
+      "description": "#% of Armour also applies to Elemental Damage",
+      "tags": ["armour", "elemental"],
+      "weight": 5000,
+      "maxIlvl": 66,
+      "tierCount": 5,
+      "slot": "suffix"
+    }
+  ],
+  "weight_sum_prefixes": 44000,
+  "weight_sum_suffixes": 69550
+}
