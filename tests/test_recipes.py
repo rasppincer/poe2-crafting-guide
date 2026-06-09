@@ -62,22 +62,29 @@ RECIPES = {
                 "action": "apply_currency",
                 "currency": "orb_of_transmutation",
                 "precondition": "normal body armour",
-                "result": "magic with random mods",
+                "result": "magic with 1 modifier",
+                "note": "PoE 2 transmute adds exactly 1 mod (not 2 like PoE 1).",
+            },
+            {
+                "action": "apply_currency",
+                "currency": "orb_of_augmentation",
+                "condition": "if transmute did NOT roll a life mod",
+                "result": "magic with 2 modifiers",
+                "note": "Augment adds a 2nd mod. IMPORTANT: if transmute already rolled life, augment is fine — but the next essence step will FAIL with 'item already has a mod of this type'. In that case, start over with a new base.",
             },
             {
                 "action": "apply_currency",
                 "currency": "essence_of_the_body",
-                "precondition": "magic rarity",
+                "precondition": "magic rarity, NO existing life modifier on the item",
                 "result": "rare with guaranteed increased_life prefix + additional random mods",
-                "note": "PoE 2 Essence of the Body upgrades magic → rare and guarantees a life modifier. Does NOT exist as 'Essence of Greed' — that's PoE 1.",
+                "note": "PoE 2 Essence of the Body upgrades magic → rare and guarantees a life modifier. Will FAIL if the item already has a life mod from transmute/augment — you'll see 'Item already has a mod of this type'.",
             },
             {
-                "action": "apply_with_omen",
+                "action": "apply_currency",
                 "currency": "exalted_orb",
-                "omen": "dextral_exaltation",
-                "precondition": "rare with open suffix slot, omen active",
-                "result": "adds 1 suffix modifier (guaranteed suffix, not random slot)",
-                "note": "Dextral Exaltation ensures the exalt hits suffix, not prefix. Use Sinistral Exaltation if you need more prefixes instead.",
+                "precondition": "rare with at least 1 open slot",
+                "result": "adds 1 random modifier to an open slot",
+                "note": "Omen is optional: without omen, exalt picks randomly from open prefix/suffix slots. With Dextral Exaltation omen, it guarantees the mod goes to suffix. Use omen only if you specifically need a suffix mod.",
             },
         ],
     },
@@ -272,8 +279,10 @@ class TestRecipeStepValidity:
     def test_body_armour_uses_essence_of_the_body(self):
         """PoE 2 uses Essence of the Body, NOT Essence of Greed."""
         recipe = RECIPES["body_armour_deterministic_life"]
-        essence_step = recipe["steps"][1]
-        assert essence_step["currency"] == "essence_of_the_body"
+        # Find the essence step (could be at different index)
+        essence_steps = [s for s in recipe["steps"] if s.get("currency") == "essence_of_the_body"]
+        assert len(essence_steps) == 1, "Expected exactly 1 essence_of_the_body step"
+        assert essence_steps[0]["currency"] == "essence_of_the_body"
 
     def test_annulment_requires_mods(self):
         """Orb of Annulment requires at least 1 mod to remove."""
