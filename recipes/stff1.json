@@ -1,0 +1,71 @@
+{
+  "name": "stff1",
+  "game": "poe2",
+  "goal": "minimum_cost",
+  "base": "fire_staff",
+  "category": "staff",
+  "target": "max fire dmg",
+  "steps": [
+    {
+      "step": 1,
+      "action": "apply_currency",
+      "currency": "orb_of_transmutation",
+      "description": "",
+      "precondition": "",
+      "result": "",
+      "conditions": [],
+      "else_goto": null,
+      "else_repeat": false
+    },
+    {
+      "step": 2,
+      "action": "apply_currency",
+      "currency": "orb_of_augmentation",
+      "description": "",
+      "precondition": "",
+      "result": "",
+      "conditions": [],
+      "else_goto": null,
+      "else_repeat": false
+    },
+    {
+      "step": 3,
+      "action": "apply_essence",
+      "currency": "essence_of_wrath",
+      "description": "",
+      "precondition": "",
+      "result": "",
+      "conditions": [],
+      "else_goto": null,
+      "else_repeat": false
+    },
+    {
+      "step": 4,
+      "action": "apply_with_omen",
+      "currency": "greater_exaltation",
+      "description": "",
+      "precondition": "",
+      "result": "",
+      "conditions": [],
+      "else_goto": null,
+      "else_repeat": false
+    },
+    {
+      "step": 5,
+      "action": "apply_currency",
+      "currency": "exalted_orb",
+      "description": "",
+      "precondition": "",
+      "result": "",
+      "conditions": [
+        {
+          "type": "has_mod",
+          "value": "life",
+          "goto": 1
+        }
+      ],
+      "else_goto": null,
+      "else_repeat": false
+    }
+  ]
+}

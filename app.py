@@ -208,19 +208,31 @@ def api_refresh():
 
 @app.route("/api/recipes")
 def api_recipes():
-    """Return all recipes."""
-    # Import from test file
+    """Return all recipes — merged from test fixtures + recipes/ directory."""
     from tests.test_recipes import RECIPES
-    return jsonify(RECIPES)
+    all_recipes = dict(RECIPES)
+    # Load from recipes/ directory (saved by Recipe Builder)
+    RECIPES_DIR.mkdir(exist_ok=True)
+    for f in sorted(RECIPES_DIR.glob("*.json")):
+        try:
+            data = json.loads(f.read_text())
+            key = f.stem  # filename without .json
+            all_recipes[key] = data
+        except Exception:
+            continue
+    return jsonify(all_recipes)
 
 
 @app.route("/api/recipes/<name>")
 def api_recipe(name):
-    """Return a single recipe."""
+    """Return a single recipe — check test fixtures first, then recipes/ dir."""
     from tests.test_recipes import RECIPES
-    if name not in RECIPES:
-        return jsonify({"error": "Recipe not found"}), 404
-    return jsonify(RECIPES[name])
+    if name in RECIPES:
+        return jsonify(RECIPES[name])
+    filepath = RECIPES_DIR / f"{name}.json"
+    if filepath.exists():
+        return jsonify(json.loads(filepath.read_text()))
+    return jsonify({"error": "Recipe not found"}), 404
 
 
 @app.route("/api/recipe/verify", methods=["POST"])
