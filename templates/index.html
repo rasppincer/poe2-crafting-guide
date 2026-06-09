@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoE 2 Crafting Guide</title>
+<style>
+:root {
+  --bg: #1a1a2e;
+  --bg2: #16213e;
+  --bg3: #0f3460;
+  --fg: #e0e0e0;
+  --fg2: #a0a0b0;
+  --accent: #e94560;
+  --accent2: #0f9b58;
+  --gold: #c8aa6e;
+  --border: #2a2a4e;
+  --prefix: #3498db;
+  --suffix: #9b59b6;
+  --disabled: #666;
+  --tag-bg: #2a2a4e;
+  --success: #2ecc71;
+  --fail: #e74c3c;
+  --warn: #f39c12;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--fg); min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+.header { background: var(--bg2); padding: 12px 24px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 16px; }
+.header h1 { font-size: 20px; color: var(--gold); }
+.header .version { font-size: 12px; color: var(--fg2); background: var(--bg3); padding: 2px 8px; border-radius: 4px; }
+.header .stats { margin-left: auto; font-size: 12px; color: var(--fg2); display: flex; gap: 12px; }
+.header .stats span { background: var(--bg3); padding: 2px 8px; border-radius: 4px; }
+
+/* Tabs */
+.tabs { display: flex; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.tab { padding: 10px 24px; cursor: pointer; color: var(--fg2); border-bottom: 3px solid transparent; transition: all 0.2s; font-size: 14px; }
+.tab:hover { color: var(--fg); background: var(--bg3); }
+.tab.active { color: var(--gold); border-bottom-color: var(--accent); }
+.tab-content { display: none; padding: 20px; }
+.tab-content.active { display: block; }
+
+/* DB Explorer */
+.db-section { margin-bottom: 24px; }
+.db-section h3 { color: var(--gold); margin-bottom: 8px; font-size: 16px; cursor: pointer; user-select: none; }
+.db-section h3::before { content: '▸ '; color: var(--fg2); }
+.db-section h3.open::before { content: '▾ '; }
+.db-section .content { display: none; }
+.db-section .content.open { display: block; }
+
+.filter-bar { margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-bar input, .filter-bar select {
+  background: var(--bg3); color: var(--fg); border: 1px solid var(--border);
+  padding: 6px 12px; border-radius: 4px; font-size: 13px;
+}
+.filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--accent); }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px; background: var(--bg3); color: var(--gold); border-bottom: 2px solid var(--border); position: sticky; top: 0; }
+td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
+tr:hover { background: var(--bg2); }
+
+.tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 11px; margin: 1px; background: var(--tag-bg); color: var(--fg2); }
+.tag.life { background: #2d4a2d; color: #7ddf7d; }
+.tag.fire { background: #4a2d2d; color: #df7d7d; }
+.tag.cold { background: #2d3d4a; color: #7dbddf; }
+.tag.lightning { background: #4a4a2d; color: #dfdf7d; }
+.tag.chaos { background: #3d2d4a; color: #b07ddf; }
+.tag.physical { background: #3a3a3a; color: #ccc; }
+.tag.resistance { background: #2d4a3d; color: #7ddfbd; }
+.tag.armour { background: #4a3a2d; color: #dfbd7d; }
+.tag.attack { background: #4a2d2d; color: #df9d7d; }
+.tag.caster { background: #2d2d4a; color: #9d7ddf; }
+.tag.speed { background: #2d4a4a; color: #7ddfdf; }
+.tag.attribute { background: #3a3a2d; color: #bdcf7d; }
+.tag.damage { background: #4a2d3a; color: #df7dbd; }
+
+.weight-bar { display: inline-block; height: 12px; background: var(--accent); border-radius: 2px; min-width: 2px; vertical-align: middle; }
+.weight-pct { font-size: 11px; color: var(--fg2); margin-left: 4px; }
+
+.slot-prefix { color: var(--prefix); font-weight: 600; }
+.slot-suffix { color: var(--suffix); font-weight: 600; }
+
+.disabled { color: var(--disabled); text-decoration: line-through; }
+.disabled-badge { background: var(--fail); color: white; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+.active-badge { background: var(--success); color: white; padding: 1px 5px; border-radius: 3px; font-size: 10px; }
+
+/* Recipes */
+.recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.recipe-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; cursor: pointer; transition: all 0.2s;
+}
+.recipe-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.recipe-card h4 { color: var(--gold); margin-bottom: 6px; font-size: 15px; }
+.recipe-card .target { color: var(--fg2); font-size: 12px; margin-bottom: 8px; }
+.recipe-card .steps-count { font-size: 11px; color: var(--fg2); }
+.recipe-card .base-tag { display: inline-block; background: var(--bg3); padding: 1px 6px; border-radius: 3px; font-size: 11px; }
+
+/* Recipe Detail / Tester */
+.recipe-detail { display: none; }
+.recipe-detail.visible { display: block; }
+.recipe-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.recipe-header h3 { color: var(--gold); }
+.recipe-header .back-btn {
+  background: var(--bg3); color: var(--fg); border: 1px solid var(--border);
+  padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 13px;
+}
+.recipe-header .back-btn:hover { border-color: var(--accent); }
+
+.step-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 14px; margin-bottom: 12px; position: relative;
+}
+.step-card .step-num {
+  position: absolute; top: -8px; left: 12px;
+  background: var(--accent); color: white; width: 20px; height: 20px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+}
+.step-card .step-action { font-weight: 600; color: var(--fg); margin-bottom: 4px; }
+.step-card .step-detail { font-size: 12px; color: var(--fg2); }
+.step-card .step-note { font-size: 11px; color: var(--warn); margin-top: 4px; font-style: italic; }
+
+.verify-btn {
+  background: var(--accent2); color: white; border: none; padding: 10px 24px;
+  border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600;
+  transition: background 0.2s;
+}
+.verify-btn:hover { background: #0aad50; }
+.verify-btn:disabled { background: var(--disabled); cursor: not-allowed; }
+
+.verify-results { margin-top: 16px; }
+.verify-step { background: var(--bg3); border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+.verify-step .step-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.verify-step .step-header .num { color: var(--gold); font-weight: 700; }
+.check { font-size: 12px; padding: 2px 0; }
+.check.pass { color: var(--success); }
+.check.pass::before { content: '✓ '; }
+.check.fail { color: var(--fail); }
+.check.fail::before { content: '✗ '; }
+
+.overall-pass { background: var(--success); color: white; padding: 8px 16px; border-radius: 6px; display: inline-block; font-weight: 600; }
+.overall-fail { background: var(--fail); color: white; padding: 8px 16px; border-radius: 6px; display: inline-block; font-weight: 600; }
+
+/* Mod Pool explorer */
+.pool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.pool-col h4 { color: var(--gold); margin-bottom: 8px; font-size: 14px; }
+
+/* Scrollable */
+.scroll-y { max-height: 600px; overflow-y: auto; }
+.scroll-y::-webkit-scrollbar { width: 6px; }
+.scroll-y::-webkit-scrollbar-track { background: var(--bg); }
+.scroll-y::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>PoE 2 Crafting Guide</h1>
+  <span class="version">v0.5.0 — Return of the Ancients</span>
+  <div class="stats" id="header-stats"></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="database">Database</div>
+  <div class="tab" data-tab="recipes">Recipes</div>
+  <div class="tab" data-tab="tester" id="tester-tab">Recipe Tester</div>
+</div>
+
+<!-- ============ DATABASE TAB ============ -->
+<div class="tab-content active" id="tab-database">
+  <div class="filter-bar">
+    <select id="db-filter-section" onchange="filterDB()">
+      <option value="all">All Sections</option>
+      <option value="mod_groups">Mod Groups</option>
+      <option value="currencies">Currencies</option>
+      <option value="omens">Omens</option>
+      <option value="alloys">Alloys</option>
+      <option value="quality">Quality</option>
+    </select>
+    <select id="db-filter-category" onchange="filterDB()">
+      <option value="all">All Categories</option>
+    </select>
+    <select id="db-filter-slot">
+      <option value="all">All Slots</option>
+      <option value="prefix">Prefix</option>
+      <option value="suffix">Suffix</option>
+    </select>
+    <input type="text" id="db-filter-tag" placeholder="Filter by tag..." oninput="filterDB()">
+    <input type="text" id="db-filter-text" placeholder="Search..." oninput="filterDB()">
+    <button onclick="refreshDB()" style="background:var(--bg3);color:var(--fg);border:1px solid var(--border);padding:6px 12px;border-radius:4px;cursor:pointer;">↻ Refresh</button>
+  </div>
+
+  <!-- Mod Groups -->
+  <div class="db-section" id="sec-mod_groups">
+    <h3 onclick="toggleSection(this)" class="open">Mod Groups <span id="mod-count"></span></h3>
+    <div class="content open scroll-y">
+      <table id="mod-groups-table">
+        <thead>
+          <tr><th>Category</th><th>Group</th><th>Description</th><th>Tags</th><th>Slot</th><th>Weight</th><th>Weight %</th><th>iLvl</th><th>Tiers</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Currencies -->
+  <div class="db-section" id="sec-currencies">
+    <h3 onclick="toggleSection(this)">Currencies <span id="currency-count"></span></h3>
+    <div class="content scroll-y">
+      <table id="currencies-table">
+        <thead><tr><th>Currency</th><th>Has Rules</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Omens -->
+  <div class="db-section" id="sec-omens">
+    <h3 onclick="toggleSection(this)">Omens <span id="omen-count"></span></h3>
+    <div class="content scroll-y">
+      <table id="omens-table">
+        <thead><tr><th>Omen</th><th>Currency</th><th>Effect</th><th>Slot</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Alloys -->
+  <div class="db-section" id="sec-alloys">
+    <h3 onclick="toggleSection(this)">Alloys <span id="alloy-count"></span></h3>
+    <div class="content scroll-y">
+      <table id="alloys-table">
+        <thead><tr><th>Alloy</th><th>Guaranteed Tag</th><th>Description</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quality -->
+  <div class="db-section" id="sec-quality">
+    <h3 onclick="toggleSection(this)">Quality / Catalysts <span id="quality-count"></span></h3>
+    <div class="content scroll-y">
+      <table id="quality-table">
+        <thead><tr><th>Catalyst</th><th>Tags Enhanced</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RECIPES TAB ============ -->
+<div class="tab-content" id="tab-recipes">
+  <div class="recipe-grid" id="recipe-grid"></div>
+</div>
+
+<!-- ============ TESTER TAB ============ -->
+<div class="tab-content" id="tab-tester">
+  <div class="recipe-detail" id="recipe-detail">
+    <div class="recipe-header">
+      <button class="back-btn" onclick="showRecipeList()">← Back</button>
+      <h3 id="recipe-title"></h3>
+      <span class="base-tag" id="recipe-base"></span>
+      <span class="base-tag" id="recipe-category"></span>
+    </div>
+    <p id="recipe-target" style="color:var(--fg2);margin-bottom:16px;font-size:13px;"></p>
+    <div id="recipe-steps"></div>
+    <div style="margin-top:20px;display:flex;gap:12px;align-items:center;">
+      <button class="verify-btn" onclick="verifyRecipe()">▶ Verify Recipe</button>
+      <span id="verify-status"></span>
+    </div>
+    <div class="verify-results" id="verify-results"></div>
+    <div id="recipe-cost" style="margin-top:16px;"></div>
+  </div>
+  <div id="tester-placeholder" style="color:var(--fg2);text-align:center;padding:60px;">
+    <p style="font-size:18px;margin-bottom:8px;">Select a recipe from the Recipes tab</p>
+    <p style="font-size:13px;">or click a recipe card to open it here</p>
+  </div>
+</div>
+
+<script>
+let DB = null;
+let RECIPES = null;
+let currentRecipe = null;
+
+// Load data
+async function loadData() {
+  const [dbRes, recRes] = await Promise.all([
+    fetch('/api/database'),
+    fetch('/api/recipes')
+  ]);
+  DB = await dbRes.json();
+  RECIPES = await recRes.json();
+  renderDatabase();
+  renderRecipes();
+  updateStats();
+}
+
+function updateStats() {
+  if (!DB) return;
+  const cats = [...new Set(DB.mod_groups.map(g => g.category))];
+  const activeOmens = DB.omens.filter(o => !o.disabled).length;
+  document.getElementById('header-stats').innerHTML = `
+    <span>${DB.mod_groups.length} mods</span>
+    <span>${cats.length} categories</span>
+    <span>${DB.currencies.length} currencies</span>
+    <span>${activeOmens} omens</span>
+    <span>${DB.alloys.length} alloys</span>
+  `;
+}
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === 'tab-' + name);
+  });
+}
+
+function toggleSection(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+// ===== DATABASE =====
+function renderDatabase() {
+  renderModGroups(DB.mod_groups);
+  renderCurrencies(DB.currencies);
+  renderOmens(DB.omens);
+  renderAlloys(DB.alloys);
+  renderQuality(DB.quality_types);
+  // Populate category filter
+  const cats = [...new Set(DB.mod_groups.map(g => g.category))].sort();
+  const sel = document.getElementById('db-filter-category');
+  cats.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+}
+
+function renderModGroups(groups) {
+  const tbody = document.querySelector('#mod-groups-table tbody');
+  tbody.innerHTML = groups.map(g => {
+    const maxWeight = Math.max(...groups.filter(x => x.slot === g.slot && x.category === g.category).map(x => x.weight), 1);
+    const pct = g.weight_pct || 0;
+    const barW = Math.max(2, pct * 2);
+    return `<tr>
+      <td><span class="base-tag">${g.category}</span></td>
+      <td style="font-size:11px;color:var(--fg2)">${g.group}</td>
+      <td>${g.description}</td>
+      <td>${g.tags.map(t => `<span class="tag ${t}">${t}</span>`).join('')}</td>
+      <td><span class="slot-${g.slot}">${g.slot}</span></td>
+      <td>${g.weight.toLocaleString()}</td>
+      <td><span class="weight-bar" style="width:${barW}px"></span><span class="weight-pct">${pct}%</span></td>
+      <td>${g.maxIlvl}</td>
+      <td>${g.tierCount}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('mod-count').textContent = `(${groups.length})`;
+}
+
+function renderCurrencies(currencies) {
+  const tbody = document.querySelector('#currencies-table tbody');
+  tbody.innerHTML = currencies.map(c => `<tr>
+    <td>${c.name.replace(/_/g, ' ')}</td>
+    <td>${c.has_rules ? '<span class="active-badge">✓</span>' : '<span class="disabled-badge">stub</span>'}</td>
+  </tr>`).join('');
+  document.getElementById('currency-count').textContent = `(${currencies.length})`;
+}
+
+function renderOmens(omens) {
+  const tbody = document.querySelector('#omens-table tbody');
+  tbody.innerHTML = omens.map(o => `<tr class="${o.disabled ? 'disabled' : ''}">
+    <td>${o.name.replace(/_/g, ' ')}</td>
+    <td>${o.currency.replace(/_/g, ' ')}</td>
+    <td>${o.effect.replace(/_/g, ' ')}</td>
+    <td><span class="slot-${o.slot === 'prefix' ? 'prefix' : o.slot === 'suffix' ? 'suffix' : ''}">${o.slot}</span></td>
+    <td>${o.disabled ? `<span class="disabled-badge">disabled ${o.disabled_version}</span>` : '<span class="active-badge">active</span>'}</td>
+  </tr>`).join('');
+  const active = omens.filter(o => !o.disabled).length;
+  document.getElementById('omen-count').textContent = `(${active} active / ${omens.length} total)`;
+}
+
+function renderAlloys(alloys) {
+  const tbody = document.querySelector('#alloys-table tbody');
+  tbody.innerHTML = alloys.map(a => `<tr>
+    <td>${a.name.replace(/_/g, ' ')}</td>
+    <td><span class="tag ${a.tag}">${a.tag}</span></td>
+    <td>${a.description}</td>
+  </tr>`).join('');
+  document.getElementById('alloy-count').textContent = `(${alloys.length})`;
+}
+
+function renderQuality(types) {
+  const tbody = document.querySelector('#quality-table tbody');
+  tbody.innerHTML = types.map(t => `<tr>
+    <td>${t.name.replace(/_/g, ' ')}</td>
+    <td>${t.tags.map(tag => `<span class="tag ${tag}">${tag}</span>`).join('')}</td>
+  </tr>`).join('');
+  document.getElementById('quality-count').textContent = `(${types.length})`;
+}
+
+function filterDB() {
+  const section = document.getElementById('db-filter-section').value;
+  const category = document.getElementById('db-filter-category').value;
+  const slot = document.getElementById('db-filter-slot').value;
+  const tag = document.getElementById('db-filter-tag').value.toLowerCase();
+  const text = document.getElementById('db-filter-text').value.toLowerCase();
+
+  // Show/hide sections
+  ['mod_groups','currencies','omens','alloys','quality'].forEach(s => {
+    const el = document.getElementById('sec-' + s);
+    if (section === 'all' || section === s) el.style.display = '';
+    else el.style.display = 'none';
+  });
+
+  // Filter mod groups
+  if (DB) {
+    let filtered = DB.mod_groups;
+    if (category !== 'all') filtered = filtered.filter(g => g.category === category);
+    if (slot !== 'all') filtered = filtered.filter(g => g.slot === slot);
+    if (tag) filtered = filtered.filter(g => g.tags.some(t => t.includes(tag)));
+    if (text) filtered = filtered.filter(g =>
+      g.group.includes(text) || g.description.toLowerCase().includes(text) || g.category.includes(text)
+    );
+    // Add weight percentages
+    filtered = filtered.map(g => {
+      const sums = DB.weight_sums[g.category] || {};
+      const total = sums[g.slot] || 1;
+      return {...g, weight_pct: total > 0 ? Math.round(g.weight / total * 10000) / 100 : 0};
+    });
+    renderModGroups(filtered);
+  }
+}
+
+async function refreshDB() {
+  await fetch('/api/database/refresh', {method: 'POST'});
+  await loadData();
+}
+
+// ===== RECIPES =====
+function renderRecipes() {
+  const grid = document.getElementById('recipe-grid');
+  grid.innerHTML = Object.entries(RECIPES).map(([name, r]) => `
+    <div class="recipe-card" onclick="openRecipe('${name}')">
+      <h4>${r.name}</h4>
+      <div class="target">${r.target}</div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <span class="base-tag">${r.base}</span>
+        <span class="base-tag">${r.category}</span>
+        <span class="steps-count">${r.steps.length} steps</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openRecipe(name) {
+  currentRecipe = name;
+  const r = RECIPES[name];
+  document.getElementById('recipe-title').textContent = r.name;
+  document.getElementById('recipe-base').textContent = r.base;
+  document.getElementById('recipe-category').textContent = r.category;
+  document.getElementById('recipe-target').textContent = 'Target: ' + r.target;
+
+  const stepsDiv = document.getElementById('recipe-steps');
+  stepsDiv.innerHTML = r.steps.map((s, i) => {
+    let detail = '';
+    if (s.currency) detail += `Currency: <strong>${s.currency.replace(/_/g,' ')}</strong>`;
+    if (s.omen) detail += ` + Omen: <strong>${s.omen.replace(/_/g,' ')}</strong>`;
+    if (s.alloy) detail += `Alloy: <strong>${s.alloy.replace(/_/g,' ')}</strong>`;
+    if (s.catalyst) detail += `Catalyst: <strong>${s.catalyst.replace(/_/g,' ')}</strong>`;
+    if (s.precondition) detail += `<br>Precondition: ${s.precondition}`;
+    if (s.condition) detail += `<br>Condition: ${s.condition}`;
+    if (s.result) detail += `<br>Result: ${s.result}`;
+    if (s.goal) detail += `<br>Goal: ${s.goal}`;
+    if (s.until) detail += `<br>Until: ${s.until}`;
+    let note = s.note ? `<div class="step-note">💡 ${s.note}</div>` : '';
+    return `<div class="step-card">
+      <div class="step-num">${i+1}</div>
+      <div class="step-action">${s.action.replace(/_/g,' ')}</div>
+      <div class="step-detail">${detail}</div>
+      ${note}
+    </div>`;
+  }).join('');
+
+  // Cost analysis
+  const costDiv = document.getElementById('recipe-cost');
+  if (r.cost_analysis) {
+    costDiv.innerHTML = `<h4 style="color:var(--gold);margin-bottom:8px;">Cost Analysis</h4><table style="max-width:400px">
+      ${Object.entries(r.cost_analysis).map(([k,v]) => `<tr><td>${k.replace(/_/g,' ')}</td><td>${v}</td></tr>`).join('')}
+    </table>`;
+  } else {
+    costDiv.innerHTML = '';
+  }
+
+  document.getElementById('verify-results').innerHTML = '';
+  document.getElementById('verify-status').innerHTML = '';
+  document.getElementById('recipe-detail').classList.add('visible');
+  document.getElementById('tester-placeholder').style.display = 'none';
+  switchTab('tester');
+}
+
+function showRecipeList() {
+  switchTab('recipes');
+}
+
+async function verifyRecipe() {
+  if (!currentRecipe) return;
+  const btn = document.querySelector('.verify-btn');
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+
+  const r = RECIPES[currentRecipe];
+  const res = await fetch('/api/recipe/verify', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(r)
+  });
+  const data = await res.json();
+
+  const statusEl = document.getElementById('verify-status');
+  statusEl.innerHTML = data.overall
+    ? '<span class="overall-pass">✓ All steps verified</span>'
+    : '<span class="overall-fail">✗ Verification failed</span>';
+
+  const resultsDiv = document.getElementById('verify-results');
+  resultsDiv.innerHTML = data.steps.map(s => `
+    <div class="verify-step">
+      <div class="step-header">
+        <span class="num">#${s.step}</span>
+        <span>${s.action.replace(/_/g,' ')}</span>
+        <span style="color:var(--fg2)">${s.currency.replace(/_/g,' ')}</span>
+        ${s.all_pass ? '<span class="active-badge">PASS</span>' : '<span class="disabled-badge">FAIL</span>'}
+      </div>
+      ${s.checks.map(c => `<div class="check ${c.pass ? 'pass' : 'fail'}">${c.test}</div>`).join('')}
+    </div>
+  `).join('');
+
+  btn.disabled = false;
+  btn.textContent = '▶ Verify Recipe';
+}
+
+// Init
+loadData();
+</script>
+</body>
+</html>
