@@ -151,7 +151,14 @@ RECIPES = {
                 "currency": "orb_of_alchemy",
                 "precondition": "normal amulet",
                 "result": "rare — check if life mod rolled",
-                "note": "Craft FIRST, then apply catalyst. If no life mod rolled, this amulet is not worth enhancing — start over or use chaos to reroll.",
+            },
+            {
+                "action": "spam",
+                "currency": "chaos_orb",
+                "condition": "if NO life prefix on the amulet after alchemy",
+                "goal": "hit increased_life prefix",
+                "until": "prefixes contains increased_life",
+                "note": "Only needed if alchemy didn't roll life (~12.5% chance per attempt). Skip this step if life already present.",
             },
             {
                 "action": "apply_catalyst",
@@ -286,7 +293,7 @@ class TestRecipeStepValidity:
         """Catalysts should be applied AFTER confirming good mods (PoE 2 best practice)."""
         recipe = RECIPES["amulet_catalyst_craft"]
         craft_step = recipe["steps"][0]
-        catalyst_step = recipe["steps"][1]
+        catalyst_step = recipe["steps"][2]  # Step 3: catalyst (step 2 is conditional chaos)
         assert craft_step["action"] == "apply_currency"
         assert catalyst_step["action"] == "apply_catalyst"
         assert "AFTER" in catalyst_step["note"]
