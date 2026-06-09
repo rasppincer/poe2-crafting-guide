@@ -35,6 +35,13 @@
     omen_disabled/2,
     omen_crafting_pairs/3,
 
+    % --- validity layer ---
+    current_version/1,
+    disabled/3,
+    nerfed/4,
+    valid/2,
+    check_valid/2,
+
     % --- alloys ---
     alloy/3,
     alloy_precondition/2,
@@ -92,13 +99,74 @@
 %% ==========================================================================
 %% This knowledge base reflects the 0.5.0 crafting system.
 %% Key facts:
-%%   - 8 omens disabled (see omen_disabled/2)
+%%   - 9 entities disabled (see disabled/3)
 %%   - Alloys introduced (13 types, replace Entities/Recombination)
 %%   - Desecrated modifiers: 1 per item, separate from crafted modifier
 %%   - Crafted modifier limit: 1 per item
 %%   - Recombination disabled
 %%   - Expedition temporarily integrated into Runes of Aldur
 %%   - Essence nerfs: Perfect Essence of Battle, Essence of Hysteria
+%% ==========================================================================
+
+%% --- Version Tracking ---
+%% Update this when patching to a new version.
+
+current_version('0.5.0').
+
+%% --- Generic Validity Layer ---
+%% Any entity (omen, currency, essence, mechanic, alloy) that has been
+%% disabled or nerfed gets a fact here. Everything else is implicitly valid.
+%%
+%% disabled(+EntityType, +Name, +VersionDisabled)
+%%   EntityType: omen | currency | essence | mechanic | alloy
+%%   Name: the entity's atom name
+%%   VersionDisabled: patch string when it was disabled
+%%
+%% nerfed(+EntityType, +Name, +VersionNerfed, +Description)
+%%   For things that still exist but were weakened.
+%%
+%% valid(+EntityType, +Name)
+%%   True if the entity is NOT disabled in the current version.
+%%
+%% check_valid(+EntityType, +Name)
+%%   Like valid/2 but prints a warning if disabled. Use in recipes.
+%% ==========================================================================
+
+% --- Disabled Entities ---
+
+disabled(omen, omen_of_corruption,        '0.5.0').
+disabled(omen, dextral_alchemy,           '0.3.0').
+disabled(omen, sinistral_alchemy,         '0.3.0').
+disabled(omen, dextral_coronation,        '0.3.0').
+disabled(omen, sinistral_coronation,      '0.3.0').
+disabled(omen, greater_annulment,         '0.3.0').
+disabled(omen, homogenising_coronation,   '0.4.0').
+disabled(omen, homogenising_exaltation,   '0.4.0').
+disabled(mechanic, recombination,         '0.5.0').
+
+% --- Nerfed Entities (still usable, but weakened) ---
+
+nerfed(essence, perfect_essence_of_battle, '0.5.0',
+       'Attack skill levels reduced from +5/+3 to +3/+2').
+nerfed(essence, essence_of_hysteria,       '0.5.0',
+       'ES Recharge Rate on Foci reduced from 41-45% to 20-23%').
+nerfed(omen, uhtreds_saga,                '0.5.0',
+       'Skill levels reduced from +3 to +2').
+
+% --- Validity Queries ---
+
+valid(EntityType, Name) :-
+    \+ disabled(EntityType, Name, _).
+
+check_valid(EntityType, Name) :-
+    (   disabled(EntityType, Name, Version)
+    ->  format("WARNING: ~w '~w' was disabled in patch ~w~n", [EntityType, Name, Version]),
+        fail
+    ;   true
+    ).
+
+% Backward compatibility: omen_disabled/2 still works
+omen_disabled(Name, Version) :- disabled(omen, Name, Version).
 %% ==========================================================================
 
 :- use_module(library(lists)).
@@ -228,17 +296,8 @@ omen(omen_of_liege,         desecration,    guarantees_amanamu_mod,      both).
 omen(omen_of_blackblooded,  desecration,    guarantees_kurgal_mod,       both).
 omen(omen_of_abyssal_echoes, desecration,   reroll_desecrated_options,   both).
 
-%% --- Disabled Omens (as of 0.5.0) ---
-%% These can no longer drop but existing ones may still function.
-omen_disabled(omen_of_corruption,        '0.5.0').
-omen_disabled(dextral_alchemy,           '0.3.0').
-omen_disabled(sinistral_alchemy,         '0.3.0').
-omen_disabled(dextral_coronation,        '0.3.0').
-omen_disabled(sinistral_coronation,      '0.3.0').
-omen_disabled(greater_annulment,         '0.3.0').
-omen_disabled(homogenising_coronation,   '0.4.0').
-omen_disabled(homogenising_exaltation,   '0.4.0').
-omen_disabled(omen_of_recombination,     '0.5.0').  % Recombinator disabled entirely
+%% Note: omen_disabled/2 is now derived from disabled/3 (see validity layer above).
+%% Backward-compatible rule handles all disabled omens automatically.
 
 %% can_use_omen(+OmenName, +Currency)
 %%   An omen can be used with a currency if the currency_target matches.

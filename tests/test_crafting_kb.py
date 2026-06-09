@@ -166,9 +166,11 @@ class TestPrologSyntax:
         assert "omen_disabled" in prolog_content, "Should track disabled omens"
 
     def test_disabled_omens_count(self, prolog_content):
-        """Should have exactly 9 disabled omens as of 0.5.0."""
-        disabled = re.findall(r'^omen_disabled\(', prolog_content, re.MULTILINE)
-        assert len(disabled) == 9, f"Expected 9 disabled omens, found {len(disabled)}"
+        """Should have exactly 8 disabled omens + 1 disabled mechanic as of 0.5.0."""
+        disabled_omens = re.findall(r'^disabled\(omen,', prolog_content, re.MULTILINE)
+        disabled_mechanics = re.findall(r'^disabled\(mechanic,', prolog_content, re.MULTILINE)
+        assert len(disabled_omens) == 8, f"Expected 8 disabled omens, found {len(disabled_omens)}"
+        assert len(disabled_mechanics) == 1, f"Expected 1 disabled mechanic, found {len(disabled_mechanics)}"
 
     def test_alloy_count(self, prolog_content):
         """Should have exactly 13 alloys."""
@@ -304,8 +306,8 @@ class TestCraftingRules:
 
     def test_disabled_alchemy_omens(self, prolog_content):
         """Sinistral/Dextral Alchemy should be disabled since 0.3.0."""
-        assert "omen_disabled(sinistral_alchemy" in prolog_content
-        assert "omen_disabled(dextral_alchemy" in prolog_content
+        assert "disabled(omen, sinistral_alchemy" in prolog_content
+        assert "disabled(omen, dextral_alchemy" in prolog_content
 
     def test_alloys_require_rare(self, prolog_content):
         """alloy_precondition should check for rare rarity."""
@@ -350,19 +352,39 @@ class TestOmenVersioning:
         "greater_annulment": "0.3.0",
         "homogenising_coronation": "0.4.0",
         "homogenising_exaltation": "0.4.0",
-        "omen_of_recombination": "0.5.0",
     }
 
     def test_all_known_disabled_present(self, prolog_content):
         for omen, version in self.KNOWN_DISABLED.items():
-            pattern = rf"omen_disabled\({omen},\s*'{version}'\)"
+            # Check in generic disabled/3 (primary source of truth)
+            pattern = rf"disabled\(omen,\s*{omen},\s*'{version}'\)"
             assert re.search(pattern, prolog_content), \
-                f"Expected omen_disabled({omen}, '{version}')"
+                f"Expected disabled(omen, {omen}, '{version}')"
 
     def test_no_extra_disabled_omens(self, prolog_content):
-        disabled = re.findall(r'^omen_disabled\((\w+),', prolog_content, re.MULTILINE)
+        disabled = re.findall(r'^disabled\(omen,\s*(\w+),', prolog_content, re.MULTILINE)
         extra = set(disabled) - set(self.KNOWN_DISABLED.keys())
         assert not extra, f"Unexpected disabled omens: {extra} (update test if intentional)"
 
     def test_version_note_present(self, prolog_content):
-        assert "Patch 0.5.0" in prolog_content or "0.5.0" in prolog_content
+        assert "current_version" in prolog_content
+        assert "0.5.0" in prolog_content
+
+    def test_generic_validity_layer(self, prolog_content):
+        """disabled/3, nerfed/4, valid/2, check_valid/2 should exist."""
+        assert "disabled(EntityType, Name," in prolog_content or "disabled(omen," in prolog_content
+        assert "nerfed(" in prolog_content
+        assert "valid(EntityType, Name)" in prolog_content
+        assert "check_valid(EntityType, Name)" in prolog_content
+
+    def test_backward_compat_omen_disabled(self, prolog_content):
+        """omen_disabled/2 should be derivable from disabled/3."""
+        assert "omen_disabled(Name, Version) :- disabled(omen, Name, Version)" in prolog_content
+
+    def test_mechanic_disabled_recombination(self, prolog_content):
+        """Recombination should be disabled as a mechanic, not just an omen."""
+        assert "disabled(mechanic, recombination" in prolog_content
+
+    def test_nerfed_essences_tracked(self, prolog_content):
+        """Essence nerfs should be in nerfed/4."""
+        assert "nerfed(essence," in prolog_content
