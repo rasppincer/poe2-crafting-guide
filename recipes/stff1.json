@@ -59,11 +59,22 @@
       "result": "",
       "conditions": [
         {
+          "goto": 1,
           "type": "has_mod",
-          "value": "life",
-          "goto": 1
+          "value": "life"
         }
       ],
+      "else_goto": null,
+      "else_repeat": false
+    },
+    {
+      "step": 6,
+      "action": "apply_currency",
+      "currency": "regal_orb",
+      "description": "",
+      "precondition": "",
+      "result": "",
+      "conditions": [],
       "else_goto": null,
       "else_repeat": false
     }

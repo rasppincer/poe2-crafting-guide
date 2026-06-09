@@ -285,6 +285,9 @@ tr:hover { background: var(--bg2); }
   display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px;
   margin-left: 6px; background: var(--tag-bg); color: var(--fg2);
 }
+.flow-step .step-currency .omen-tag {
+  background: #4a2020; color: #ff8888; font-weight: 600;
+}
 .flow-step .step-desc { font-size: 12px; color: var(--fg2); margin-top: 4px; }
 .flow-step .step-conditions { margin-top: 6px; }
 .flow-step .condition-tag {
@@ -620,11 +623,16 @@ tr:hover { background: var(--bg2); }
       <label>Action Type</label>
       <select id="editor-action">
         <option value="apply_currency">Apply Currency</option>
-        <option value="apply_with_omen">Apply with Omen</option>
         <option value="apply_essence">Apply Essence</option>
         <option value="apply_catalyst">Apply Catalyst</option>
         <option value="apply_alloy">Apply Alloy</option>
         <option value="spam">Spam (repeat)</option>
+      </select>
+    </div>
+    <div class="editor-field">
+      <label>Omen (optional — augments the currency)</label>
+      <select id="editor-omen">
+        <option value="">None</option>
       </select>
     </div>
     <div class="editor-field">
@@ -992,17 +1000,32 @@ async function verifyRecipe() {
     : '<span class="overall-fail">✗ Verification failed</span>';
 
   const resultsDiv = document.getElementById('verify-results');
-  resultsDiv.innerHTML = data.steps.map(s => `
+  let html = '';
+
+  // Global errors (loop reachability, etc.)
+  if (data.errors && data.errors.length > 0) {
+    html += `<div class="verify-step" style="border-color:#ff4444;">
+      <div class="step-header"><span class="num">⚠</span> <span>Global Issues</span>
+      <span class="disabled-badge">ERRORS</span></div>
+      ${data.errors.map(e => `<div class="check fail">${e}</div>`).join('')}
+    </div>`;
+  }
+
+  html += data.steps.map(s => `
     <div class="verify-step">
       <div class="step-header">
         <span class="num">#${s.step}</span>
         <span>${s.action.replace(/_/g,' ')}</span>
         <span style="color:var(--fg2)">${s.currency.replace(/_/g,' ')}</span>
+        ${s.omen ? `<span class="currency-tag omen-tag" style="font-size:10px;">🔴 ${s.omen.replace(/_/g,' ')}</span>` : ''}
         ${s.all_pass ? '<span class="active-badge">PASS</span>' : '<span class="disabled-badge">FAIL</span>'}
       </div>
-      ${s.checks.map(c => `<div class="check ${c.pass ? 'pass' : 'fail'}">${c.test}</div>`).join('')}
+      ${s.state_before ? `<div style="font-size:11px;color:var(--fg2);margin:4px 0;">State: ${s.state_before} → ${s.state_after}</div>` : ''}
+      ${s.checks.map(c => `<div class="check ${c.pass ? 'pass' : 'fail'}">${c.pass ? '✓' : '✗'} ${c.test}</div>`).join('')}
     </div>
   `).join('');
+
+  resultsDiv.innerHTML = html;
 
   btn.disabled = false;
   btn.textContent = '▶ Verify Recipe';
@@ -1088,10 +1111,70 @@ function renderPalette() {
 
 function filterPalette() { renderPalette(); }
 
+// Omen → currency pairing (which currency an omen augments)
+const OMEN_CURRENCY_MAP = {
+  'sinistral_exaltation': 'exalted_orb',
+  'dextral_exaltation': 'exalted_orb',
+  'greater_exaltation': 'exalted_orb',
+  'catalysing_exaltation': 'exalted_orb',
+  'sinistral_annulment': 'orb_of_annulment',
+  'dextral_annulment': 'orb_of_annulment',
+  'sinistral_crystallisation': 'exalted_orb',
+  'dextral_crystallisation': 'exalted_orb',
+  'sinistral_erasure': 'chaos_orb',
+  'dextral_erasure': 'chaos_orb',
+  'sinistral_necromancy': 'chaos_orb',
+  'dextral_necromancy': 'chaos_orb',
+  'greater_annulment': 'orb_of_annulment',
+  'omen_of_chance': 'orb_of_chance',
+  'omen_of_the_ancients': 'orb_of_chance',
+  'omen_of_blessed': 'divine_orb',
+  'omen_of_sanctification': 'vaal_orb',
+  'whittling': 'exalted_orb',
+};
+
+function isOmen(name) {
+  return name in OMEN_CURRENCY_MAP;
+}
+
 function addBuilderStep(currencyName) {
+  // If clicking an omen: set it as modifier on the last step, or create a step with paired currency
+  if (isOmen(currencyName)) {
+    const pairedCurrency = OMEN_CURRENCY_MAP[currencyName];
+    if (builderSteps.length > 0) {
+      const lastStep = builderSteps[builderSteps.length - 1];
+      if (lastStep.currency === pairedCurrency || !lastStep.omen) {
+        // Attach omen to last step
+        lastStep.omen = currencyName;
+        renderBuilderSteps();
+        builderToast(`Omen ${currencyName.replace(/_/g, ' ')} → step ${builderSteps.length}`);
+        return;
+      }
+    }
+    // No suitable last step — create new step with paired currency + omen
+    const step = {
+      id: 'step_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      currency: pairedCurrency,
+      omen: currencyName,
+      action: guessActionType(pairedCurrency),
+      description: '',
+      precondition: '',
+      result: '',
+      conditions: [],
+      else_goto: null,
+      else_repeat: false
+    };
+    builderSteps.push(step);
+    renderBuilderSteps();
+    builderToast(`Added ${pairedCurrency.replace(/_/g, ' ')} + ${currencyName.replace(/_/g, ' ')}`);
+    return;
+  }
+
+  // Normal currency step
   const step = {
     id: 'step_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
     currency: currencyName,
+    omen: null,
     action: guessActionType(currencyName),
     description: '',
     precondition: '',
@@ -1111,11 +1194,7 @@ function guessActionType(currency) {
        'xophs_catalyst','tuls_catalyst','eshs_catalyst','chayulas_catalyst',
        'reaver_catalyst','sibilant_catalyst','skittering_catalyst','adaptive_catalyst',
        'armourer_scrap','blacksmith_whetstone','arcanist_etcher'].includes(currency)) return 'apply_catalyst';
-  if (currency.includes('omen_') || ['sinistral_erasure','dextral_erasure',
-       'sinistral_exaltation','dextral_exaltation','sinistral_annulment',
-       'dextral_annulment','greater_exaltation','catalysing_exaltation',
-       'whittling','omen_of_chance','omen_of_the_ancients','omen_of_blessed',
-       'omen_of_sanctification','omen_of_light'].includes(currency)) return 'apply_with_omen';
+  // Omens are modifiers, not standalone action types — handled via omen field
   return 'apply_currency';
 }
 
@@ -1147,6 +1226,7 @@ function renderBuilderSteps() {
         <div class="step-num">${i + 1}</div>
         <div class="step-currency">
           ${currLabel}
+          ${step.omen ? `<span class="currency-tag omen-tag">🔴 ${step.omen.replace(/_/g, ' ')}</span>` : ''}
           <span class="currency-tag">${step.action.replace(/_/g, ' ')}</span>
         </div>
       </div>
@@ -1241,6 +1321,20 @@ function openStepEditor(idx) {
   }
 
   document.getElementById('editor-action').value = step.action || 'apply_currency';
+
+  // Populate omen dropdown
+  const omenSelect = document.getElementById('editor-omen');
+  omenSelect.innerHTML = '<option value="">None</option>';
+  if (DB && DB.omens) {
+    DB.omens.filter(o => !o.disabled).forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o.name;
+      opt.textContent = o.name.replace(/_/g, ' ');
+      if (o.name === step.omen) opt.selected = true;
+      omenSelect.appendChild(opt);
+    });
+  }
+
   document.getElementById('editor-desc').value = step.description || '';
   document.getElementById('editor-precondition').value = step.precondition || '';
   document.getElementById('editor-result').value = step.result || '';
@@ -1301,6 +1395,7 @@ function saveStepEdit() {
   const step = builderSteps[editingStepIndex];
   step.currency = document.getElementById('editor-currency').value;
   step.action = document.getElementById('editor-action').value;
+  step.omen = document.getElementById('editor-omen').value || null;
   step.description = document.getElementById('editor-desc').value;
   step.precondition = document.getElementById('editor-precondition').value;
   step.result = document.getElementById('editor-result').value;
@@ -1343,6 +1438,7 @@ async function saveBuilderRecipe() {
       step: i + 1,
       action: s.action,
       currency: s.currency,
+      omen: s.omen || null,
       description: s.description,
       precondition: s.precondition,
       result: s.result,
@@ -1409,6 +1505,7 @@ async function loadBuilderRecipe(filename) {
     builderSteps = (recipe.steps || []).map(s => ({
       id: 'step_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
       currency: s.currency || '',
+      omen: s.omen || null,
       action: s.action || 'apply_currency',
       description: s.description || '',
       precondition: s.precondition || '',
@@ -1447,8 +1544,11 @@ async function exportBuilderProlog() {
     goal: document.getElementById('builder-goal').value,
     steps: builderSteps.map((s, i) => ({
       currency: s.currency,
+      omen: s.omen || null,
       action: s.action,
-      description: s.description || `${s.action.replace(/_/g,' ')} ${s.currency.replace(/_/g,' ')}`
+      description: s.description || (s.omen
+        ? `${s.currency.replace(/_/g,' ')} + ${s.omen.replace(/_/g,' ')}`
+        : `${s.action.replace(/_/g,' ')} ${s.currency.replace(/_/g,' ')}`)
     }))
   };
 

@@ -237,87 +237,12 @@ def api_recipe(name):
 
 @app.route("/api/recipe/verify", methods=["POST"])
 def api_verify_recipe():
-    """Verify a recipe's steps against the KB."""
+    """Verify a recipe's steps against the KB using state-tracking verifier."""
     recipe = request.json
     pl = DATA["prolog"]
-    game = recipe.get("game", "poe2")  # Game context for this recipe
-    results = []
-
-    for i, step in enumerate(recipe.get("steps", [])):
-        checks = []
-        action = step.get("action", "")
-
-        # Check currency exists AND is valid for the selected game
-        if "currency" in step:
-            curr = step["currency"]
-            exists = f"currency({game}, {curr})" in pl
-            checks.append({
-                "test": f"Currency '{curr}' exists in {game.upper()}",
-                "pass": exists,
-            })
-            if not exists:
-                # Check if it exists in the OTHER game (stale source warning)
-                other_game = "poe1" if game == "poe2" else "poe2"
-                exists_other = f"currency({other_game}, {curr})" in pl
-                if exists_other:
-                    checks.append({
-                        "test": f"⚠ STALE: '{curr}' exists in {other_game.upper()} but not {game.upper()} — likely from old source",
-                        "pass": False,
-                    })
-            has_pre = f"currency_precondition({curr}," in pl
-            checks.append({
-                "test": f"Currency '{curr}' has precondition rules",
-                "pass": has_pre,
-            })
-
-        # Check omen exists and is active for the selected game
-        if "omen" in step:
-            omen = step["omen"]
-            exists = f"omen({game}, {omen}," in pl
-            disabled = f"disabled(omen, {omen}" in pl
-            checks.append({
-                "test": f"Omen '{omen}' exists in {game.upper()}",
-                "pass": exists,
-            })
-            checks.append({
-                "test": f"Omen '{omen}' is not disabled",
-                "pass": not disabled,
-            })
-            can_use = f"can_use_omen({omen}," in pl or "can_use_omen" in pl
-            checks.append({
-                "test": f"can_use_omen/2 available",
-                "pass": can_use,
-            })
-
-        # Check alloy exists for the selected game
-        if "alloy" in step:
-            alloy = step["alloy"]
-            exists = f"alloy({game}, {alloy}," in pl
-            checks.append({
-                "test": f"Alloy '{alloy}' exists in {game.upper()}",
-                "pass": exists,
-            })
-
-        # Check catalyst exists for the selected game
-        if "catalyst" in step:
-            cat = step["catalyst"]
-            exists = f"quality_type({game}, {cat}," in pl
-            checks.append({
-                "test": f"Catalyst '{cat}' exists in {game.upper()}",
-                "pass": exists,
-            })
-
-        all_pass = all(c["pass"] for c in checks)
-        results.append({
-            "step": i + 1,
-            "action": action,
-            "currency": step.get("currency", step.get("alloy", step.get("catalyst", ""))),
-            "checks": checks,
-            "all_pass": all_pass,
-        })
-
-    overall = all(r["all_pass"] for r in results)
-    return jsonify({"overall": overall, "steps": results})
+    from verifier import verify_recipe
+    result = verify_recipe(recipe, prolog_kb=pl)
+    return jsonify(result.to_dict())
 
 
 @app.route("/api/mod_pool/<category>")
