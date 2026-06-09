@@ -1,27 +1,29 @@
 %%% Mod data for body_armour_str
-%%% Source: https://poe2db.tw/us/Body_Armours_str
-%%% Extracted: 2026-06-09
+%%% Source: POE2-PathOfCrafting (frankthetank001/POE2-PathOfCrafting)
+%%% Original data: poe2db.tw via weights.csv
+%%% Imported: 2026-06-09
 
 %% mod_group(+Category, +GroupId, +Desc, +Tags, +Weight, +MaxIlvl, +TierCount, +Slot)
 
-mod_pool_weight_sum(body_armour_str, prefix, 54000).
-mod_pool_weight_sum(body_armour_str, suffix, 70500).
+mod_pool_weight_sum(body_armour_str, prefix, 6100).
+mod_pool_weight_sum(body_armour_str, suffix, 9450).
 
-mod_group(body_armour_str, 1IncreasedLife, '+# to maximum Life', [life], 13000, 80, 13, prefix).
-mod_group(body_armour_str, 1BaseLocalDefences, '+# to Armour', [armour], 11000, 79, 11, prefix).
-mod_group(body_armour_str, 1DefencesPercent, '#% increased Armour', [armour], 8000, 75, 8, prefix).
-mod_group(body_armour_str, 1BaseLocalDefencesAndLife, '#% increased Armour / +# to maximum Life (hybrid)', [life, armour], 6000, 78, 6, prefix).
-mod_group(body_armour_str, 1BaseLocalDefencesAndDefencePercent, '+# to Armour / #% increased Armour (hybrid)', [armour], 6000, 78, 6, prefix).
-mod_group(body_armour_str, 1Thorns, '+# to # Physical Thorns damage', [damage, physical], 7000, 74, 7, prefix).
-mod_group(body_armour_str, 1BaseSpirit, '+# to Spirit', [], 3000, 78, 8, prefix).
-
-mod_group(body_armour_str, 2Strength, '+# to Strength', [attribute], 8000, 74, 8, suffix).
-mod_group(body_armour_str, 2FireResistance, '#% to Fire Resistance', [elemental, fire, resistance], 8000, 82, 8, suffix).
-mod_group(body_armour_str, 2ColdResistance, '#% to Cold Resistance', [elemental, cold, resistance], 8000, 82, 8, suffix).
-mod_group(body_armour_str, 2LightningResistance, '#% to Lightning Resistance', [elemental, lightning, resistance], 8000, 82, 8, suffix).
-mod_group(body_armour_str, 2ChaosResistance, '#% to Chaos Resistance', [chaos, resistance], 1500, 81, 6, suffix).
-mod_group(body_armour_str, 2LocalAttributeRequirements, '#% reduced Attribute Requirements', [], 4500, 60, 5, suffix).
-mod_group(body_armour_str, 2StunThreshold, '+# to Stun Threshold', [], 8000, 72, 10, suffix).
-mod_group(body_armour_str, 2LifeRegeneration, '# Life Regeneration per second', [life], 11000, 81, 11, suffix).
-mod_group(body_armour_str, 2ReducedAilmentDuration, '#% reduced Duration of Bleeding/Poison/Ignite on You', [physical, ailment, chaos, elemental, fire], 7500, 76, 15, suffix).
-mod_group(body_armour_str, 2ArmourAppliesToElementalDamage, '#% of Armour also applies to Elemental Damage', [armour, elemental], 6000, 81, 6, suffix).
+mod_group(body_armour_str, FlattoFlatPhysicalThornsDamage, '# to # Physical Thorns damage', [physical, damage], 1000, 100, 7, prefix).
+mod_group(body_armour_str, PercentIncreasedArmour, '#% increased Armour', [armour], 1000, 100, 8, prefix).
+mod_group(body_armour_str, FlattoArmourPercentIncreasedArmour, '# to Armour, #% increased Armour', [armour], 1000, 100, 6, prefix).
+mod_group(body_armour_str, PercentIncreasedArmourFlattoMaximumLife, '#% increased Armour, # to maximum Life', [life, armour], 1000, 100, 6, prefix).
+mod_group(body_armour_str, FlattoArmour, '# to Armour', [armour], 1000, 100, 11, prefix).
+mod_group(body_armour_str, FlattoMaximumLife, '# to maximum Life', [life], 1000, 100, 13, prefix).
+mod_group(body_armour_str, FlattoSpirit, '# to Spirit', [spirit], 100, 100, 8, prefix).
+mod_group(body_armour_str, FlatLifeRegenerationPerSecond, '# Life Regeneration per second', [life], 1000, 100, 11, suffix).
+mod_group(body_armour_str, PercentReducedAttributeRequirements, '#% reduced Attribute Requirements', [attribute], 900, 100, 5, suffix).
+mod_group(body_armour_str, PercentReducedDurationOfBleedingOnYou, '#% reduced Duration of Bleeding on You', [], 500, 100, 5, suffix).
+mod_group(body_armour_str, PercentReducedIgniteDurationOnYou, '#% reduced Ignite Duration on you', [], 500, 100, 5, suffix).
+mod_group(body_armour_str, PercentReducedPoisonDurationOnYou, '#% reduced Poison Duration on you', [], 500, 100, 5, suffix).
+mod_group(body_armour_str, FlattoStrength, '# to Strength', [attribute], 1000, 100, 8, suffix).
+mod_group(body_armour_str, FlattoStunThreshold, '# to Stun Threshold', [], 800, 100, 10, suffix).
+mod_group(body_armour_str, PercentToChaosResistance, '#% to Chaos Resistance', [chaos, resistance], 250, 100, 6, suffix).
+mod_group(body_armour_str, PercentToColdResistance, '#% to Cold Resistance', [cold, resistance], 1000, 100, 8, suffix).
+mod_group(body_armour_str, PercentToFireResistance, '#% to Fire Resistance', [fire, resistance], 1000, 100, 8, suffix).
+mod_group(body_armour_str, PercentToLightningResistance, '#% to Lightning Resistance', [lightning, resistance], 1000, 100, 8, suffix).
+mod_group(body_armour_str, PercentOfArmourAlsoAppliesToElementalDamage, '#% of Armour also applies to Elemental Damage', [armour, damage], 1000, 100, 6, suffix).

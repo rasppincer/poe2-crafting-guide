@@ -33,7 +33,7 @@ class TestModProbability:
     def test_life_prefix_on_ring(self):
         from optimizer import RecipeOptimizer
         opt = RecipeOptimizer()
-        prob = opt.mod_probability("ring", "1IncreasedLife")
+        prob = opt.mod_probability("ring", "FlattoMaximumLife")
         assert prob is not None
         assert 0.08 < prob.probability < 0.20, f"Life prob {prob.probability} outside expected range"
         assert 5 < prob.expected_attempts < 15
@@ -41,9 +41,9 @@ class TestModProbability:
     def test_life_prefix_on_body_armour(self):
         from optimizer import RecipeOptimizer
         opt = RecipeOptimizer()
-        prob = opt.mod_probability("body_armour_str", "1IncreasedLife")
+        prob = opt.mod_probability("body_armour_str", "FlattoMaximumLife")
         assert prob is not None
-        assert 0.20 < prob.probability < 0.30, f"Body armour life prob {prob.probability}"
+        assert 0.10 < prob.probability < 0.25, f"Body armour life prob {prob.probability}"
 
     def test_nonexistent_mod_returns_none(self):
         from optimizer import RecipeOptimizer
@@ -54,10 +54,10 @@ class TestModProbability:
     def test_fire_res_suffix_on_ring(self):
         from optimizer import RecipeOptimizer
         opt = RecipeOptimizer()
-        prob = opt.mod_probability("ring", "2FireResistance")
+        prob = opt.mod_probability("ring", "PercentToFireResistance")
         assert prob is not None
         assert prob.slot == "suffix"
-        assert 0.05 < prob.probability < 0.15
+        assert 0.04 < prob.probability < 0.10
 
 
 class TestCombinedProbability:
@@ -67,19 +67,19 @@ class TestCombinedProbability:
         from optimizer import RecipeOptimizer
         opt = RecipeOptimizer()
         p = opt.combined_probability("ring", [
-            ("1IncreasedLife", "prefix"),
-            ("2FireResistance", "suffix"),
+            ("FlattoMaximumLife", "prefix"),
+            ("PercentToFireResistance", "suffix"),
         ])
-        # Should be around 11.5% * 9.2% ≈ 1.06%
-        assert 0.005 < p < 0.02, f"Combined prob {p} outside expected range"
+        # Should be around 13.5% * 6.3% ≈ 0.85%
+        assert 0.003 < p < 0.02, f"Combined prob {p} outside expected range"
 
     def test_single_mod_combined(self):
         from optimizer import RecipeOptimizer
         opt = RecipeOptimizer()
         p = opt.combined_probability("body_armour_str", [
-            ("1IncreasedLife", "prefix"),
+            ("FlattoMaximumLife", "prefix"),
         ])
-        assert 0.20 < p < 0.30
+        assert 0.10 < p < 0.25
 
 
 class TestCostEstimation:
@@ -88,22 +88,22 @@ class TestCostEstimation:
     def test_chaos_spam_ring_life_fire(self):
         from optimizer import RecipeOptimizer
         opt = RecipeOptimizer()
-        cost = opt.estimate_chaos_spam_cost("ring", ["1IncreasedLife"], ["2FireResistance"])
+        cost = opt.estimate_chaos_spam_cost("ring", ["FlattoMaximumLife"], ["PercentToFireResistance"])
         assert cost.total_steps > 0
-        assert cost.total_expected["chaos_orb"] > 10  # Should need many attempts
+        assert cost.total_expected["chaos_orb"] > 5  # Should need many attempts
         assert cost.total_expected["chaos_orb"] < 500
 
     def test_chaos_spam_body_armour_life(self):
         from optimizer import RecipeOptimizer
         opt = RecipeOptimizer()
-        cost = opt.estimate_chaos_spam_cost("body_armour_str", ["1IncreasedLife"], [])
-        # Life is 24% on body armour, so ~4 chaos expected
-        assert 2 < cost.total_expected["chaos_orb"] < 20
+        cost = opt.estimate_chaos_spam_cost("body_armour_str", ["FlattoMaximumLife"], [])
+        # Life is ~16% on body armour, so ~6 chaos expected
+        assert 1 < cost.total_expected["chaos_orb"] < 20
 
     def test_essence_guarantees_mod(self):
         from optimizer import RecipeOptimizer
         opt = RecipeOptimizer()
-        cost = opt.estimate_essence_cost("body_armour_str", "1IncreasedLife", ["1IncreasedLife"], [])
+        cost = opt.estimate_essence_cost("body_armour_str", "FlattoMaximumLife", ["FlattoMaximumLife"], [])
         # Essence alone should suffice
         assert cost.total_steps == 2
         assert "chaos_orb" not in cost.total_expected
@@ -164,7 +164,7 @@ class TestOptimizerAPI:
         assert resp.status_code == 404
 
     def test_mod_probability_endpoint(self, client):
-        resp = client.get("/api/mod_probability/ring/1IncreasedLife")
+        resp = client.get("/api/mod_probability/ring/FlattoMaximumLife")
         assert resp.status_code == 200
         data = resp.get_json()
         assert "probability" in data

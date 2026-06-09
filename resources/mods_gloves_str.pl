@@ -1,37 +1,37 @@
 %%% Mod data for gloves_str
-%%% Source: https://poe2db.tw/us/Gloves_str
-%%% Extracted: 2026-06-09
+%%% Source: POE2-PathOfCrafting (frankthetank001/POE2-PathOfCrafting)
+%%% Original data: poe2db.tw via weights.csv
+%%% Imported: 2026-06-09
 
 %% mod_group(+Category, +GroupId, +Desc, +Tags, +Weight, +MaxIlvl, +TierCount, +Slot)
 
-mod_pool_weight_sum(gloves_str, prefix, 63700).
-mod_pool_weight_sum(gloves_str, suffix, 84500).
+mod_pool_weight_sum(gloves_str, prefix, 6200).
+mod_pool_weight_sum(gloves_str, suffix, 13450).
 
-mod_group(gloves_str, 1IncreasedLife, '# to maximum Life', [life], 9000, 60, 9, prefix).
-mod_group(gloves_str, 1IncreasedMana, '# to maximum Mana', [mana], 9000, 60, 9, prefix).
-mod_group(gloves_str, 1BaseLocalDefences, '# to Armour', [armour], 7000, 54, 7, prefix).
-mod_group(gloves_str, 1DefencesPercent, '#% increased Armour', [armour], 7000, 65, 7, prefix).
-mod_group(gloves_str, 1BaseLocalDefencesAndLife, '#% increased Armour, # to maximum Life', [life, armour], 6000, 78, 6, prefix).
-mod_group(gloves_str, 1PhysicalDamage, 'Adds # to # Physical Damage to Attacks', [damage, physical, attack], 7800, 75, 9, prefix).
-mod_group(gloves_str, 1FireDamage, 'Adds # to # Fire damage to Attacks', [damage, elemental, fire, attack], 3900, 75, 9, prefix).
-mod_group(gloves_str, 1ColdDamage, 'Adds # to # Cold damage to Attacks', [damage, elemental, cold, attack], 3900, 75, 9, prefix).
-mod_group(gloves_str, 1LightningDamage, 'Adds # to # Lightning damage to Attacks', [damage, elemental, lightning, attack], 3900, 75, 9, prefix).
-mod_group(gloves_str, 1IncreasedAccuracy, '# to Accuracy Rating', [attack], 6200, 76, 9, prefix).
-
-mod_group(gloves_str, 2Strength, '# to Strength', [attribute], 8000, 74, 8, suffix).
-mod_group(gloves_str, 2Dexterity, '# to Dexterity', [attribute], 9000, 81, 9, suffix).
-mod_group(gloves_str, 2FireResistance, '#% to Fire Resistance', [elemental, fire, resistance], 8000, 82, 8, suffix).
-mod_group(gloves_str, 2ColdResistance, '#% to Cold Resistance', [elemental, cold, resistance], 8000, 82, 8, suffix).
-mod_group(gloves_str, 2LightningResistance, '#% to Lightning Resistance', [elemental, lightning, resistance], 8000, 82, 8, suffix).
-mod_group(gloves_str, 2ChaosResistance, '#% to Chaos Resistance', [chaos, resistance], 1500, 81, 6, suffix).
-mod_group(gloves_str, 2LocalAttributeRequirements, '#% reduced Attribute Requirements', [], 3500, 60, 5, suffix).
-mod_group(gloves_str, 2IncreaseSocketedGemLevel, '# to Level of all Melee Skills', [attack], 750, 41, 2, suffix).
-mod_group(gloves_str, 2LifeLeech, 'Leech #% of Physical Attack Damage as Life', [life, physical, attack], 4000, 65, 4, suffix).
-mod_group(gloves_str, 2ManaLeech, 'Leech #% of Physical Attack Damage as Mana', [mana, physical, attack], 4000, 65, 4, suffix).
-mod_group(gloves_str, 2LifeGainedFromEnemyDeath, 'Gain # Life per enemy killed', [life], 6000, 77, 8, suffix).
-mod_group(gloves_str, 2ManaGainedFromEnemyDeath, 'Gain # Mana per enemy killed', [mana], 6000, 78, 8, suffix).
-mod_group(gloves_str, 2LifeGainPerTarget, 'Gain # Life per Enemy Hit with Attacks', [life, attack], 4000, 40, 4, suffix).
-mod_group(gloves_str, 2IncreasedAttackSpeed, '#% increased Attack Speed', [attack, speed], 2000, 60, 4, suffix).
-mod_group(gloves_str, 2CriticalStrikeMultiplier, '#% increased Critical Damage Bonus', [damage, critical], 3750, 59, 5, suffix).
-mod_group(gloves_str, 2ItemFoundRarityIncrease, '#% increased Rarity of Items found', [], 3000, 40, 3, suffix).
-mod_group(gloves_str, 2ArmourAppliesToElementalDamage, '#% of Armour also applies to Elemental Damage', [armour, elemental], 5000, 66, 5, suffix).
+mod_group(gloves_str, PercentIncreasedArmour, '#% increased Armour', [armour], 1000, 100, 7, prefix).
+mod_group(gloves_str, PercentIncreasedArmourFlattoMaximumLife, '#% increased Armour, # to maximum Life', [life, armour], 1000, 100, 6, prefix).
+mod_group(gloves_str, FlattoAccuracyRating, '# to Accuracy Rating', [accuracy], 200, 100, 9, prefix).
+mod_group(gloves_str, FlattoArmour, '# to Armour', [armour], 1000, 100, 7, prefix).
+mod_group(gloves_str, FlattoMaximumLife, '# to maximum Life', [life], 1000, 100, 9, prefix).
+mod_group(gloves_str, FlattoMaximumMana, '# to maximum Mana', [mana], 1000, 100, 9, prefix).
+mod_group(gloves_str, AddsFlattoFlatColdDamageToAttacks, 'Adds # to # Cold damage to Attacks', [cold, attack, damage], 200, 100, 9, prefix).
+mod_group(gloves_str, AddsFlattoFlatFireDamageToAttacks, 'Adds # to # Fire damage to Attacks', [fire, attack, damage], 200, 100, 9, prefix).
+mod_group(gloves_str, AddsFlattoFlatLightningDamageToAttacks, 'Adds # to # Lightning damage to Attacks', [lightning, attack, damage], 200, 100, 9, prefix).
+mod_group(gloves_str, AddsFlattoFlatPhysicalDamageToAttacks, 'Adds # to # Physical Damage to Attacks', [physical, attack, damage], 400, 100, 9, prefix).
+mod_group(gloves_str, PercentIncreasedAttackSpeed, '#% increased Attack Speed', [attack, speed], 500, 100, 4, suffix).
+mod_group(gloves_str, PercentIncreasedCriticalDamageBonus, '#% increased Critical Damage Bonus', [critical, damage], 250, 100, 5, suffix).
+mod_group(gloves_str, PercentIncreasedRarityOfItemsFound, '#% increased Rarity of Items found', [], 1000, 100, 3, suffix).
+mod_group(gloves_str, PercentReducedAttributeRequirements, '#% reduced Attribute Requirements', [attribute], 700, 100, 5, suffix).
+mod_group(gloves_str, FlattoDexterity, '# to Dexterity', [attribute], 1000, 100, 9, suffix).
+mod_group(gloves_str, FlattoLevelOfAllMeleeSkills, '# to Level of all Melee Skills', [], 250, 100, 2, suffix).
+mod_group(gloves_str, FlattoStrength, '# to Strength', [attribute], 1000, 100, 8, suffix).
+mod_group(gloves_str, PercentToChaosResistance, '#% to Chaos Resistance', [chaos, resistance], 250, 100, 6, suffix).
+mod_group(gloves_str, PercentToColdResistance, '#% to Cold Resistance', [cold, resistance], 1000, 100, 8, suffix).
+mod_group(gloves_str, PercentToFireResistance, '#% to Fire Resistance', [fire, resistance], 1000, 100, 8, suffix).
+mod_group(gloves_str, PercentToLightningResistance, '#% to Lightning Resistance', [lightning, resistance], 1000, 100, 8, suffix).
+mod_group(gloves_str, GainFlatLifePerEnemyHitWithAttacks, 'Gain # Life per Enemy Hit with Attacks', [life, attack], 1000, 100, 4, suffix).
+mod_group(gloves_str, GainFlatLifePerEnemyKilled, 'Gain # Life per Enemy Killed', [life], 750, 100, 8, suffix).
+mod_group(gloves_str, GainFlatManaPerEnemyKilled, 'Gain # Mana per Enemy Killed', [mana], 750, 100, 8, suffix).
+mod_group(gloves_str, LeechPercentOfPhysicalAttackDamageAsLife, 'Leech #% of Physical Attack Damage as Life', [life, physical, attack, damage], 1000, 100, 5, suffix).
+mod_group(gloves_str, LeechPercentOfPhysicalAttackDamageAsMana, 'Leech #% of Physical Attack Damage as Mana', [mana, physical, attack, damage], 1000, 100, 5, suffix).
+mod_group(gloves_str, PercentOfArmourAlsoAppliesToElementalDamage, '#% of Armour also applies to Elemental Damage', [armour, damage], 1000, 100, 5, suffix).

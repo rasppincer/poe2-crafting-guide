@@ -1,40 +1,43 @@
 %%% Mod data for amulet
-%%% Source: https://poe2db.tw/us/Amulets
-%%% Extracted: 2026-06-09
+%%% Source: POE2-PathOfCrafting (frankthetank001/POE2-PathOfCrafting)
+%%% Original data: poe2db.tw via weights.csv
+%%% Imported: 2026-06-09
 
 %% mod_group(+Category, +GroupId, +Desc, +Tags, +Weight, +MaxIlvl, +TierCount, +Slot)
 
-mod_pool_weight_sum(amulet, prefix, 72200).
-mod_pool_weight_sum(amulet, suffix, 96656).
+mod_pool_weight_sum(amulet, prefix, 9400).
+mod_pool_weight_sum(amulet, suffix, 13300).
 
-mod_group(amulet, 1IncreasedLife, '# to maximum Life', [life], 9000, 60, 9, prefix).
-mod_group(amulet, 1MaximumLifeIncreasePercent, '#% increased maximum Life', [life], 900, 75, 3, prefix).
-mod_group(amulet, 1IncreasedMana, '# to maximum Mana', [mana], 13000, 82, 13, prefix).
-mod_group(amulet, 1MaximumManaIncreasePercent, '#% increased maximum Mana', [mana], 900, 75, 3, prefix).
-mod_group(amulet, 1IncreasedEnergyShield, '# to maximum Energy Shield', [energy_shield], 10000, 80, 10, prefix).
-mod_group(amulet, 1IncreasedPhysicalDamageReductionRatingPercent, '#% increased Armour', [armour], 7000, 75, 7, prefix).
-mod_group(amulet, 1EvasionRatingPercent, '#% increased Evasion Rating', [evasion], 7000, 77, 7, prefix).
-mod_group(amulet, 1EnergyShieldPercent, '#% increased maximum Energy Shield', [energy_shield], 7000, 75, 7, prefix).
-mod_group(amulet, 1IncreasedAccuracy, '# to Accuracy Rating', [attack], 6000, 67, 8, prefix).
-mod_group(amulet, 1ItemFoundRarityIncreasePrefix, '#% increased Rarity of Items found', [], 3000, 47, 3, prefix).
-mod_group(amulet, 1BaseSpirit, '# to Spirit', [], 2400, 54, 5, prefix).
-mod_group(amulet, 1SpellDamage, '#% increased Spell Damage', [damage, caster], 6000, 75, 6, prefix).
-
-mod_group(amulet, 2Strength, '# to Strength', [attribute], 8000, 74, 8, suffix).
-mod_group(amulet, 2Dexterity, '# to Dexterity', [attribute], 8000, 74, 8, suffix).
-mod_group(amulet, 2Intelligence, '# to Intelligence', [attribute], 8000, 74, 8, suffix).
-mod_group(amulet, 2AllAttributes, '# to all Attributes', [attribute], 7200, 82, 9, suffix).
-mod_group(amulet, 2FireResistance, '#% to Fire Resistance', [elemental, fire, resistance], 8000, 82, 8, suffix).
-mod_group(amulet, 2ColdResistance, '#% to Cold Resistance', [elemental, cold, resistance], 8000, 82, 8, suffix).
-mod_group(amulet, 2LightningResistance, '#% to Lightning Resistance', [elemental, lightning, resistance], 8000, 82, 8, suffix).
-mod_group(amulet, 2AllResistances, '#% to all Elemental Resistances', [elemental, fire, cold, lightning, resistance], 4800, 80, 6, suffix).
-mod_group(amulet, 2ChaosResistance, '#% to Chaos Resistance', [chaos, resistance], 1500, 81, 6, suffix).
-mod_group(amulet, 2IncreaseSocketedGemLevel, '# to Level of all Spell Skills', [caster, gem, minion, gem, attack], 3400, 75, 12, suffix).
-mod_group(amulet, 2LifeRegeneration, '# Life Regeneration per second', [life], 10000, 75, 10, suffix).
-mod_group(amulet, 2ManaRegeneration, '#% increased Mana Regeneration Rate', [mana], 6000, 79, 6, suffix).
-mod_group(amulet, 2CriticalStrikeChanceIncrease, '#% increased Critical Hit Chance', [critical], 3875, 72, 6, suffix).
-mod_group(amulet, 2CriticalStrikeMultiplier, '#% increased Critical Damage Bonus', [damage, critical], 3875, 74, 6, suffix).
-mod_group(amulet, 2ItemFoundRarityIncrease, '#% increased Rarity of Items found', [], 3000, 40, 3, suffix).
-mod_group(amulet, 2DamageTakenGainedAsLife, '#% of Damage taken Recouped as Life', [life], 2500, 79, 5, suffix).
-mod_group(amulet, 2PercentDamageGoesToMana, '#% of Damage taken Recouped as Mana', [life, mana], 2500, 80, 5, suffix).
-mod_group(amulet, 2IncreasedCastSpeed, '#% increased Cast Speed', [caster, speed], 6, 66, 6, suffix).
+mod_group(amulet, PercentIncreasedArmour, '#% increased Armour', [armour], 1000, 100, 7, prefix).
+mod_group(amulet, PercentIncreasedEvasionRating, '#% increased Evasion Rating', [evasion], 1000, 100, 7, prefix).
+mod_group(amulet, PercentIncreasedMaximumEnergyShield, '#% increased maximum Energy Shield', [energy_shield], 1000, 100, 7, prefix).
+mod_group(amulet, PercentIncreasedMaximumLife, '#% increased maximum Life', [life], 300, 100, 3, prefix).
+mod_group(amulet, PercentIncreasedMaximumMana, '#% increased maximum Mana', [mana], 300, 100, 3, prefix).
+mod_group(amulet, PercentIncreasedRarityOfItemsFound, '#% increased Rarity of Items found', [], 1000, 100, 3, prefix).
+mod_group(amulet, PercentIncreasedSpellDamage, '#% increased Spell Damage', [spell, damage], 1000, 100, 6, prefix).
+mod_group(amulet, FlattoAccuracyRating, '# to Accuracy Rating', [accuracy], 400, 100, 8, prefix).
+mod_group(amulet, FlattoMaximumEnergyShield, '# to maximum Energy Shield', [energy_shield], 1000, 100, 10, prefix).
+mod_group(amulet, FlattoMaximumLife, '# to maximum Life', [life], 1000, 100, 9, prefix).
+mod_group(amulet, FlattoMaximumMana, '# to maximum Mana', [mana], 1000, 100, 13, prefix).
+mod_group(amulet, FlattoSpirit, '# to Spirit', [spirit], 400, 100, 5, prefix).
+mod_group(amulet, FlatLifeRegenerationPerSecond, '# Life Regeneration per second', [life], 1000, 100, 10, suffix).
+mod_group(amulet, PercentIncreasedCastSpeed, '#% increased Cast Speed', [speed], 800, 100, 5, suffix).
+mod_group(amulet, PercentIncreasedCriticalDamageBonus, '#% increased Critical Damage Bonus', [critical, damage], 125, 100, 6, suffix).
+mod_group(amulet, PercentIncreasedCriticalHitChance, '#% increased Critical Hit Chance', [critical], 125, 100, 6, suffix).
+mod_group(amulet, PercentIncreasedManaRegenerationRate, '#% increased Mana Regeneration Rate', [mana], 1000, 100, 6, suffix).
+mod_group(amulet, PercentIncreasedRarityOfItemsFound, '#% increased Rarity of Items found', [], 1000, 100, 3, suffix).
+mod_group(amulet, PercentOfDamageTakenRecoupedAsLife, '#% of Damage taken Recouped as Life', [life, damage], 500, 100, 5, suffix).
+mod_group(amulet, PercentOfDamageTakenRecoupedAsMana, '#% of Damage taken Recouped as Mana', [mana, damage], 500, 100, 5, suffix).
+mod_group(amulet, FlattoAllAttributes, '# to all Attributes', [attribute], 800, 100, 9, suffix).
+mod_group(amulet, FlattoDexterity, '# to Dexterity', [attribute], 1000, 100, 8, suffix).
+mod_group(amulet, FlattoIntelligence, '# to Intelligence', [attribute], 1000, 100, 8, suffix).
+mod_group(amulet, FlattoLevelOfAllMeleeSkills, '# to Level of all Melee Skills', [], 100, 100, 3, suffix).
+mod_group(amulet, FlattoLevelOfAllMinionSkills, '# to Level of all Minion Skills', [], 100, 100, 3, suffix).
+mod_group(amulet, FlattoLevelOfAllProjectileSkills, '# to Level of all Projectile Skills', [], 100, 100, 3, suffix).
+mod_group(amulet, FlattoLevelOfAllSpellSkills, '# to Level of all Spell Skills', [spell], 100, 100, 3, suffix).
+mod_group(amulet, FlattoStrength, '# to Strength', [attribute], 1000, 100, 8, suffix).
+mod_group(amulet, PercentToAllElementalResistances, '#% to all Elemental Resistances', [resistance], 800, 100, 6, suffix).
+mod_group(amulet, PercentToChaosResistance, '#% to Chaos Resistance', [chaos, resistance], 250, 100, 6, suffix).
+mod_group(amulet, PercentToColdResistance, '#% to Cold Resistance', [cold, resistance], 1000, 100, 8, suffix).
+mod_group(amulet, PercentToFireResistance, '#% to Fire Resistance', [fire, resistance], 1000, 100, 8, suffix).
+mod_group(amulet, PercentToLightningResistance, '#% to Lightning Resistance', [lightning, resistance], 1000, 100, 8, suffix).
