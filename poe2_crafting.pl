@@ -728,7 +728,7 @@ currency(poe2, divine_orb).
 currency(poe2, vaal_orb).
 currency(poe2, orb_of_augmentation).
 currency(poe2, orb_of_chance).
-currency(poe2, essence_of_greed).
+currency(poe2, essence_of_the_body).  % PoE 2 life essence (NOT Essence of Greed — that's PoE 1)
 currency(poe2, essence_of_wrath).
 currency(poe2, fracturing_orb).
 
@@ -973,20 +973,20 @@ currency_postcondition(orb_of_chance,
         roll_suffixes(Cat, Ilvl, FinalPre, FinalSuf)
     ).
 
-%% ---------- Essence of Greed ----------
-%% On any rarity item: guarantees a life-tagged prefix. Here: force t1_life prefix.
+%% ---------- Essence of the Body (PoE 2 Life Essence) ----------
+%% Upgrades magic → rare, guarantees a life-tagged prefix.
 
-currency_precondition(essence_of_greed, item_state(_, _, _, _, Props, _, _, _)) :-
-    \+ member(corrupted, Props),
-    \+ member(mirrored, Props).
+currency_precondition(essence_of_the_body, item_state(_, magic, _, _, Props, _, _, _)) :-
+    \\+ member(corrupted, Props),
+    \\+ member(mirrored, Props).
 
-currency_postcondition(essence_of_greed,
-    item_state(Base, _, Ilvl, Inf, Props, _, Suffixes, Impl),
+currency_postcondition(essence_of_the_body,
+    item_state(Base, magic, Ilvl, Inf, Props, _, Suffixes, Impl),
     item_state(Base, rare, Ilvl, Inf, [identified|NewProps], [increased_life|NewPre], Suffixes, Impl)) :-
-    include(\==(identified), Props, Props0),
+    include(\\==(identified), Props, Props0),
     NewProps = [identified|Props0],
     base_mod_pool(Base, Cat),
-    roll_prefixes(Cat, Ilvl, [increased_life], NewPre).  % additional prefixes beyond the guaranteed one
+    roll_prefixes(Cat, Ilvl, [increased_life], NewPre).
 
 %% ---------- Essence of Wrath ----------
 %% Guarantees a lightning-tagged suffix.

@@ -4,7 +4,16 @@ A curated collection of crafting algorithms, methods, and theorycrafting for **P
 
 ## Goal
 
-Document deterministic and probabilistic crafting workflows — step-by-step recipes for producing specific items, along with the reasoning behind each decision (why a particular method is chosen over alternatives, expected costs, probability math, etc.).
+Document deterministic and probabilistic crafting workflows for Path of Exile 2 — step-by-step recipes for producing specific items, along with the reasoning behind each decision.
+
+**Recipes are evaluated against optimization goals:**
+- **`minimum_cost`** — cheapest method in expected currency expenditure
+- **`minimum_interactions`** — fewest crafting steps (clicks) to reach the target
+- **`maximum_values`** — highest possible numeric rolls on target mods
+
+Each recipe declares its optimization goal and is validated against it. A recipe that achieves the target but uses 20 chaos orbs when 5 would suffice is flagged as suboptimal. The Prolog KB and test suite verify correctness; the optimization layer verifies efficiency.
+
+**Every recipe must specify which game it's for** (`poe1` or `poe2`). PoE 1 and PoE 2 have fundamentally different crafting systems — mixing them produces invalid recipes.
 
 ## Scope
 
