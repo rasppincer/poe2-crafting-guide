@@ -189,6 +189,247 @@ tr:hover { background: var(--bg2); }
 .scroll-y::-webkit-scrollbar { width: 6px; }
 .scroll-y::-webkit-scrollbar-track { background: var(--bg); }
 .scroll-y::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ===== RECIPE BUILDER ===== */
+.builder-toolbar {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  background: var(--bg2); padding: 12px 16px; border-radius: 8px;
+  border: 1px solid var(--border); margin-bottom: 16px;
+}
+.builder-toolbar label { font-size: 12px; color: var(--fg2); margin-right: 2px; }
+.builder-toolbar input, .builder-toolbar select {
+  background: var(--bg3); color: var(--fg); border: 1px solid var(--border);
+  padding: 6px 10px; border-radius: 4px; font-size: 13px;
+}
+.builder-toolbar input:focus, .builder-toolbar select:focus { outline: none; border-color: var(--accent); }
+.builder-toolbar .spacer { flex: 1; }
+.builder-btn {
+  padding: 6px 14px; border-radius: 4px; border: 1px solid var(--border);
+  background: var(--bg3); color: var(--fg); cursor: pointer; font-size: 12px;
+  font-weight: 600; transition: all 0.2s;
+}
+.builder-btn:hover { border-color: var(--accent); }
+.builder-btn.primary { background: var(--accent2); border-color: var(--accent2); color: white; }
+.builder-btn.primary:hover { background: #0aad50; }
+.builder-btn.danger { background: var(--fail); border-color: var(--fail); color: white; }
+
+.builder-layout { display: grid; grid-template-columns: 280px 1fr; gap: 16px; min-height: 500px; }
+
+/* Currency Palette */
+.currency-palette {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px; overflow-y: auto; max-height: 70vh;
+}
+.currency-palette::-webkit-scrollbar { width: 6px; }
+.currency-palette::-webkit-scrollbar-track { background: var(--bg); }
+.currency-palette::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.palette-search {
+  width: 100%; background: var(--bg3); color: var(--fg); border: 1px solid var(--border);
+  padding: 6px 10px; border-radius: 4px; font-size: 12px; margin-bottom: 10px;
+}
+.palette-search:focus { outline: none; border-color: var(--accent); }
+.palette-category { margin-bottom: 12px; }
+.palette-category-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gold); margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border);
+}
+.palette-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.palette-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;
+  background: var(--bg3); color: var(--fg2); border: 1px solid var(--border);
+  transition: all 0.15s; user-select: none;
+}
+.palette-chip:hover { border-color: var(--accent); color: var(--fg); transform: translateY(-1px); }
+.palette-chip:active { transform: scale(0.95); }
+.palette-chip .chip-icon { font-size: 13px; }
+.palette-chip.basic { border-left: 3px solid var(--gold); }
+.palette-chip.essence { border-left: 3px solid #9b59b6; }
+.palette-chip.omen { border-left: 3px solid #e74c3c; }
+.palette-chip.catalyst { border-left: 3px solid #3498db; }
+.palette-chip.other { border-left: 3px solid var(--fg2); }
+
+/* Builder Canvas */
+.builder-canvas {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; overflow-y: auto; max-height: 70vh; position: relative;
+}
+.builder-canvas::-webkit-scrollbar { width: 6px; }
+.builder-canvas::-webkit-scrollbar-track { background: var(--bg); }
+.builder-canvas::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.canvas-placeholder {
+  text-align: center; padding: 60px 20px; color: var(--fg2);
+}
+.canvas-placeholder .icon { font-size: 36px; margin-bottom: 12px; }
+.canvas-placeholder p { font-size: 14px; }
+
+/* Step Flow */
+.step-flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.flow-step {
+  background: var(--bg3); border: 2px solid var(--border); border-radius: 8px;
+  padding: 12px 16px; width: 100%; max-width: 480px; position: relative;
+  cursor: pointer; transition: all 0.2s;
+}
+.flow-step:hover { border-color: var(--accent); transform: translateY(-1px); }
+.flow-step.editing { border-color: var(--gold); box-shadow: 0 0 12px rgba(200,170,110,0.2); }
+.flow-step .step-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.flow-step .step-num {
+  background: var(--accent); color: white; width: 22px; height: 22px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.flow-step .step-currency {
+  font-weight: 600; color: var(--fg); font-size: 13px;
+}
+.flow-step .step-currency .currency-tag {
+  display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px;
+  margin-left: 6px; background: var(--tag-bg); color: var(--fg2);
+}
+.flow-step .step-desc { font-size: 12px; color: var(--fg2); margin-top: 4px; }
+.flow-step .step-conditions { margin-top: 6px; }
+.flow-step .condition-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px;
+  margin: 2px 2px; font-weight: 600;
+}
+.flow-step .condition-tag.if-cond { background: #2d4a2d; color: #7ddf7d; }
+.flow-step .condition-tag.else-cond { background: #4a2d2d; color: #df7d7d; }
+.flow-step .condition-tag.goto-cond { background: #2d3d4a; color: #7dbddf; }
+.flow-step .step-actions {
+  position: absolute; top: 8px; right: 8px; display: flex; gap: 4px;
+  opacity: 0; transition: opacity 0.2s;
+}
+.flow-step:hover .step-actions { opacity: 1; }
+.flow-step .step-action-btn {
+  width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--border);
+  background: var(--bg2); color: var(--fg2); cursor: pointer; font-size: 12px;
+  display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+}
+.flow-step .step-action-btn:hover { border-color: var(--accent); color: var(--fg); }
+.flow-step .step-action-btn.delete:hover { border-color: var(--fail); color: var(--fail); }
+
+/* Flow Arrows */
+.flow-arrow {
+  display: flex; flex-direction: column; align-items: center; padding: 2px 0;
+  color: var(--fg2); font-size: 10px; position: relative;
+}
+.flow-arrow .arrow-line {
+  width: 2px; height: 20px; background: var(--border); position: relative;
+}
+.flow-arrow .arrow-head {
+  width: 0; height: 0; border-left: 5px solid transparent;
+  border-right: 5px solid transparent; border-top: 6px solid var(--border);
+}
+.flow-arrow .arrow-label {
+  position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+  font-size: 9px; color: var(--fg2); white-space: nowrap;
+}
+.flow-arrow.branch-arrow {
+  padding: 2px 0;
+}
+.flow-arrow.branch-arrow .branch-indicator {
+  background: #2d4a2d; color: #7ddf7d; padding: 1px 6px; border-radius: 3px;
+  font-size: 9px; font-weight: 600; margin-bottom: 2px;
+}
+.flow-arrow.branch-arrow.else-branch .branch-indicator {
+  background: #4a2d2d; color: #df7d7d;
+}
+
+/* Step Editor Modal */
+.step-editor-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;
+}
+.step-editor-overlay.visible { display: flex; }
+.step-editor-modal {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 20px; width: 480px; max-width: 95vw; max-height: 85vh; overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.step-editor-modal h3 { color: var(--gold); margin-bottom: 16px; font-size: 16px; }
+.editor-field { margin-bottom: 12px; }
+.editor-field label {
+  display: block; font-size: 12px; color: var(--fg2); margin-bottom: 4px; font-weight: 600;
+}
+.editor-field input, .editor-field select, .editor-field textarea {
+  width: 100%; background: var(--bg3); color: var(--fg); border: 1px solid var(--border);
+  padding: 8px 10px; border-radius: 4px; font-size: 13px; font-family: inherit;
+}
+.editor-field input:focus, .editor-field select:focus, .editor-field textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+.editor-field textarea { resize: vertical; min-height: 60px; }
+.editor-conditions { background: var(--bg); border-radius: 6px; padding: 10px; margin-top: 8px; }
+.editor-conditions h4 { color: var(--fg); font-size: 13px; margin-bottom: 8px; }
+.condition-row {
+  display: flex; gap: 6px; align-items: center; margin-bottom: 6px; flex-wrap: wrap;
+}
+.condition-row select, .condition-row input {
+  background: var(--bg3); color: var(--fg); border: 1px solid var(--border);
+  padding: 4px 8px; border-radius: 4px; font-size: 12px;
+}
+.condition-row .remove-cond {
+  background: none; border: none; color: var(--fail); cursor: pointer; font-size: 14px;
+  padding: 2px 4px;
+}
+.editor-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+
+/* Load Recipe Modal */
+.load-modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;
+}
+.load-modal-overlay.visible { display: flex; }
+.load-modal {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 20px; width: 500px; max-width: 95vw; max-height: 80vh; overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.load-modal h3 { color: var(--gold); margin-bottom: 16px; }
+.load-recipe-item {
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 14px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.load-recipe-item:hover { border-color: var(--accent); }
+.load-recipe-item .recipe-info h4 { color: var(--fg); font-size: 14px; margin-bottom: 2px; }
+.load-recipe-item .recipe-info .meta { font-size: 11px; color: var(--fg2); }
+.load-recipe-item .delete-btn {
+  background: none; border: 1px solid var(--fail); color: var(--fail);
+  padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px;
+}
+.load-recipe-item .delete-btn:hover { background: var(--fail); color: white; }
+
+/* Prolog Export Modal */
+.export-modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;
+}
+.export-modal-overlay.visible { display: flex; }
+.export-modal {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 20px; width: 600px; max-width: 95vw; max-height: 80vh; overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.export-modal h3 { color: var(--gold); margin-bottom: 16px; }
+.export-modal pre {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+  padding: 14px; font-size: 12px; color: var(--fg); font-family: 'Consolas', 'Monaco', monospace;
+  white-space: pre-wrap; overflow-x: auto;
+}
+.export-modal .copy-btn {
+  margin-top: 10px; background: var(--accent2); color: white; border: none;
+  padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;
+}
+.export-modal .copy-btn:hover { background: #0aad50; }
+
+/* Notification toast */
+.builder-toast {
+  position: fixed; bottom: 20px; right: 20px; background: var(--accent2);
+  color: white; padding: 10px 20px; border-radius: 6px; font-size: 13px;
+  font-weight: 600; z-index: 2000; opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.builder-toast.visible { opacity: 1; }
 </style>
 </head>
 <body>
@@ -209,6 +450,7 @@ tr:hover { background: var(--bg2); }
   <div class="tab" data-tab="recipes">Recipes</div>
   <div class="tab" data-tab="optimizer">Optimizer</div>
   <div class="tab" data-tab="tester" id="tester-tab">Recipe Tester</div>
+  <div class="tab" data-tab="builder" id="builder-tab">Recipe Builder</div>
 </div>
 
 <!-- ============ DATABASE TAB ============ -->
@@ -326,6 +568,124 @@ tr:hover { background: var(--bg2); }
     <p style="font-size:13px;">or click a recipe card to open it here</p>
   </div>
 </div>
+
+<!-- ============ RECIPE BUILDER TAB ============ -->
+<div class="tab-content" id="tab-builder">
+  <!-- Toolbar -->
+  <div class="builder-toolbar">
+    <label>Name:</label>
+    <input type="text" id="builder-name" placeholder="My Recipe" style="width:160px;">
+    <label>Goal:</label>
+    <select id="builder-goal">
+      <option value="minimum_cost">Min Cost</option>
+      <option value="minimum_interactions">Min Steps</option>
+      <option value="maximum_values">Max Values</option>
+    </select>
+    <label>Base:</label>
+    <input type="text" id="builder-base" placeholder="e.g. jade_ring" style="width:120px;">
+    <label>Category:</label>
+    <input type="text" id="builder-category" placeholder="e.g. ring" style="width:100px;">
+    <label>Target:</label>
+    <input type="text" id="builder-target" placeholder="Description of target item..." style="width:200px;">
+    <div class="spacer"></div>
+    <button class="builder-btn primary" onclick="saveBuilderRecipe()">💾 Save</button>
+    <button class="builder-btn" onclick="showLoadModal()">📂 Load</button>
+    <button class="builder-btn" onclick="exportBuilderProlog()">📤 Export Prolog</button>
+    <button class="builder-btn danger" onclick="clearBuilder()">🗑 Clear</button>
+  </div>
+
+  <div class="builder-layout">
+    <!-- Currency Palette -->
+    <div class="currency-palette" id="currency-palette">
+      <input type="text" class="palette-search" id="palette-search" placeholder="🔍 Search currencies..." oninput="filterPalette()">
+      <div id="palette-content"></div>
+    </div>
+
+    <!-- Builder Canvas -->
+    <div class="builder-canvas" id="builder-canvas">
+      <div id="builder-steps-container"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Step Editor Modal -->
+<div class="step-editor-overlay" id="step-editor-overlay">
+  <div class="step-editor-modal">
+    <h3 id="editor-title">Edit Step</h3>
+    <div class="editor-field">
+      <label>Currency</label>
+      <select id="editor-currency"></select>
+    </div>
+    <div class="editor-field">
+      <label>Action Type</label>
+      <select id="editor-action">
+        <option value="apply_currency">Apply Currency</option>
+        <option value="apply_with_omen">Apply with Omen</option>
+        <option value="apply_essence">Apply Essence</option>
+        <option value="apply_catalyst">Apply Catalyst</option>
+        <option value="apply_alloy">Apply Alloy</option>
+        <option value="spam">Spam (repeat)</option>
+      </select>
+    </div>
+    <div class="editor-field">
+      <label>Description</label>
+      <textarea id="editor-desc" placeholder="What this step does..."></textarea>
+    </div>
+    <div class="editor-field">
+      <label>Precondition</label>
+      <input type="text" id="editor-precondition" placeholder="e.g. normal rarity, no mods">
+    </div>
+    <div class="editor-field">
+      <label>Expected Result</label>
+      <input type="text" id="editor-result" placeholder="e.g. magic with 1 prefix + 1 suffix">
+    </div>
+
+    <!-- Conditions -->
+    <div class="editor-conditions">
+      <h4>Conditional Branching</h4>
+      <div id="editor-conditions-list"></div>
+      <button class="builder-btn" onclick="addEditorCondition()" style="margin-top:6px;font-size:11px;">+ Add Condition</button>
+      <div style="margin-top:8px;">
+        <label style="font-size:12px;color:var(--fg2);">Else goto step:</label>
+        <input type="number" id="editor-else-goto" min="0" placeholder="0 = next step" style="width:80px;background:var(--bg3);color:var(--fg);border:1px solid var(--border);padding:4px 8px;border-radius:4px;font-size:12px;">
+        <label style="font-size:12px;color:var(--fg2);margin-left:4px;">
+          <input type="checkbox" id="editor-else-repeat"> Repeat this step
+        </label>
+      </div>
+    </div>
+
+    <div class="editor-actions">
+      <button class="builder-btn danger" onclick="deleteEditingStep()">🗑 Delete Step</button>
+      <div style="flex:1;"></div>
+      <button class="builder-btn" onclick="closeStepEditor()">Cancel</button>
+      <button class="builder-btn primary" onclick="saveStepEdit()">✓ Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Load Recipe Modal -->
+<div class="load-modal-overlay" id="load-modal-overlay">
+  <div class="load-modal">
+    <h3>Load Recipe</h3>
+    <div id="load-recipe-list"></div>
+    <div style="margin-top:12px;text-align:right;">
+      <button class="builder-btn" onclick="closeLoadModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Export Prolog Modal -->
+<div class="export-modal-overlay" id="export-modal-overlay">
+  <div class="export-modal">
+    <h3>Export to Prolog</h3>
+    <pre id="export-prolog-content"></pre>
+    <button class="copy-btn" onclick="copyPrologExport()">📋 Copy to Clipboard</button>
+    <button class="builder-btn" onclick="closeExportModal()" style="margin-left:8px;">Close</button>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="builder-toast" id="builder-toast"></div>
 
 <script>
 let DB = null;
@@ -647,6 +1007,499 @@ async function verifyRecipe() {
   btn.disabled = false;
   btn.textContent = '▶ Verify Recipe';
 }
+
+// ===== RECIPE BUILDER =====
+let builderSteps = [];
+let editingStepIndex = -1;
+let builderAllCurrencies = [];
+
+// Currency categories for the palette
+const CURRENCY_CATEGORIES = {
+  'Basic Orbs': {
+    type: 'basic',
+    items: [
+      {name: 'orb_of_transmutation', icon: '🔵', label: 'Transmutation'},
+      {name: 'orb_of_augmentation', icon: '🔵', label: 'Augmentation'},
+      {name: 'orb_of_alchemy', icon: '🟡', label: 'Alchemy'},
+      {name: 'chaos_orb', icon: '🟣', label: 'Chaos Orb'},
+      {name: 'regal_orb', icon: '🟡', label: 'Regal Orb'},
+      {name: 'exalted_orb', icon: '⭐', label: 'Exalted Orb'},
+      {name: 'orb_of_annulment', icon: '🔴', label: 'Annulment'},
+      {name: 'divine_orb', icon: '✨', label: 'Divine Orb'},
+      {name: 'vaal_orb', icon: '💀', label: 'Vaal Orb'},
+      {name: 'orb_of_chance', icon: '🎲', label: 'Chance Orb'},
+      {name: 'fracturing_orb', icon: '💎', label: 'Fracturing Orb'},
+    ]
+  },
+  'Essences': {
+    type: 'essence',
+    items: [
+      {name: 'essence_of_the_body', icon: '💚', label: 'Essence of Body'},
+      {name: 'essence_of_wrath', icon: '⚡', label: 'Essence of Wrath'},
+    ]
+  },
+  'Omens': {
+    type: 'omen',
+    items: [] // Populated from DB
+  },
+  'Catalysts & Quality': {
+    type: 'catalyst',
+    items: [] // Populated from DB
+  }
+};
+
+function initBuilderPalette() {
+  // Populate omens from DB
+  if (DB && DB.omens) {
+    CURRENCY_CATEGORIES['Omens'].items = DB.omens
+      .filter(o => !o.disabled)
+      .map(o => ({name: o.name, icon: '🔴', label: o.name.replace(/_/g, ' ')}));
+  }
+  // Populate catalysts/quality from DB
+  if (DB && DB.quality_types) {
+    CURRENCY_CATEGORIES['Catalysts & Quality'].items = DB.quality_types
+      .map(q => ({name: q.name, icon: '🔵', label: q.name.replace(/_/g, ' ')}));
+  }
+  renderPalette();
+}
+
+function renderPalette() {
+  const container = document.getElementById('palette-content');
+  const search = (document.getElementById('palette-search').value || '').toLowerCase();
+  let html = '';
+  for (const [catName, cat] of Object.entries(CURRENCY_CATEGORIES)) {
+    let items = cat.items;
+    if (search) {
+      items = items.filter(i => i.name.includes(search) || i.label.toLowerCase().includes(search));
+    }
+    if (items.length === 0) continue;
+    html += `<div class="palette-category">
+      <div class="palette-category-title">${catName}</div>
+      <div class="palette-chips">
+        ${items.map(i => `<div class="palette-chip ${cat.type}" onclick="addBuilderStep('${i.name}')" title="${i.name}">
+          <span class="chip-icon">${i.icon}</span> ${i.label}
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+  if (!html) html = '<div style="text-align:center;color:var(--fg2);padding:20px;">No currencies match search</div>';
+  container.innerHTML = html;
+}
+
+function filterPalette() { renderPalette(); }
+
+function addBuilderStep(currencyName) {
+  const step = {
+    id: 'step_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+    currency: currencyName,
+    action: guessActionType(currencyName),
+    description: '',
+    precondition: '',
+    result: '',
+    conditions: [],
+    else_goto: null,
+    else_repeat: false
+  };
+  builderSteps.push(step);
+  renderBuilderSteps();
+  builderToast(`Added step: ${currencyName.replace(/_/g, ' ')}`);
+}
+
+function guessActionType(currency) {
+  if (currency.startsWith('essence_')) return 'apply_essence';
+  if (['flesh_catalyst','neural_catalyst','carapace_catalyst','uul_netol_catalyst',
+       'xophs_catalyst','tuls_catalyst','eshs_catalyst','chayulas_catalyst',
+       'reaver_catalyst','sibilant_catalyst','skittering_catalyst','adaptive_catalyst',
+       'armourer_scrap','blacksmith_whetstone','arcanist_etcher'].includes(currency)) return 'apply_catalyst';
+  if (currency.includes('omen_') || ['sinistral_erasure','dextral_erasure',
+       'sinistral_exaltation','dextral_exaltation','sinistral_annulment',
+       'dextral_annulment','greater_exaltation','catalysing_exaltation',
+       'whittling','omen_of_chance','omen_of_the_ancients','omen_of_blessed',
+       'omen_of_sanctification','omen_of_light'].includes(currency)) return 'apply_with_omen';
+  return 'apply_currency';
+}
+
+function renderBuilderSteps() {
+  const container = document.getElementById('builder-steps-container');
+  if (builderSteps.length === 0) {
+    container.innerHTML = `<div class="canvas-placeholder">
+      <div class="icon">🔨</div>
+      <p>Click a currency orb on the left to add crafting steps</p>
+      <p style="font-size:12px;margin-top:8px;color:var(--fg2);">Build your recipe step by step</p>
+    </div>`;
+    return;
+  }
+
+  let html = '<div class="step-flow">';
+  builderSteps.forEach((step, i) => {
+    const currLabel = step.currency.replace(/_/g, ' ');
+    const hasConditions = step.conditions && step.conditions.length > 0;
+    const hasElse = step.else_goto || step.else_repeat;
+
+    // Step card
+    html += `<div class="flow-step" onclick="openStepEditor(${i})" data-step="${i}">
+      <div class="step-actions">
+        ${i > 0 ? `<button class="step-action-btn" onclick="event.stopPropagation();moveStep(${i},-1)" title="Move up">↑</button>` : ''}
+        ${i < builderSteps.length - 1 ? `<button class="step-action-btn" onclick="event.stopPropagation();moveStep(${i},1)" title="Move down">↓</button>` : ''}
+        <button class="step-action-btn delete" onclick="event.stopPropagation();deleteStep(${i})" title="Delete">✕</button>
+      </div>
+      <div class="step-header">
+        <div class="step-num">${i + 1}</div>
+        <div class="step-currency">
+          ${currLabel}
+          <span class="currency-tag">${step.action.replace(/_/g, ' ')}</span>
+        </div>
+      </div>
+      ${step.description ? `<div class="step-desc">${escHtml(step.description)}</div>` : ''}
+      ${step.precondition ? `<div class="step-desc" style="color:var(--warn);">⚡ ${escHtml(step.precondition)}</div>` : ''}
+      ${step.result ? `<div class="step-desc" style="color:var(--success);">→ ${escHtml(step.result)}</div>` : ''}
+      ${hasConditions || hasElse ? `<div class="step-conditions">
+        ${step.conditions.map(c => {
+          const condLabel = formatCondition(c);
+          return `<span class="condition-tag if-cond">IF ${escHtml(condLabel)} → step ${c.goto}</span>`;
+        }).join('')}
+        ${step.else_repeat ? `<span class="condition-tag else-cond">ELSE repeat this step</span>` :
+          step.else_goto ? `<span class="condition-tag else-cond">ELSE → step ${step.else_goto}</span>` : ''}
+      </div>` : ''}
+    </div>`;
+
+    // Arrow to next step
+    if (i < builderSteps.length - 1) {
+      const hasBranch = hasConditions || hasElse;
+      html += `<div class="flow-arrow ${hasBranch ? 'branch-arrow' : ''}">
+        ${hasBranch ? `<div class="branch-indicator">↓ default</div>` : ''}
+        <div class="arrow-line"></div>
+        <div class="arrow-head"></div>
+      </div>`;
+    }
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function formatCondition(c) {
+  switch (c.type) {
+    case 'has_mod': return `has [${c.value}]`;
+    case 'not_has_mod': return `NOT has [${c.value}]`;
+    case 'prefix_count_gte': return `prefix_count >= ${c.value}`;
+    case 'suffix_count_gte': return `suffix_count >= ${c.value}`;
+    case 'prefix_count_lte': return `prefix_count <= ${c.value}`;
+    case 'suffix_count_lte': return `suffix_count <= ${c.value}`;
+    case 'rarity_is': return `rarity == ${c.value}`;
+    case 'rarity_not': return `rarity != ${c.value}`;
+    case 'custom': return c.value;
+    default: return `${c.type}: ${c.value}`;
+  }
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function moveStep(idx, dir) {
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= builderSteps.length) return;
+  [builderSteps[idx], builderSteps[newIdx]] = [builderSteps[newIdx], builderSteps[idx]];
+  renderBuilderSteps();
+}
+
+function deleteStep(idx) {
+  builderSteps.splice(idx, 1);
+  renderBuilderSteps();
+  builderToast('Step deleted');
+}
+
+function clearBuilder() {
+  if (builderSteps.length > 0 && !confirm('Clear all steps? This cannot be undone.')) return;
+  builderSteps = [];
+  document.getElementById('builder-name').value = '';
+  document.getElementById('builder-goal').value = 'minimum_cost';
+  document.getElementById('builder-base').value = '';
+  document.getElementById('builder-category').value = '';
+  document.getElementById('builder-target').value = '';
+  renderBuilderSteps();
+  builderToast('Builder cleared');
+}
+
+// Step Editor
+function openStepEditor(idx) {
+  editingStepIndex = idx;
+  const step = builderSteps[idx];
+  document.getElementById('editor-title').textContent = `Edit Step ${idx + 1}`;
+
+  // Populate currency select
+  const currSelect = document.getElementById('editor-currency');
+  currSelect.innerHTML = '';
+  for (const cat of Object.values(CURRENCY_CATEGORIES)) {
+    for (const item of cat.items) {
+      const opt = document.createElement('option');
+      opt.value = item.name;
+      opt.textContent = item.label;
+      if (item.name === step.currency) opt.selected = true;
+      currSelect.appendChild(opt);
+    }
+  }
+
+  document.getElementById('editor-action').value = step.action || 'apply_currency';
+  document.getElementById('editor-desc').value = step.description || '';
+  document.getElementById('editor-precondition').value = step.precondition || '';
+  document.getElementById('editor-result').value = step.result || '';
+  document.getElementById('editor-else-goto').value = step.else_goto || '';
+  document.getElementById('editor-else-repeat').checked = step.else_repeat || false;
+
+  // Render conditions
+  editorConditions = (step.conditions || []).map(c => ({...c}));
+  renderEditorConditions(editorConditions);
+
+  document.getElementById('step-editor-overlay').classList.add('visible');
+}
+
+function renderEditorConditions(conditions) {
+  const container = document.getElementById('editor-conditions-list');
+  container.innerHTML = conditions.map((c, i) => `
+    <div class="condition-row" data-idx="${i}">
+      <select onchange="updateCondField(${i},'type',this.value)" style="width:140px;">
+        <option value="has_mod" ${c.type==='has_mod'?'selected':''}>has mod group</option>
+        <option value="not_has_mod" ${c.type==='not_has_mod'?'selected':''}>NOT has mod group</option>
+        <option value="prefix_count_gte" ${c.type==='prefix_count_gte'?'selected':''}>prefix count >=</option>
+        <option value="suffix_count_gte" ${c.type==='suffix_count_gte'?'selected':''}>suffix count >=</option>
+        <option value="prefix_count_lte" ${c.type==='prefix_count_lte'?'selected':''}>prefix count <=</option>
+        <option value="suffix_count_lte" ${c.type==='suffix_count_lte'?'selected':''}>suffix count <=</option>
+        <option value="rarity_is" ${c.type==='rarity_is'?'selected':''}>rarity is</option>
+        <option value="rarity_not" ${c.type==='rarity_not'?'selected':''}>rarity is not</option>
+        <option value="custom" ${c.type==='custom'?'selected':''}>custom</option>
+      </select>
+      <input type="text" value="${escHtml(c.value || '')}" placeholder="value" style="width:120px;"
+        onchange="updateCondField(${i},'value',this.value)">
+      <span style="color:var(--fg2);font-size:12px;">→ step</span>
+      <input type="number" value="${c.goto || ''}" min="1" placeholder="N" style="width:60px;"
+        onchange="updateCondField(${i},'goto',parseInt(this.value))">
+      <button class="remove-cond" onclick="removeEditorCondition(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+let editorConditions = [];
+
+function addEditorCondition() {
+  editorConditions.push({type: 'has_mod', value: '', goto: ''});
+  renderEditorConditions(editorConditions);
+}
+
+function removeEditorCondition(idx) {
+  editorConditions.splice(idx, 1);
+  renderEditorConditions(editorConditions);
+}
+
+function updateCondField(idx, field, value) {
+  if (!editorConditions[idx]) return;
+  editorConditions[idx][field] = value;
+}
+
+function saveStepEdit() {
+  if (editingStepIndex < 0 || editingStepIndex >= builderSteps.length) return;
+  const step = builderSteps[editingStepIndex];
+  step.currency = document.getElementById('editor-currency').value;
+  step.action = document.getElementById('editor-action').value;
+  step.description = document.getElementById('editor-desc').value;
+  step.precondition = document.getElementById('editor-precondition').value;
+  step.result = document.getElementById('editor-result').value;
+  step.else_goto = parseInt(document.getElementById('editor-else-goto').value) || null;
+  step.else_repeat = document.getElementById('editor-else-repeat').checked;
+
+  // Read conditions from editor state
+  step.conditions = editorConditions.map(c => ({...c}));
+
+  closeStepEditor();
+  renderBuilderSteps();
+  builderToast('Step updated');
+}
+
+function deleteEditingStep() {
+  if (editingStepIndex < 0) return;
+  deleteStep(editingStepIndex);
+  closeStepEditor();
+}
+
+function closeStepEditor() {
+  document.getElementById('step-editor-overlay').classList.remove('visible');
+  editingStepIndex = -1;
+}
+
+// Save/Load
+async function saveBuilderRecipe() {
+  const name = document.getElementById('builder-name').value.trim();
+  if (!name) { alert('Please enter a recipe name'); return; }
+  if (builderSteps.length === 0) { alert('Add at least one step'); return; }
+
+  const recipe = {
+    name: name,
+    game: 'poe2',
+    goal: document.getElementById('builder-goal').value,
+    base: document.getElementById('builder-base').value,
+    category: document.getElementById('builder-category').value,
+    target: document.getElementById('builder-target').value,
+    steps: builderSteps.map((s, i) => ({
+      step: i + 1,
+      action: s.action,
+      currency: s.currency,
+      description: s.description,
+      precondition: s.precondition,
+      result: s.result,
+      conditions: s.conditions,
+      else_goto: s.else_goto,
+      else_repeat: s.else_repeat
+    }))
+  };
+
+  try {
+    const res = await fetch('/api/recipe-builder/save', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(recipe)
+    });
+    const data = await res.json();
+    if (data.error) { alert('Error: ' + data.error); return; }
+    builderToast('Recipe saved: ' + data.filename);
+  } catch (e) {
+    alert('Save failed: ' + e.message);
+  }
+}
+
+async function showLoadModal() {
+  try {
+    const res = await fetch('/api/recipe-builder/list');
+    const recipes = await res.json();
+    const container = document.getElementById('load-recipe-list');
+    if (recipes.length === 0) {
+      container.innerHTML = '<div style="text-align:center;color:var(--fg2);padding:20px;">No saved recipes found</div>';
+    } else {
+      container.innerHTML = recipes.map(r => `
+        <div class="load-recipe-item" onclick="loadBuilderRecipe('${r.filename}')">
+          <div class="recipe-info">
+            <h4>${escHtml(r.name)}</h4>
+            <div class="meta">${r.goal} · ${r.base || 'no base'} · ${r.step_count} steps</div>
+          </div>
+          <button class="delete-btn" onclick="event.stopPropagation();deleteBuilderRecipe('${r.filename}')">Delete</button>
+        </div>
+      `).join('');
+    }
+    document.getElementById('load-modal-overlay').classList.add('visible');
+  } catch (e) {
+    alert('Failed to load recipe list: ' + e.message);
+  }
+}
+
+function closeLoadModal() {
+  document.getElementById('load-modal-overlay').classList.remove('visible');
+}
+
+async function loadBuilderRecipe(filename) {
+  try {
+    const res = await fetch('/api/recipe-builder/load/' + encodeURIComponent(filename));
+    const recipe = await res.json();
+    if (recipe.error) { alert('Error: ' + recipe.error); return; }
+
+    document.getElementById('builder-name').value = recipe.name || '';
+    document.getElementById('builder-goal').value = recipe.goal || 'minimum_cost';
+    document.getElementById('builder-base').value = recipe.base || '';
+    document.getElementById('builder-category').value = recipe.category || '';
+    document.getElementById('builder-target').value = recipe.target || '';
+
+    builderSteps = (recipe.steps || []).map(s => ({
+      id: 'step_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      currency: s.currency || '',
+      action: s.action || 'apply_currency',
+      description: s.description || '',
+      precondition: s.precondition || '',
+      result: s.result || '',
+      conditions: s.conditions || [],
+      else_goto: s.else_goto || null,
+      else_repeat: s.else_repeat || false
+    }));
+
+    renderBuilderSteps();
+    closeLoadModal();
+    builderToast('Loaded: ' + (recipe.name || filename));
+  } catch (e) {
+    alert('Load failed: ' + e.message);
+  }
+}
+
+async function deleteBuilderRecipe(filename) {
+  if (!confirm('Delete this recipe?')) return;
+  try {
+    await fetch('/api/recipe-builder/delete/' + encodeURIComponent(filename), {method: 'DELETE'});
+    showLoadModal(); // Refresh list
+    builderToast('Recipe deleted');
+  } catch (e) {
+    alert('Delete failed: ' + e.message);
+  }
+}
+
+// Export to Prolog
+async function exportBuilderProlog() {
+  const name = document.getElementById('builder-name').value.trim() || 'unnamed';
+  if (builderSteps.length === 0) { alert('Add at least one step first'); return; }
+
+  const recipe = {
+    name: name,
+    goal: document.getElementById('builder-goal').value,
+    steps: builderSteps.map((s, i) => ({
+      currency: s.currency,
+      action: s.action,
+      description: s.description || `${s.action.replace(/_/g,' ')} ${s.currency.replace(/_/g,' ')}`
+    }))
+  };
+
+  try {
+    const res = await fetch('/api/recipe-builder/export-prolog', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(recipe)
+    });
+    const data = await res.json();
+    document.getElementById('export-prolog-content').textContent = data.prolog;
+    document.getElementById('export-modal-overlay').classList.add('visible');
+  } catch (e) {
+    alert('Export failed: ' + e.message);
+  }
+}
+
+function copyPrologExport() {
+  const text = document.getElementById('export-prolog-content').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    builderToast('Copied to clipboard!');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    builderToast('Copied to clipboard!');
+  });
+}
+
+function closeExportModal() {
+  document.getElementById('export-modal-overlay').classList.remove('visible');
+}
+
+// Toast
+function builderToast(msg) {
+  const toast = document.getElementById('builder-toast');
+  toast.textContent = msg;
+  toast.classList.add('visible');
+  setTimeout(() => toast.classList.remove('visible'), 2000);
+}
+
+// Init builder palette when data loads
+const origRenderDB = renderDatabase;
+renderDatabase = function() {
+  origRenderDB();
+  initBuilderPalette();
+};
 
 // Init
 loadData();

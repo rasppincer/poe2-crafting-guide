@@ -1,0 +1,34 @@
+{
+  "name": "Ring Life + Resists",
+  "game": "poe2",
+  "goal": "Min Cost",
+  "base": "jade_ring",
+  "category": "ring",
+  "target": "Life prefix + 2 resist suffixes",
+  "steps": [
+    {
+      "step": 1,
+      "action": "apply_currency",
+      "currency": "orb_of_transmutation",
+      "description": "Make item magic"
+    },
+    {
+      "step": 2,
+      "action": "apply_currency",
+      "currency": "orb_of_augmentation",
+      "description": "Add 2nd mod"
+    },
+    {
+      "step": 3,
+      "action": "apply_currency",
+      "currency": "regal_orb",
+      "description": "Upgrade to rare"
+    },
+    {
+      "step": 4,
+      "action": "apply_currency",
+      "currency": "chaos_orb",
+      "description": "Reroll mods until good"
+    }
+  ]
+}
