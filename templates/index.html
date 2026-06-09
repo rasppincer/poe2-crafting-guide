@@ -112,6 +112,28 @@ tr:hover { background: var(--bg2); }
 .game-badge.poe1 { background: #2d6a4f; color: #95d5b2; }
 .game-badge.poe2 { background: #6a2d2d; color: #f4a261; }
 
+/* Optimizer */
+.optimizer-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; margin-bottom: 16px;
+}
+.optimizer-card .header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.optimizer-card .header h4 { color: var(--gold); font-size: 15px; flex: 1; }
+.optimizer-card .score-badge { padding: 4px 12px; border-radius: 4px; font-weight: 700; font-size: 14px; }
+.optimizer-card .score-badge.good { background: var(--success); color: white; }
+.optimizer-card .score-badge.ok { background: var(--warn); color: white; }
+.optimizer-card .score-badge.bad { background: var(--fail); color: white; }
+.optimizer-card .goal-tag { font-size: 11px; color: var(--fg2); background: var(--bg3); padding: 2px 8px; border-radius: 3px; }
+.optimizer-card .method { margin-bottom: 8px; }
+.optimizer-card .method-name { font-weight: 600; color: var(--fg); font-size: 13px; }
+.optimizer-card .method-detail { font-size: 12px; color: var(--fg2); margin-top: 4px; }
+.optimizer-card .recommendation { background: var(--bg3); border-left: 3px solid var(--accent); padding: 8px 12px; margin-top: 8px; font-size: 13px; color: var(--fg); border-radius: 0 4px 4px 0; }
+.optimizer-card .alt-row { display: flex; gap: 8px; margin-top: 8px; }
+.optimizer-card .alt-card { flex: 1; background: var(--bg3); border-radius: 6px; padding: 10px; }
+.optimizer-card .alt-card h5 { color: var(--accent); font-size: 12px; margin-bottom: 4px; }
+.optimizer-card .alt-card .cost { font-size: 13px; color: var(--fg); }
+.optimizer-card .alt-card .steps { font-size: 11px; color: var(--fg2); margin-top: 4px; }
+
 /* Recipe Detail / Tester */
 .recipe-detail { display: none; }
 .recipe-detail.visible { display: block; }
@@ -185,6 +207,7 @@ tr:hover { background: var(--bg2); }
 <div class="tabs">
   <div class="tab active" data-tab="database">Database</div>
   <div class="tab" data-tab="recipes">Recipes</div>
+  <div class="tab" data-tab="optimizer">Optimizer</div>
   <div class="tab" data-tab="tester" id="tester-tab">Recipe Tester</div>
 </div>
 
@@ -275,6 +298,11 @@ tr:hover { background: var(--bg2); }
   <div class="recipe-grid" id="recipe-grid"></div>
 </div>
 
+<!-- ============ OPTIMIZER TAB ============ -->
+<div class="tab-content" id="tab-optimizer">
+  <div id="optimizer-content"></div>
+</div>
+
 <!-- ============ TESTER TAB ============ -->
 <div class="tab-content" id="tab-tester">
   <div class="recipe-detail" id="recipe-detail">
@@ -324,6 +352,7 @@ async function loadData() {
   renderDatabase();
   renderRecipes();
   updateStats();
+  loadOptimizer();
 }
 
 function updateStats() {
@@ -494,10 +523,43 @@ function renderRecipes() {
       <div style="display:flex;gap:8px;margin-top:8px;">
         <span class="base-tag">${r.base}</span>
         <span class="base-tag">${r.category}</span>
+        <span class="base-tag">${r.game || 'poe2'}</span>
+        <span class="base-tag">${r.goal || 'none'}</span>
         <span class="steps-count">${r.steps.length} steps</span>
       </div>
     </div>
   `).join('');
+}
+
+// ===== OPTIMIZER =====
+let OPTIMIZER_DATA = null;
+
+async function loadOptimizer() {
+  const res = await fetch('/api/optimize');
+  OPTIMIZER_DATA = await res.json();
+  renderOptimizer();
+}
+
+function renderOptimizer() {
+  if (!OPTIMIZER_DATA) return;
+  const container = document.getElementById('optimizer-content');
+  container.innerHTML = OPTIMIZER_DATA.map(r => {
+    const scoreClass = r.score >= 90 ? 'good' : r.score >= 60 ? 'ok' : 'bad';
+    const goalLabels = {minimum_cost: 'Min Cost', minimum_interactions: 'Min Steps', maximum_values: 'Max Values'};
+    const recs = r.recommendations.map(rec => `<div class="recommendation">→ ${rec}</div>`).join('');
+    return `<div class="optimizer-card">
+      <div class="header">
+        <h4>${r.recipe_name}</h4>
+        <span class="goal-tag">${goalLabels[r.goal] || r.goal}</span>
+        <span class="score-badge ${scoreClass}">${r.score.toFixed(0)}/100</span>
+      </div>
+      <div class="method">
+        <span class="method-name">Current:</span>
+        <span class="method-detail">${r.current_steps} steps, ${r.alternatives_count} alternatives analyzed</span>
+      </div>
+      ${recs}
+    </div>`;
+  }).join('');
 }
 
 function openRecipe(name) {

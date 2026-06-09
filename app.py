@@ -16,6 +16,15 @@ ROOT = Path(__file__).parent
 RESOURCES = ROOT / "resources"
 PROLOG_FILE = ROOT / "poe2_crafting.pl"
 
+# Lazy-load optimizer
+_optimizer = None
+def get_optimizer():
+    global _optimizer
+    if _optimizer is None:
+        from optimizer import RecipeOptimizer
+        _optimizer = RecipeOptimizer()
+    return _optimizer
+
 
 # ============================================================================
 # Data Loading
@@ -315,6 +324,84 @@ def api_mod_pool(category):
 def api_prolog():
     """Return raw Prolog content."""
     return jsonify({"content": DATA["prolog"]})
+
+
+# ============================================================================
+# Optimizer Endpoints
+# ============================================================================
+
+@app.route("/api/optimize/<name>")
+def api_optimize(name):
+    """Evaluate a recipe for optimality."""
+    from tests.test_recipes import RECIPES
+    if name not in RECIPES:
+        return jsonify({"error": "Recipe not found"}), 404
+
+    opt = get_optimizer()
+    evaluation = opt.evaluate_recipe(RECIPES[name])
+
+    return jsonify({
+        "recipe_name": evaluation.recipe_name,
+        "goal": evaluation.goal,
+        "score": evaluation.score,
+        "current_method": {
+            "name": evaluation.current_method.method_name,
+            "steps": evaluation.current_method.steps,
+            "total_expected": evaluation.current_method.total_expected,
+            "total_steps": evaluation.current_method.total_steps,
+            "description": evaluation.current_method.description,
+        },
+        "alternatives": [
+            {
+                "name": a.method_name,
+                "steps": a.steps,
+                "total_expected": a.total_expected,
+                "total_steps": a.total_steps,
+                "description": a.description,
+            }
+            for a in evaluation.alternatives
+        ],
+        "recommendations": evaluation.recommendations,
+    })
+
+
+@app.route("/api/optimize")
+def api_optimize_all():
+    """Evaluate all recipes."""
+    from tests.test_recipes import RECIPES
+
+    opt = get_optimizer()
+    results = []
+    for name, recipe in RECIPES.items():
+        evaluation = opt.evaluate_recipe(recipe)
+        results.append({
+            "recipe_name": evaluation.recipe_name,
+            "recipe_id": name,
+            "goal": evaluation.goal,
+            "score": evaluation.score,
+            "current_steps": evaluation.current_method.total_steps,
+            "alternatives_count": len(evaluation.alternatives),
+            "recommendations": evaluation.recommendations,
+        })
+    return jsonify(results)
+
+
+@app.route("/api/mod_probability/<category>/<mod_group>")
+def api_mod_probability(category, mod_group):
+    """Get the probability of rolling a specific mod."""
+    opt = get_optimizer()
+    prob = opt.mod_probability(category, mod_group)
+    if not prob:
+        return jsonify({"error": f"Mod '{mod_group}' not found in category '{category}'"}), 404
+    return jsonify({
+        "mod_group": prob.mod_group,
+        "category": prob.category,
+        "slot": prob.slot,
+        "weight": prob.weight,
+        "total_weight": prob.total_weight,
+        "probability": round(prob.probability, 6),
+        "expected_attempts": round(prob.expected_attempts, 1),
+    })
 
 
 # ============================================================================
