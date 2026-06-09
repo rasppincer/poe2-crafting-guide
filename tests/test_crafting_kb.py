@@ -5,6 +5,7 @@ Tests are organized into:
 - Prolog syntax (valid Prolog constructs, no duplicate predicates)
 - Mod pool consistency (weights, tags, categories)
 - Crafting rules (currency preconditions, omen status, alloy constraints)
+- Game versioning (poe1/poe2 arg validation)
 """
 
 import json
@@ -174,12 +175,12 @@ class TestPrologSyntax:
 
     def test_alloy_count(self, prolog_content):
         """Should have exactly 13 alloys."""
-        alloys = re.findall(r'^alloy\([a-z_]+,', prolog_content, re.MULTILINE)
+        alloys = re.findall(r'^alloy\(\w+,\s*[a-z_]+,', prolog_content, re.MULTILINE)
         assert len(alloys) == 13, f"Expected 13 alloys, found {len(alloys)}"
 
     def test_quality_type_count(self, prolog_content):
         """Should have 15 quality types (3 weapon/armour + 12 catalysts)."""
-        qt = re.findall(r'^quality_type\(', prolog_content, re.MULTILINE)
+        qt = re.findall(r'^quality_type\(\w+,', prolog_content, re.MULTILINE)
         assert len(qt) == 15, f"Expected 15 quality types, found {len(qt)}"
 
 
@@ -272,15 +273,15 @@ class TestCraftingRules:
     """Test currency, omen, and alloy rule consistency."""
 
     def test_all_currencies_have_precondition(self, prolog_content):
-        """Every currency/1 fact should have at least one precondition."""
-        currencies = re.findall(r'^currency\((\w+)\)', prolog_content, re.MULTILINE)
+        """Every currency/2 fact should have at least one precondition."""
+        currencies = re.findall(r'^currency\(\w+,\s*(\w+)\)', prolog_content, re.MULTILINE)
         for c in currencies:
             assert f"currency_precondition({c}," in prolog_content, \
                 f"Currency {c} has no precondition"
 
     def test_all_currencies_have_postcondition(self, prolog_content):
-        """Every currency/1 fact should have at least one postcondition."""
-        currencies = re.findall(r'^currency\((\w+)\)', prolog_content, re.MULTILINE)
+        """Every currency/2 fact should have at least one postcondition."""
+        currencies = re.findall(r'^currency\(\w+,\s*(\w+)\)', prolog_content, re.MULTILINE)
         for c in currencies:
             assert f"currency_postcondition({c}," in prolog_content, \
                 f"Currency {c} has no postcondition"
@@ -298,8 +299,8 @@ class TestCraftingRules:
             ("sinistral_erasure", "dextral_erasure"),
         ]
         for sin, dex in active_pairs:
-            assert f"omen({sin}," in prolog_content
-            assert f"omen({dex}," in prolog_content
+            assert f"omen(poe2, {sin}," in prolog_content
+            assert f"omen(poe2, {dex}," in prolog_content
             # Should NOT be in omen_disabled
             assert f"omen_disabled({sin}" not in prolog_content
             assert f"omen_disabled({dex}" not in prolog_content
@@ -388,3 +389,60 @@ class TestOmenVersioning:
     def test_nerfed_essences_tracked(self, prolog_content):
         """Essence nerfs should be in nerfed/4."""
         assert "nerfed(essence," in prolog_content
+
+
+# ============================================================================
+# 6. Game Versioning
+# ============================================================================
+
+class TestGameVersioning:
+    """Verify that poe1/poe2 game arguments are correctly applied."""
+
+    def test_currency_game_args_valid(self, prolog_content):
+        """All currency/2 facts must have poe1 or poe2 as first arg."""
+        games = re.findall(r'^currency\((\w+),', prolog_content, re.MULTILINE)
+        assert len(games) > 0, "No currency/2 facts found"
+        for g in games:
+            assert g in ("poe1", "poe2"), f"currency game arg '{g}' is not poe1 or poe2"
+
+    def test_omen_game_args_poe2(self, prolog_content):
+        """All omen/5 facts must have poe2 as first arg (no poe1 omens exist)."""
+        games = re.findall(r'^omen\((\w+),', prolog_content, re.MULTILINE)
+        assert len(games) > 0, "No omen/5 facts found"
+        for g in games:
+            assert g == "poe2", f"omen game arg '{g}' should be poe2"
+
+    def test_alloy_game_args_poe2(self, prolog_content):
+        """All alloy/4 facts must have poe2 as first arg."""
+        games = re.findall(r'^alloy\((\w+),', prolog_content, re.MULTILINE)
+        assert len(games) > 0, "No alloy/4 facts found"
+        for g in games:
+            assert g == "poe2", f"alloy game arg '{g}' should be poe2"
+
+    def test_quality_type_game_args_poe2(self, prolog_content):
+        """All quality_type/3 facts must have poe2 as first arg."""
+        games = re.findall(r'^quality_type\((\w+),', prolog_content, re.MULTILINE)
+        assert len(games) > 0, "No quality_type/3 facts found"
+        for g in games:
+            assert g == "poe2", f"quality_type game arg '{g}' should be poe2"
+
+    def test_current_game_fact_exists(self, prolog_content):
+        """current_game/1 fact should be defined."""
+        assert "current_game(poe2)" in prolog_content
+
+    def test_orb_of_alteration_is_poe1_only(self, prolog_content):
+        """orb_of_alteration should be a poe1 currency, not poe2."""
+        assert "currency(poe1, orb_of_alteration)" in prolog_content
+        assert "currency(poe2, orb_of_alteration)" not in prolog_content
+
+    def test_orb_of_scouring_is_poe1_only(self, prolog_content):
+        """orb_of_scouring should be a poe1 currency, not poe2."""
+        assert "currency(poe1, orb_of_scouring)" in prolog_content
+        assert "currency(poe2, orb_of_scouring)" not in prolog_content
+
+    def test_poe1_currencies_separate_from_poe2(self, prolog_content):
+        """No currency name should appear under both poe1 and poe2."""
+        poe1_currencies = set(re.findall(r'^currency\(poe1,\s*(\w+)\)', prolog_content, re.MULTILINE))
+        poe2_currencies = set(re.findall(r'^currency\(poe2,\s*(\w+)\)', prolog_content, re.MULTILINE))
+        overlap = poe1_currencies & poe2_currencies
+        assert not overlap, f"Currencies appear under both poe1 and poe2: {overlap}"

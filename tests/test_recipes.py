@@ -213,8 +213,8 @@ class TestRecipeStructure:
             for step in recipe["steps"]:
                 if "currency" in step:
                     curr = step["currency"]
-                    assert f"currency({curr})" in content or \
-                           f"currency({curr}," in content or \
+                    assert f"currency(poe2, {curr})" in content or \
+                           f"currency(poe1, {curr})" in content or \
                            f"essence" in curr, \
                         f"{name}/{step['action']}: currency '{curr}' not in KB"
 
@@ -225,9 +225,9 @@ class TestRecipeStructure:
             for step in recipe["steps"]:
                 if "omen" in step:
                     omen = step["omen"]
-                    assert f"omen({omen}," in content, \
+                    assert f"omen(poe2, {omen}," in content, \
                         f"{name}: omen '{omen}' not in KB"
-                    assert f"omen_disabled({omen}" not in content, \
+                    assert f"disabled(omen, {omen}" not in content, \
                         f"{name}: omen '{omen}' is disabled in 0.5.0"
 
     def test_recipe_alloys_exist(self):
@@ -237,17 +237,17 @@ class TestRecipeStructure:
             for step in recipe["steps"]:
                 if "alloy" in step:
                     alloy = step["alloy"]
-                    assert f"alloy({alloy}," in content, \
+                    assert f"alloy(poe2, {alloy}," in content, \
                         f"{name}: alloy '{alloy}' not in KB"
 
     def test_recipe_catalysts_exist(self):
-        """All catalysts referenced should exist in quality_type/2."""
+        """All catalysts referenced should exist in quality_type/3."""
         content = PROLOG_FILE.read_text()
         for name, recipe in RECIPES.items():
             for step in recipe["steps"]:
                 if "catalyst" in step:
                     cat = step["catalyst"]
-                    assert f"quality_type({cat}," in content, \
+                    assert f"quality_type(poe2, {cat}," in content, \
                         f"{name}: catalyst '{cat}' not in KB"
 
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PoE 2 Crafting Guide</title>
+<title>PoE Crafting Guide</title>
 <style>
 :root {
   --bg: #1a1a2e;
@@ -100,6 +100,18 @@ tr:hover { background: var(--bg2); }
 .recipe-card .steps-count { font-size: 11px; color: var(--fg2); }
 .recipe-card .base-tag { display: inline-block; background: var(--bg3); padding: 1px 6px; border-radius: 3px; font-size: 11px; }
 
+/* Game selector */
+.game-selector { display: flex; gap: 4px; margin-left: 12px; }
+.game-btn { padding: 4px 12px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg3); color: var(--fg2); cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; }
+.game-btn:hover { border-color: var(--accent); color: var(--fg); }
+.game-btn.active { border-color: var(--accent); color: white; }
+.game-btn.poe1.active { background: #2d6a4f; border-color: #40916c; }
+.game-btn.poe2.active { background: #6a2d2d; border-color: #c1440e; }
+.game-btn.all.active { background: var(--bg3); border-color: var(--gold); color: var(--gold); }
+.game-badge { display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-left: 4px; }
+.game-badge.poe1 { background: #2d6a4f; color: #95d5b2; }
+.game-badge.poe2 { background: #6a2d2d; color: #f4a261; }
+
 /* Recipe Detail / Tester */
 .recipe-detail { display: none; }
 .recipe-detail.visible { display: block; }
@@ -162,6 +174,11 @@ tr:hover { background: var(--bg2); }
 <div class="header">
   <h1>PoE 2 Crafting Guide</h1>
   <span class="version">v0.5.0 — Return of the Ancients</span>
+  <div class="game-selector">
+    <button class="game-btn poe2 active" onclick="setGame('poe2')">PoE 2</button>
+    <button class="game-btn poe1" onclick="setGame('poe1')">PoE 1</button>
+    <button class="game-btn all" onclick="setGame('all')">All</button>
+  </div>
   <div class="stats" id="header-stats"></div>
 </div>
 
@@ -213,7 +230,7 @@ tr:hover { background: var(--bg2); }
     <h3 onclick="toggleSection(this)">Currencies <span id="currency-count"></span></h3>
     <div class="content scroll-y">
       <table id="currencies-table">
-        <thead><tr><th>Currency</th><th>Has Rules</th></tr></thead>
+        <thead><tr><th>Currency</th><th>Game</th><th>Has Rules</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -224,7 +241,7 @@ tr:hover { background: var(--bg2); }
     <h3 onclick="toggleSection(this)">Omens <span id="omen-count"></span></h3>
     <div class="content scroll-y">
       <table id="omens-table">
-        <thead><tr><th>Omen</th><th>Currency</th><th>Effect</th><th>Slot</th><th>Status</th></tr></thead>
+        <thead><tr><th>Omen</th><th>Game</th><th>Currency</th><th>Effect</th><th>Slot</th><th>Status</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -235,7 +252,7 @@ tr:hover { background: var(--bg2); }
     <h3 onclick="toggleSection(this)">Alloys <span id="alloy-count"></span></h3>
     <div class="content scroll-y">
       <table id="alloys-table">
-        <thead><tr><th>Alloy</th><th>Guaranteed Tag</th><th>Description</th></tr></thead>
+        <thead><tr><th>Alloy</th><th>Game</th><th>Guaranteed Tag</th><th>Description</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -246,7 +263,7 @@ tr:hover { background: var(--bg2); }
     <h3 onclick="toggleSection(this)">Quality / Catalysts <span id="quality-count"></span></h3>
     <div class="content scroll-y">
       <table id="quality-table">
-        <thead><tr><th>Catalyst</th><th>Tags Enhanced</th></tr></thead>
+        <thead><tr><th>Catalyst</th><th>Game</th><th>Tags Enhanced</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -286,11 +303,20 @@ tr:hover { background: var(--bg2); }
 let DB = null;
 let RECIPES = null;
 let currentRecipe = null;
+let currentGame = 'poe2';  // Default to PoE 2
+
+function setGame(game) {
+  currentGame = game;
+  document.querySelectorAll('.game-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.classList.contains(game));
+  });
+  loadData();
+}
 
 // Load data
 async function loadData() {
   const [dbRes, recRes] = await Promise.all([
-    fetch('/api/database'),
+    fetch('/api/database?game=' + currentGame),
     fetch('/api/recipes')
   ]);
   DB = await dbRes.json();
@@ -379,6 +405,7 @@ function renderCurrencies(currencies) {
   const tbody = document.querySelector('#currencies-table tbody');
   tbody.innerHTML = currencies.map(c => `<tr>
     <td>${c.name.replace(/_/g, ' ')}</td>
+    <td><span class="game-badge ${c.game}">${c.game.toUpperCase()}</span></td>
     <td>${c.has_rules ? '<span class="active-badge">✓</span>' : '<span class="disabled-badge">stub</span>'}</td>
   </tr>`).join('');
   document.getElementById('currency-count').textContent = `(${currencies.length})`;
@@ -388,6 +415,7 @@ function renderOmens(omens) {
   const tbody = document.querySelector('#omens-table tbody');
   tbody.innerHTML = omens.map(o => `<tr class="${o.disabled ? 'disabled' : ''}">
     <td>${o.name.replace(/_/g, ' ')}</td>
+    <td><span class="game-badge ${o.game}">${o.game.toUpperCase()}</span></td>
     <td>${o.currency.replace(/_/g, ' ')}</td>
     <td>${o.effect.replace(/_/g, ' ')}</td>
     <td><span class="slot-${o.slot === 'prefix' ? 'prefix' : o.slot === 'suffix' ? 'suffix' : ''}">${o.slot}</span></td>
@@ -401,6 +429,7 @@ function renderAlloys(alloys) {
   const tbody = document.querySelector('#alloys-table tbody');
   tbody.innerHTML = alloys.map(a => `<tr>
     <td>${a.name.replace(/_/g, ' ')}</td>
+    <td><span class="game-badge ${a.game}">${a.game.toUpperCase()}</span></td>
     <td><span class="tag ${a.tag}">${a.tag}</span></td>
     <td>${a.description}</td>
   </tr>`).join('');
@@ -411,6 +440,7 @@ function renderQuality(types) {
   const tbody = document.querySelector('#quality-table tbody');
   tbody.innerHTML = types.map(t => `<tr>
     <td>${t.name.replace(/_/g, ' ')}</td>
+    <td><span class="game-badge ${t.game}">${t.game.toUpperCase()}</span></td>
     <td>${t.tags.map(tag => `<span class="tag ${tag}">${tag}</span>`).join('')}</td>
   </tr>`).join('');
   document.getElementById('quality-count').textContent = `(${types.length})`;
@@ -530,7 +560,7 @@ async function verifyRecipe() {
   const res = await fetch('/api/recipe/verify', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(r)
+    body: JSON.stringify({...r, game: currentGame})
   });
   const data = await res.json();
 

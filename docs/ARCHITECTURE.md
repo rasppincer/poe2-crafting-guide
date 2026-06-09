@@ -80,26 +80,26 @@ has_open_slot(+Item, +SlotType)
 count_mods(+Item, +Slot, -Count)
 
 % Currencies
-currency(+Name)
+currency(+Game, +Name)
 currency_precondition(+Currency, +ItemState)
 currency_postcondition(+Currency, +OldItem, -NewItem)
 can_apply(+Currency, +Item)
 apply_currency(+Currency, +OldItem, -NewItem)
 
 % Omens
-omen(+Name, +Currency, +Effect, +SlotRestriction)
+omen(+Game, +Name, +Currency, +Effect, +SlotRestriction)
 omen_disabled(+Name, +VersionDisabled)
-omen_active(+Name, -Effect, -Slot)
-can_use_omen(+Omen, +Currency)
-omen_crafting_pairs(+Currency, -Sinistral, -Dextral)
+omen_active(+Game, +Name, -Effect, -Slot)
+can_use_omen(+Game, +Omen, +Currency)
+omen_crafting_pairs(+Game, +Currency, -Sinistral, -Dextral)
 
 % Alloys
-alloy(+Name, +GuaranteedTag, +Description)
+alloy(+Game, +Name, +GuaranteedTag, +Description)
 alloy_precondition(+Alloy, +Item)
 alloy_postcondition(+Alloy, +OldItem, -NewItem)
 
 % Quality
-quality_type(+CatalystType, +TagsEnhanced)
+quality_type(+Game, +CatalystType, +TagsEnhanced)
 quality_max(+ItemType, -MaxPercent)
 quality_effect(+QualityPct, +ModTags, +CatalystType, -Multiplier)
 ```
@@ -145,7 +145,7 @@ weapon × str_dex → weapon_sword
 
 1. **mod_group/8 includes category** — allows multiple item types in one KB
 2. **Weight sums stored per category** — enables probability calculations
-3. **Omen disabled tracking** — `omen_disabled/2` with version string
+3. **Game versioning** — `current_game/1` + game-tagged data predicates (currency/2, omen/5, alloy/4, quality_type/3). Enforces PoE1 vs PoE2 separation at the data level.
 4. **Quality NOT in item_state** — it's a post-roll multiplier, not a state
 5. **Consulted .pl files** — data files loaded at startup, not hardcoded
 6. **Recipes live in test files** — not in Prolog (yet), validated by pytest

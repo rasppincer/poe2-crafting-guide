@@ -50,11 +50,30 @@ Mod weights and available mods can change between patches. If pulling from:
 
 ### 4. Is this a PoE 1 or PoE 2 mechanic?
 
+**This is now enforced at the data level.** Every currency, omen, alloy, and quality_type fact MUST declare which game it belongs to:
+
+```prolog
+currency(poe2, orb_of_transmutation).   % PoE 2
+currency(poe1, orb_of_alteration).      % PoE 1 ONLY — does not exist in PoE 2
+```
+
+The `can_apply/2` engine automatically checks `current_game/1` — a PoE 1 currency will **fail** when `current_game(poe2)` is set. This makes it impossible to accidentally use a PoE 1 currency in a PoE 2 recipe.
+
+**When adding ANY new data fact, you MUST specify the game as the first argument:**
+- `currency(poe2, new_currency_name).`
+- `omen(poe2, new_omen_name, currency, effect, slot).`
+- `alloy(poe2, alloy_name, tag, 'description').`
+- `quality_type(poe2, catalyst_name, [tags]).`
+
 Common confusion points:
 - PoE 1 has "prefixes cannot be changed" bench craft → PoE 2 uses **omens** instead
 - PoE 1 has catalyst quality on belts → PoE 2 **belts cannot have quality**
 - PoE 1 has recombinators → PoE 2 recombination is **disabled**
+- PoE 1 has Orb of Alteration → PoE 2 **does not** (use Orb of Augmentation instead)
+- PoE 1 has Orb of Scouring → PoE 2 **does not** (items cannot be reset)
 - PoE 1 influence system differs from PoE 2
+
+**The web UI has a global game toggle** (PoE 1 / PoE 2 / All) that filters all displayed data. Recipe verification checks against the selected game and flags stale sources.
 
 ---
 

@@ -24,26 +24,28 @@
     blocks_modification/2,
 
     % --- quality ---
-    quality_type/2,
+    quality_type/3,
     quality_max/2,
     quality_effect/4,
 
     % --- omens ---
-    omen/4,
-    can_use_omen/2,
-    omen_active/3,
+    omen/5,
+    can_use_omen/3,
+    omen_active/4,
+    omen_crafting_pairs/4,
     omen_disabled/2,
-    omen_crafting_pairs/3,
 
     % --- validity layer ---
     current_version/1,
+    current_game/1,
+    game_tag/2,
     disabled/3,
     nerfed/4,
     valid/2,
     check_valid/2,
 
     % --- alloys ---
-    alloy/3,
+    alloy/4,
     alloy_precondition/2,
     alloy_postcondition/3,
 
@@ -73,7 +75,7 @@
     mod_pool/3,
 
     % --- currency catalogue ---
-    currency/1,
+    currency/2,
     currency_precondition/2,
     currency_postcondition/3,
 
@@ -112,6 +114,16 @@
 %% Update this when patching to a new version.
 
 current_version('0.5.0').
+current_game(poe2).  % Which game context we're operating in (poe1 | poe2)
+
+%% game_tag(+FactType, +Game)
+%%   Every data fact (currency, omen, alloy, quality_type) must declare
+%%   which game it belongs to. This predicate is used by tests and
+%%   the UI to verify no fact is added without a game tag.
+game_tag(currency, _).       % currency/2: game is field 1
+game_tag(omen, _).           % omen/5: game is field 1
+game_tag(alloy, _).          % alloy/4: game is field 1
+game_tag(quality_type, _).   % quality_type/3: game is field 1
 
 %% --- Generic Validity Layer ---
 %% Any entity (omen, currency, essence, mechanic, alloy) that has been
@@ -209,22 +221,23 @@ item_property(desecrated).        % has desecrated modifiers
 %% Quality increases modifier magnitude for matching tags.
 %% Applied via Catalysts (rings/amulets) or Whetstones/Scrap (weapons/armour).
 %% Does NOT affect mod weights — only post-roll numeric values.
+%% NOTE: ALL quality types in this KB are PoE 2 only.
 
-quality_type(armourer_scrap,   [armour, evasion, energy_shield, runic_ward]).
-quality_type(blacksmith_whetstone, [physical]).
-quality_type(arcanist_etcher,  [gem_level]).
-quality_type(flesh_catalyst,   [life]).
-quality_type(neural_catalyst,  [mana]).
-quality_type(carapace_catalyst,[armour, evasion, energy_shield]).
-quality_type(uul_netol_catalyst, [physical]).
-quality_type(xophs_catalyst,   [fire]).
-quality_type(tuls_catalyst,    [cold]).
-quality_type(eshs_catalyst,    [lightning]).
-quality_type(chayulas_catalyst,[chaos]).
-quality_type(reaver_catalyst,  [attack]).
-quality_type(sibilant_catalyst,[caster]).
-quality_type(skittering_catalyst, [speed]).
-quality_type(adaptive_catalyst,[attribute]).
+quality_type(poe2, armourer_scrap,   [armour, evasion, energy_shield, runic_ward]).
+quality_type(poe2, blacksmith_whetstone, [physical]).
+quality_type(poe2, arcanist_etcher,  [gem_level]).
+quality_type(poe2, flesh_catalyst,   [life]).
+quality_type(poe2, neural_catalyst,  [mana]).
+quality_type(poe2, carapace_catalyst,[armour, evasion, energy_shield]).
+quality_type(poe2, uul_netol_catalyst, [physical]).
+quality_type(poe2, xophs_catalyst,   [fire]).
+quality_type(poe2, tuls_catalyst,    [cold]).
+quality_type(poe2, eshs_catalyst,    [lightning]).
+quality_type(poe2, chayulas_catalyst,[chaos]).
+quality_type(poe2, reaver_catalyst,  [attack]).
+quality_type(poe2, sibilant_catalyst,[caster]).
+quality_type(poe2, skittering_catalyst, [speed]).
+quality_type(poe2, adaptive_catalyst,[attribute]).
 
 %% Quality caps by item type
 quality_max(ring,              20).
@@ -243,7 +256,7 @@ quality_max(shield,            20).
 %%   1% quality = 1% increased modifier magnitude for matching tags.
 %%   Multiplier = 1 + (quality/100) if any mod tag matches catalyst tags.
 quality_effect(QualityPct, ModTags, CatalystType, Multiplier) :-
-    quality_type(CatalystType, CatalystTags),
+    quality_type(_, CatalystType, CatalystTags),
     (   member(Tag, ModTags), member(Tag, CatalystTags)
     ->  Multiplier is 1 + QualityPct / 100
     ;   Multiplier = 1.0
@@ -252,76 +265,77 @@ quality_effect(QualityPct, ModTags, CatalystType, Multiplier) :-
 %% --- 1b3. Omens ---
 %% Omens modify the behavior of the next currency orb used.
 %% Right-click to activate, stays in inventory until triggered, consumed on use.
+%% NOTE: ALL omens in this KB are PoE 2 only. PoE 1 does not have omens.
 %%
-%% omen(+Name, +TargetCurrency, +Effect, +SlotRestriction)
+%% omen(+Game, +Name, +TargetCurrency, +Effect, +SlotRestriction)
 %%   SlotRestriction: prefix | suffix | both | none | specific
 
 % Sinistral/Dextral pairs — the core of deterministic crafting
-omen(sinistral_erasure,     chaos_orb,      removes_only_prefixes,       prefix).
-omen(dextral_erasure,       chaos_orb,      removes_only_suffixes,       suffix).
-omen(sinistral_alchemy,  % DISABLED 0.3-0.5     orb_of_alchemy, max_prefixes,                prefix).
-omen(dextral_alchemy,  % DISABLED 0.3-0.5       orb_of_alchemy, max_suffixes,                suffix).
-omen(sinistral_coronation,  % DISABLED 0.3-0.5  regal_orb,      adds_only_prefixes,          prefix).
-omen(dextral_coronation,  % DISABLED 0.3-0.5    regal_orb,      adds_only_suffixes,          suffix).
-omen(sinistral_exaltation,  exalted_orb,    adds_only_prefixes,          prefix).
-omen(dextral_exaltation,    exalted_orb,    adds_only_suffixes,          suffix).
-omen(sinistral_annulment,   orb_of_annulment, removes_only_prefixes,     prefix).
-omen(dextral_annulment,     orb_of_annulment, removes_only_suffixes,     suffix).
-omen(sinistral_crystallisation, essence,    removes_only_prefixes,       prefix).
-omen(dextral_crystallisation,   essence,    removes_only_suffixes,       suffix).
-omen(sinistral_necromancy,  desecration,    adds_only_prefixes,          prefix).
-omen(dextral_necromancy,    desecration,    adds_only_suffixes,          suffix).
+omen(poe2, sinistral_erasure,     chaos_orb,      removes_only_prefixes,       prefix).
+omen(poe2, dextral_erasure,       chaos_orb,      removes_only_suffixes,       suffix).
+omen(poe2, sinistral_alchemy,  % DISABLED 0.3-0.5     orb_of_alchemy, max_prefixes,                prefix).
+omen(poe2, dextral_alchemy,  % DISABLED 0.3-0.5       orb_of_alchemy, max_suffixes,                suffix).
+omen(poe2, sinistral_coronation,  % DISABLED 0.3-0.5  regal_orb,      adds_only_prefixes,          prefix).
+omen(poe2, dextral_coronation,  % DISABLED 0.3-0.5    regal_orb,      adds_only_suffixes,          suffix).
+omen(poe2, sinistral_exaltation,  exalted_orb,    adds_only_prefixes,          prefix).
+omen(poe2, dextral_exaltation,    exalted_orb,    adds_only_suffixes,          suffix).
+omen(poe2, sinistral_annulment,   orb_of_annulment, removes_only_prefixes,     prefix).
+omen(poe2, dextral_annulment,     orb_of_annulment, removes_only_suffixes,     suffix).
+omen(poe2, sinistral_crystallisation, essence,    removes_only_prefixes,       prefix).
+omen(poe2, dextral_crystallisation,   essence,    removes_only_suffixes,       suffix).
+omen(poe2, sinistral_necromancy,  desecration,    adds_only_prefixes,          prefix).
+omen(poe2, dextral_necromancy,    desecration,    adds_only_suffixes,          suffix).
 
 % Power omens
-omen(greater_exaltation,    exalted_orb,    adds_two_mods,               both).
-omen(greater_annulment,  % DISABLED 0.3-0.5     orb_of_annulment, removes_two_mods,          both).
-omen(homogenising_exaltation,  % DISABLED 0.3-0.5 exalted_orb,  adds_same_tag_mod,           both).
-omen(homogenising_coronation,  % DISABLED 0.3-0.5 regal_orb,    adds_same_tag_mod,           both).
-omen(catalysing_exaltation, exalted_orb,    consumes_quality_for_targeting, both).
-omen(whittling,             chaos_orb,      removes_lowest_level_mod,    both).
+omen(poe2, greater_exaltation,    exalted_orb,    adds_two_mods,               both).
+omen(poe2, greater_annulment,  % DISABLED 0.3-0.5     orb_of_annulment, removes_two_mods,          both).
+omen(poe2, homogenising_exaltation,  % DISABLED 0.3-0.5 exalted_orb,  adds_same_tag_mod,           both).
+omen(poe2, homogenising_coronation,  % DISABLED 0.3-0.5 regal_orb,    adds_same_tag_mod,           both).
+omen(poe2, catalysing_exaltation, exalted_orb,    consumes_quality_for_targeting, both).
+omen(poe2, whittling,             chaos_orb,      removes_lowest_level_mod,    both).
 
 % Special omens
-omen(omen_of_chance,        orb_of_chance,  wont_destroy_item,           both).
-omen(omen_of_the_ancients,  orb_of_chance,  upgrades_to_random_unique,   both).
-omen(omen_of_blessed,       divine_orb,     rerolls_implicit_only,       both).
-omen(omen_of_sanctification, divine_orb,    sanctifies_item,             both).
-omen(omen_of_corruption,  % DISABLED 0.3-0.5    vaal_orb,       always_changes,              both).
-omen(omen_of_light,         orb_of_annulment, removes_desecrated_only,   both).
-omen(omen_of_putrefaction,  desecration,    replaces_all_mods_and_corrupts, both).
-omen(omen_of_recombination,  % DISABLED 0.3-0.5 recombination,  enables_recombination,       both).
+omen(poe2, omen_of_chance,        orb_of_chance,  wont_destroy_item,           both).
+omen(poe2, omen_of_the_ancients,  orb_of_chance,  upgrades_to_random_unique,   both).
+omen(poe2, omen_of_blessed,       divine_orb,     rerolls_implicit_only,       both).
+omen(poe2, omen_of_sanctification, divine_orb,    sanctifies_item,             both).
+omen(poe2, omen_of_corruption,  % DISABLED 0.3-0.5    vaal_orb,       always_changes,              both).
+omen(poe2, omen_of_light,         orb_of_annulment, removes_desecrated_only,   both).
+omen(poe2, omen_of_putrefaction,  desecration,    replaces_all_mods_and_corrupts, both).
+omen(poe2, omen_of_recombination,  % DISABLED 0.3-0.5 recombination,  enables_recombination,       both).
 
 % Abyssal desecration omens
-omen(omen_of_sovereign,     desecration,    guarantees_ulaman_mod,       both).
-omen(omen_of_liege,         desecration,    guarantees_amanamu_mod,      both).
-omen(omen_of_blackblooded,  desecration,    guarantees_kurgal_mod,       both).
-omen(omen_of_abyssal_echoes, desecration,   reroll_desecrated_options,   both).
+omen(poe2, omen_of_sovereign,     desecration,    guarantees_ulaman_mod,       both).
+omen(poe2, omen_of_liege,         desecration,    guarantees_amanamu_mod,      both).
+omen(poe2, omen_of_blackblooded,  desecration,    guarantees_kurgal_mod,       both).
+omen(poe2, omen_of_abyssal_echoes, desecration,   reroll_desecrated_options,   both).
 
 %% Note: omen_disabled/2 is now derived from disabled/3 (see validity layer above).
 %% Backward-compatible rule handles all disabled omens automatically.
 
-%% can_use_omen(+OmenName, +Currency)
+%% can_use_omen(+Game, +OmenName, +Currency)
 %%   An omen can be used with a currency if the currency_target matches.
 %%   Excludes disabled omens (can still exist in Standard but cannot drop).
-can_use_omen(OmenName, Currency) :-
-    omen(OmenName, Currency, _, _),
-    \+ omen_disabled(OmenName, _).
-can_use_omen(OmenName, Currency) :-
-    omen(OmenName, any_currency, _, _),
-    \+ omen_disabled(OmenName, _).
+can_use_omen(Game, OmenName, Currency) :-
+    omen(Game, OmenName, Currency, _, _),
+    \\+ omen_disabled(OmenName, _).
+can_use_omen(Game, OmenName, Currency) :-
+    omen(Game, OmenName, any_currency, _, _),
+    \\+ omen_disabled(OmenName, _).
 
-%% omen_active(+OmenName, -Effect, -SlotRestriction)
+%% omen_active(+Game, +OmenName, -Effect, -SlotRestriction)
 %%   Only returns omens that can still drop in 0.5.0.
-omen_active(OmenName, Effect, Slot) :-
-    omen(OmenName, _, Effect, Slot),
-    \+ omen_disabled(OmenName, _).
+omen_active(Game, OmenName, Effect, Slot) :-
+    omen(Game, OmenName, _, Effect, Slot),
+    \\+ omen_disabled(OmenName, _).
 
-%% omen_crafting_pairs(+Currency, -Sinistral, -Dextral)
+%% omen_crafting_pairs(+Game, +Currency, -Sinistral, -Dextral)
 %%   Returns the sinistral/dextral pair for a currency, if both are active.
-omen_crafting_pairs(Currency, Sinistral, Dextral) :-
-    omen_active(sinistral_omen, removes_only_prefixes, prefix),
-    omen_active(dextral_omen, removes_only_suffixes, suffix),
-    omen(sinistral_omen, Currency, removes_only_prefixes, prefix),
-    omen(dextral_omen, Currency, removes_only_suffixes, suffix),
+omen_crafting_pairs(Game, Currency, Sinistral, Dextral) :-
+    omen_active(Game, sinistral_omen, removes_only_prefixes, prefix),
+    omen_active(Game, dextral_omen, removes_only_suffixes, suffix),
+    omen(Game, sinistral_omen, Currency, removes_only_prefixes, prefix),
+    omen(Game, dextral_omen, Currency, removes_only_suffixes, suffix),
     Sinistral = sinistral_omen,
     Dextral = dextral_omen.
 
@@ -329,22 +343,23 @@ omen_crafting_pairs(Currency, Sinistral, Dextral) :-
 %% Alloys are a PoE 2 patch 0.5 crafting currency.
 %% Apply to rare item → removes one random mod → adds a guaranteed mod.
 %% Obtained from Remnant encounters or rune recipes.
+%% NOTE: ALL alloys in this KB are PoE 2 only. PoE 1 does not have alloys.
 %%
-%% alloy(+Name, +GuaranteedModTag, +Description)
+%% alloy(+Game, +Name, +GuaranteedModTag, +Description)
 
-alloy(runic_alloy,          runic_ward,     'Adds Runic Ward modifier').
-alloy(adaptive_alloy,       attribute,      'Adds attribute modifier').
-alloy(protective_alloy,     defence,        'Adds defence modifier').
-alloy(expansive_alloy,      life,           'Adds life modifier').
-alloy(swift_alloy,          speed,          'Adds speed modifier').
-alloy(cyclonic_alloy,       physical,       'Adds physical modifier').
-alloy(prismatic_alloy,      elemental,      'Adds elemental modifier').
-alloy(mystic_alloy,         caster,         'Adds caster modifier').
-alloy(sovereign_alloy,      attack,         'Adds attack modifier').
-alloy(celestial_alloy,      resistance,     'Adds resistance modifier').
-alloy(transcendent_alloy,   gem_level,      'Adds gem level modifier').
-alloy(runebinder_alloy,     rune,           'Adds rune modifier').
-alloy(runefather_alloy,     rune,           'Adds enhanced rune modifier').
+alloy(poe2, runic_alloy,          runic_ward,     'Adds Runic Ward modifier').
+alloy(poe2, adaptive_alloy,       attribute,      'Adds attribute modifier').
+alloy(poe2, protective_alloy,     defence,        'Adds defence modifier').
+alloy(poe2, expansive_alloy,      life,           'Adds life modifier').
+alloy(poe2, swift_alloy,          speed,          'Adds speed modifier').
+alloy(poe2, cyclonic_alloy,       physical,       'Adds physical modifier').
+alloy(poe2, prismatic_alloy,      elemental,      'Adds elemental modifier').
+alloy(poe2, mystic_alloy,         caster,         'Adds caster modifier').
+alloy(poe2, sovereign_alloy,      attack,         'Adds attack modifier').
+alloy(poe2, celestial_alloy,      resistance,     'Adds resistance modifier').
+alloy(poe2, transcendent_alloy,   gem_level,      'Adds gem level modifier').
+alloy(poe2, runebinder_alloy,     rune,           'Adds rune modifier').
+alloy(poe2, runefather_alloy,     rune,           'Adds enhanced rune modifier').
 
 %% alloy_precondition(+AlloyName, +ItemState)
 %%   Alloys only work on rare items that are not corrupted/mirrored.
@@ -358,7 +373,7 @@ alloy_precondition(_, item_state(_, rare, _, _, Props, _, _, _)) :-
 alloy_postcondition(AlloyName,
     item_state(Base, rare, Ilvl, Inf, Props, OldPre, OldSuf, Impl),
     item_state(Base, rare, Ilvl, Inf, Props, NewPre, NewSuf, Impl)) :-
-    alloy(AlloyName, _, _),
+    alloy(_, AlloyName, _, _),
     append(OldPre, OldSuf, AllMods),
     AllMods \= [],
     random_member(_Removed, AllMods),
@@ -695,27 +710,27 @@ roll_suffixes(Category, Ilvl, _Prefixes, Suffixes) :-
 %%% 5. CURRENCY TRANSITION RULES
 %%% ==========================================================================
 
-%% currency(+Name)
+%% currency(+Game, +Name)
 %%   Complete catalogue of implemented currencies.
+%%   Every currency MUST declare which game it belongs to.
+%%   PoE1-only currencies that do not exist in PoE2 are tagged poe1.
+%%   This makes it impossible to accidentally use a PoE1 currency in a PoE2 recipe.
 
-currency(orb_of_transmutation).
-currency(orb_of_alteration).
-currency(orb_of_alchemy).
-currency(chaos_orb).
-currency(regal_orb).
-currency(exalted_orb).
-currency(orb_of_annulment).
-currency(orb_of_scouring).
-currency(divine_orb).
-currency(vaal_orb).
-currency(orb_of_augmentation).
-currency(orb_of_chance).
-% currency(fusing_orb).  % removed — PoE 1 only
-% currency(jewellers_orb).  % removed — PoE 1 only
-% currency(chromatic_orb).  % removed — PoE 1 only
-currency(essence_of_greed).
-currency(essence_of_wrath).
-currency(fracturing_orb).
+currency(poe1, orb_of_alteration).   % PoE 1 ONLY — does not exist in PoE 2
+currency(poe1, orb_of_scouring).     % PoE 1 ONLY — removed from PoE 2 (items cannot be reset)
+currency(poe2, orb_of_transmutation).
+currency(poe2, orb_of_alchemy).
+currency(poe2, chaos_orb).
+currency(poe2, regal_orb).
+currency(poe2, exalted_orb).
+currency(poe2, orb_of_annulment).
+currency(poe2, divine_orb).
+currency(poe2, vaal_orb).
+currency(poe2, orb_of_augmentation).
+currency(poe2, orb_of_chance).
+currency(poe2, essence_of_greed).
+currency(poe2, essence_of_wrath).
+currency(poe2, fracturing_orb).
 
 
 %% ---------- Orb of Transmutation ----------
@@ -1012,13 +1027,16 @@ currency_postcondition(fracturing_orb,
 
 %% can_apply(+Currency, +ItemState)
 %%   True if the currency's preconditions are satisfied for this item.
+%%   IMPORTANT: Checks that the currency exists in the current_game/1 context.
+%%   This prevents using PoE1 currencies (like orb_of_alteration) in PoE2 recipes.
 can_apply(Currency, Item) :-
-    currency(Currency),
+    current_game(Game),
+    currency(Game, Currency),
     currency_precondition(Currency, Item).
 
 %% apply_currency(+Currency, +OldItemState, -NewItemState)
 %%   Applies a currency to an item, producing the transformed item state.
-%%   Fails if can_apply/2 fails.
+%%   Fails if can_apply/2 fails (including game validation).
 apply_currency(Currency, OldItem, NewItem) :-
     can_apply(Currency, OldItem),
     currency_postcondition(Currency, OldItem, NewItem).
