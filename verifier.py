@@ -630,53 +630,99 @@ def _check_preconditions(state: ItemState, pre: dict, currency: str,
                     f"Step {step_num}: '{currency}' requires {req_rarity}, item is {state.rarity}",
                     False,
                 ))
+            else:
+                checks.append(Check(
+                    f"Step {step_num}: '{currency}' requires {req_rarity}, item is {state.rarity}",
+                    True,
+                ))
         else:
             if state.rarity != req_rarity:
                 checks.append(Check(
                     f"Step {step_num}: '{currency}' requires {req_rarity}, item is {state.rarity}",
                     False,
                 ))
+            else:
+                checks.append(Check(
+                    f"Step {step_num}: '{currency}' requires {req_rarity}, item is {state.rarity}",
+                    True,
+                ))
 
     # No mods check (for transmutation, alchemy, chance on normal base)
-    if pre.get("no_mods") and state.total_mods > 0:
-        checks.append(Check(
-            f"Step {step_num}: '{currency}' requires item with no mods (has {state.total_mods})",
-            False,
-        ))
+    if pre.get("no_mods"):
+        if state.total_mods > 0:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires item with no mods (has {state.total_mods})",
+                False,
+            ))
+        else:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires item with no mods",
+                True,
+            ))
 
     # Has mods check (for annulment, divine)
-    if pre.get("has_mods") and state.total_mods == 0:
-        checks.append(Check(
-            f"Step {step_num}: '{currency}' requires item with at least 1 mod",
-            False,
-        ))
+    if pre.get("has_mods"):
+        if state.total_mods == 0:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires item with at least 1 mod",
+                False,
+            ))
+        else:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires item with at least 1 mod",
+                True,
+            ))
 
     # Min mods check
     min_mods = pre.get("min_mods")
-    if min_mods and state.total_mods < min_mods:
-        checks.append(Check(
-            f"Step {step_num}: '{currency}' requires at least {min_mods} mods (has {state.total_mods})",
-            False,
-        ))
+    if min_mods:
+        if state.total_mods < min_mods:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires at least {min_mods} mods (has {state.total_mods})",
+                False,
+            ))
+        else:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires at least {min_mods} mods",
+                True,
+            ))
 
     # Open slot checks
-    if pre.get("open_slot") and not state.has_open_slot:
-        checks.append(Check(
-            f"Step {step_num}: '{currency}' requires open prefix or suffix slot (full: {state.prefix_count}p+{state.suffix_count}s)",
-            False,
-        ))
+    if pre.get("open_slot"):
+        if not state.has_open_slot:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires open prefix or suffix slot (full: {state.prefix_count}p+{state.suffix_count}s)",
+                False,
+            ))
+        else:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires open prefix or suffix slot",
+                True,
+            ))
 
-    if pre.get("open_prefix") and not state.has_open_prefix:
-        checks.append(Check(
-            f"Step {step_num}: '{currency}' requires open prefix slot ({state.prefix_count}/{state.max_prefixes})",
-            False,
-        ))
+    if pre.get("open_prefix"):
+        if not state.has_open_prefix:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires open prefix slot ({state.prefix_count}/{state.max_prefixes})",
+                False,
+            ))
+        else:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires open prefix slot",
+                True,
+            ))
 
-    if pre.get("open_suffix") and not state.has_open_suffix:
-        checks.append(Check(
-            f"Step {step_num}: '{currency}' requires open suffix slot ({state.suffix_count}/{state.max_suffixes})",
-            False,
-        ))
+    if pre.get("open_suffix"):
+        if not state.has_open_suffix:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires open suffix slot ({state.suffix_count}/{state.max_suffixes})",
+                False,
+            ))
+        else:
+            checks.append(Check(
+                f"Step {step_num}: '{currency}' requires open suffix slot",
+                True,
+            ))
 
     return checks
 
