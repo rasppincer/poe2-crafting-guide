@@ -182,12 +182,15 @@ def index():
     """API info endpoint."""
     return jsonify({
         "service": "poe2-crafting-guide",
-        "version": "0.5.0",
+        "version": "0.6.0",
         "description": "PoE 2 Crafting Guide API — no frontend, use One Ring dashboard",
         "endpoints": {
             "database": "/api/database?game=poe1|poe2|all",
             "recipes": "/api/recipes",
             "optimize": "/api/optimize",
+            "currency_palette": "/api/currency-palette",
+            "omen_map": "/api/omen-map",
+            "verify": "/api/recipe/verify",
             "health": "/health",
         },
     })
@@ -200,12 +203,43 @@ def health():
 
 @app.route("/api/database")
 def api_database():
-    """Return all DB data for the explorer tab. Supports ?game=poe1|poe2|all filter."""
+    """Return all DB data for the explorer tab. Supports ?game=poe1|poe2|all filter.
+
+    Query params (all optional):
+      ?game=poe1|poe2|all  — filter by game
+      ?category=ring       — filter mod_groups by category
+      ?slot=prefix|suffix  — filter mod_groups by slot
+      ?tag=life            — filter mod_groups by tag (partial match)
+      ?text=fire           — search in group name, description, category
+    """
     game = request.args.get("game", "all")
+    category = request.args.get("category", "").strip()
+    slot = request.args.get("slot", "").strip()
+    tag = request.args.get("tag", "").strip()
+    text = request.args.get("text", "").strip().lower()
+
     def by_game(items):
         return [i for i in items if i.get("game") == game] if game != "all" else items
+
+    # Filter mod_groups
+    mod_groups = DATA["mod_groups"]
+    if category:
+        mod_groups = [g for g in mod_groups if g["category"] == category]
+    if slot:
+        mod_groups = [g for g in mod_groups if g["slot"] == slot]
+    if tag:
+        tag_lower = tag.lower()
+        mod_groups = [g for g in mod_groups if any(tag_lower in t.lower() for t in g.get("tags", []))]
+    if text:
+        mod_groups = [
+            g for g in mod_groups
+            if text in g.get("group", "").lower()
+            or text in g.get("description", "").lower()
+            or text in g.get("category", "").lower()
+        ]
+
     return jsonify({
-        "mod_groups": DATA["mod_groups"],
+        "mod_groups": mod_groups,
         "omens": by_game(DATA["omens"]),
         "alloys": by_game(DATA["alloys"]),
         "quality_types": by_game(DATA["quality_types"]),
@@ -252,6 +286,32 @@ def api_recipe(name):
     return jsonify({"error": "Recipe not found"}), 404
 
 
+def _format_condition_label(cond):
+    """Format a condition dict into a human-readable label (like JS formatCondition)."""
+    ctype = cond.get("type", "")
+    value = cond.get("value", "")
+    if ctype == "has_mod":
+        return f"has [{value}]"
+    elif ctype == "not_has_mod":
+        return f"NOT has [{value}]"
+    elif ctype == "prefix_count_gte":
+        return f"prefix_count >= {value}"
+    elif ctype == "suffix_count_gte":
+        return f"suffix_count >= {value}"
+    elif ctype == "prefix_count_lte":
+        return f"prefix_count <= {value}"
+    elif ctype == "suffix_count_lte":
+        return f"suffix_count <= {value}"
+    elif ctype == "rarity_is":
+        return f"rarity == {value}"
+    elif ctype == "rarity_not":
+        return f"rarity != {value}"
+    elif ctype == "custom":
+        return str(value)
+    else:
+        return f"{ctype}: {value}"
+
+
 @app.route("/api/recipe/verify", methods=["POST"])
 def api_verify_recipe():
     """Verify a recipe's steps against the KB using state-tracking verifier."""
@@ -259,7 +319,20 @@ def api_verify_recipe():
     pl = DATA["prolog"]
     from verifier import verify_recipe
     result = verify_recipe(recipe, prolog_kb=pl)
-    return jsonify(result.to_dict())
+    result_dict = result.to_dict()
+
+    # Add condition_label to each condition in the response
+    # Conditions come from the original recipe steps (pre-normalization)
+    steps_input = recipe.get("steps", [])
+    for i, step_data in enumerate(steps_input):
+        conditions = step_data.get("conditions", [])
+        if conditions and i < len(result_dict["steps"]):
+            result_dict["steps"][i]["conditions"] = [
+                {**cond, "condition_label": _format_condition_label(cond)}
+                for cond in conditions
+            ]
+
+    return jsonify(result_dict)
 
 
 @app.route("/api/mod_pool/<category>")
@@ -278,6 +351,140 @@ def api_mod_pool(category):
 def api_prolog():
     """Return raw Prolog content."""
     return jsonify({"content": DATA["prolog"]})
+
+
+# ============================================================================
+# Currency Palette & Omen Map (Recipe Builder support)
+# ============================================================================
+
+# Catalyst names used for action_type detection
+CATALYST_NAMES = {
+    "flesh_catalyst", "neural_catalyst", "carapace_catalyst",
+    "uul_netol_catalyst", "xophs_catalyst", "tuls_catalyst",
+    "eshs_catalyst", "chayulas_catalyst", "reaver_catalyst",
+    "sibilant_catalyst", "skittering_catalyst", "adaptive_catalyst",
+    "armourer_scrap", "blacksmith_whetstone", "arcanist_etcher",
+}
+
+# Static basic orbs definition
+BASIC_ORBS = [
+    {"name": "orb_of_transmutation", "icon": "🔵", "label": "Transmutation"},
+    {"name": "orb_of_augmentation", "icon": "🔵", "label": "Augmentation"},
+    {"name": "orb_of_alchemy", "icon": "🟡", "label": "Alchemy"},
+    {"name": "chaos_orb", "icon": "🟣", "label": "Chaos"},
+    {"name": "regal_orb", "icon": "🟡", "label": "Regal"},
+    {"name": "exalted_orb", "icon": "⭐", "label": "Exalted"},
+    {"name": "orb_of_annulment", "icon": "🔴", "label": "Annulment"},
+    {"name": "divine_orb", "icon": "✨", "label": "Divine"},
+    {"name": "vaal_orb", "icon": "💀", "label": "Vaal"},
+    {"name": "orb_of_chance", "icon": "🎲", "label": "Chance"},
+    {"name": "fracturing_orb", "icon": "💎", "label": "Fracturing"},
+]
+
+# Static essences definition
+ESSENCES = [
+    {"name": "essence_of_the_body", "icon": "💚", "label": "Essence of the Body"},
+    {"name": "essence_of_wrath", "icon": "⚡", "label": "Essence of Wrath"},
+]
+
+
+def _guess_action_type(currency_name):
+    """Determine action_type from a currency name (moved from JS guessActionType)."""
+    if currency_name.startswith("essence_"):
+        return "apply_essence"
+    if currency_name in CATALYST_NAMES:
+        return "apply_catalyst"
+    return "apply_currency"
+
+
+def _omen_label(name):
+    """Generate a human-readable label from an omen snake_case name."""
+    return name.replace("_", " ").title()
+
+
+@app.route("/api/currency-palette")
+def api_currency_palette():
+    """Return currency categorization for the recipe builder palette.
+
+    Structure: { categories: { "Basic Orbs": {type, items}, ... } }
+    Each item: {name, icon, label, action_type}
+    """
+    # Basic orbs — static list
+    basic_items = [
+        {**orb, "action_type": _guess_action_type(orb["name"])}
+        for orb in BASIC_ORBS
+    ]
+
+    # Essences — static list
+    essence_items = [
+        {**ess, "action_type": _guess_action_type(ess["name"])}
+        for ess in ESSENCES
+    ]
+
+    # Omens — from DB, active only
+    omen_items = []
+    for omen in DATA["omens"]:
+        if omen.get("disabled"):
+            continue
+        name = omen["name"]
+        omen_items.append({
+            "name": name,
+            "icon": "🟢",
+            "label": _omen_label(name),
+            "action_type": _guess_action_type(name),
+        })
+
+    # Catalysts — from DB quality_types
+    catalyst_items = []
+    for qt in DATA["quality_types"]:
+        name = qt["name"]
+        catalyst_items.append({
+            "name": name,
+            "icon": "🧪",
+            "label": _omen_label(name),
+            "action_type": _guess_action_type(name),
+        })
+
+    return jsonify({
+        "categories": {
+            "Basic Orbs": {"type": "basic", "items": basic_items},
+            "Essences": {"type": "essence", "items": essence_items},
+            "Omens": {"type": "omen", "items": omen_items},
+            "Catalysts & Quality": {"type": "catalyst", "items": catalyst_items},
+        }
+    })
+
+
+# Omen → currency pairing map (static, from JS frontend)
+OMEN_CURRENCY_MAP = {
+    "sinistral_exaltation": "exalted_orb",
+    "dextral_exaltation": "exalted_orb",
+    "greater_exaltation": "exalted_orb",
+    "catalysing_exaltation": "exalted_orb",
+    "sinistral_annulment": "orb_of_annulment",
+    "dextral_annulment": "orb_of_annulment",
+    "sinistral_crystallisation": "exalted_orb",
+    "dextral_crystallisation": "exalted_orb",
+    "sinistral_erasure": "chaos_orb",
+    "dextral_erasure": "chaos_orb",
+    "sinistral_necromancy": "chaos_orb",
+    "dextral_necromancy": "chaos_orb",
+    "greater_annulment": "orb_of_annulment",
+    "omen_of_chance": "orb_of_chance",
+    "omen_of_the_ancients": "orb_of_chance",
+    "omen_of_blessed": "divine_orb",
+    "omen_of_sanctification": "vaal_orb",
+    "whittling": "exalted_orb",
+}
+
+
+@app.route("/api/omen-map")
+def api_omen_map():
+    """Return omen→currency pairing map.
+
+    Maps omen names to the currency they pair with.
+    """
+    return jsonify(OMEN_CURRENCY_MAP)
 
 
 # ============================================================================
