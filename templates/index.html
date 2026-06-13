@@ -712,8 +712,8 @@ function setGame(game) {
 // Load data
 async function loadData() {
   const [dbRes, recRes] = await Promise.all([
-    fetch('/api/database?game=' + currentGame),
-    fetch('/api/recipes')
+    fetch('api/database?game=' + currentGame),
+    fetch('api/recipes')
   ]);
   DB = await dbRes.json();
   RECIPES = await recRes.json();
@@ -877,7 +877,7 @@ function filterDB() {
 }
 
 async function refreshDB() {
-  await fetch('/api/database/refresh', {method: 'POST'});
+  await fetch('api/database/refresh', {method: 'POST'});
   await loadData();
 }
 
@@ -903,7 +903,7 @@ function renderRecipes() {
 let OPTIMIZER_DATA = null;
 
 async function loadOptimizer() {
-  const res = await fetch('/api/optimize');
+  const res = await fetch('api/optimize');
   OPTIMIZER_DATA = await res.json();
   renderOptimizer();
 }
@@ -987,7 +987,7 @@ async function verifyRecipe() {
   btn.textContent = 'Verifying...';
 
   const r = RECIPES[currentRecipe];
-  const res = await fetch('/api/recipe/verify', {
+  const res = await fetch('api/recipe/verify', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({...r, game: currentGame})
@@ -1449,7 +1449,7 @@ async function saveBuilderRecipe() {
   };
 
   try {
-    const res = await fetch('/api/recipe-builder/save', {
+    const res = await fetch('api/recipe-builder/save', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(recipe)
@@ -1464,7 +1464,7 @@ async function saveBuilderRecipe() {
 
 async function showLoadModal() {
   try {
-    const res = await fetch('/api/recipe-builder/list');
+    const res = await fetch('api/recipe-builder/list');
     const recipes = await res.json();
     const container = document.getElementById('load-recipe-list');
     if (recipes.length === 0) {
@@ -1492,7 +1492,7 @@ function closeLoadModal() {
 
 async function loadBuilderRecipe(filename) {
   try {
-    const res = await fetch('/api/recipe-builder/load/' + encodeURIComponent(filename));
+    const res = await fetch('api/recipe-builder/load/' + encodeURIComponent(filename));
     const recipe = await res.json();
     if (recipe.error) { alert('Error: ' + recipe.error); return; }
 
@@ -1526,7 +1526,7 @@ async function loadBuilderRecipe(filename) {
 async function deleteBuilderRecipe(filename) {
   if (!confirm('Delete this recipe?')) return;
   try {
-    await fetch('/api/recipe-builder/delete/' + encodeURIComponent(filename), {method: 'DELETE'});
+    await fetch('api/recipe-builder/delete/' + encodeURIComponent(filename), {method: 'DELETE'});
     showLoadModal(); // Refresh list
     builderToast('Recipe deleted');
   } catch (e) {
@@ -1553,7 +1553,7 @@ async function exportBuilderProlog() {
   };
 
   try {
-    const res = await fetch('/api/recipe-builder/export-prolog', {
+    const res = await fetch('api/recipe-builder/export-prolog', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(recipe)

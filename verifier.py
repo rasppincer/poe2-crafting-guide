@@ -152,6 +152,34 @@ CURRENCY_RULES = {
         "pre": {},
         "post": lambda s: _set_rarity(s, "rare", prefix=max(s.prefix_count, 1), suffix=max(s.suffix_count, 1)),
     },
+    "essence_of_abyss": {
+        "pre": {"rarity": ["magic", "rare"]},  # corrupted essence — works on magic/rare
+        "post": lambda s: _remove_random_mod(_add_random_mod(s, 1)),  # removes 1, adds 1
+    },
+    "essence_of_hysteria": {
+        "pre": {"rarity": ["magic", "rare"]},  # corrupted essence
+        "post": lambda s: _add_random_mod(s, 1),  # adds hysteria mod
+    },
+    "greater_exalted_orb": {
+        "pre": {"rarity": "rare", "open_slot": True},
+        "post": lambda s: _add_random_mod(s, 1),  # same as exalt but min ilvl 35
+    },
+    "perfect_exalted_orb": {
+        "pre": {"rarity": "rare", "open_slot": True},
+        "post": lambda s: _add_random_mod(s, 1),  # same as exalt but min ilvl 50
+    },
+    "preserved_cranium": {
+        "pre": {"rarity": "rare"},  # desecration — applies to rare jewels
+        "post": lambda s: _add_random_mod(s, 1),  # adds a desecrated suffix mod
+    },
+    "liquid_contempt": {
+        "pre": {"rarity": "rare", "has_mods": True},  # removes 1, adds +1 suffix/prefix
+        "post": lambda s: s,  # net zero — removes 1 mod, adds 1 crafted mod
+    },
+    "liquid_ferocity": {
+        "pre": {"rarity": "rare", "has_mods": True},  # removes 1, adds effect mod
+        "post": lambda s: s,  # net zero — removes 1 mod, adds 1 effect mod
+    },
 }
 
 # Add generic essence rule (any essence follows same pattern)
@@ -190,12 +218,12 @@ OMEN_CURRENCY_MAP = {
     "catalysing_exaltation": "exalted_orb",
     "sinistral_annulment": "orb_of_annulment",
     "dextral_annulment": "orb_of_annulment",
-    "sinistral_crystallisation": "exalted_orb",
-    "dextral_crystallisation": "exalted_orb",
+    "sinistral_crystallisation": "essence",
+    "dextral_crystallisation": "essence",
     "sinistral_erasure": "chaos_orb",
     "dextral_erasure": "chaos_orb",
-    "sinistral_necromancy": "chaos_orb",
-    "dextral_necromancy": "chaos_orb",
+    "sinistral_necromancy": "desecration",
+    "dextral_necromancy": "desecration",
     "greater_annulment": "orb_of_annulment",
     "omen_of_chance": "orb_of_chance",
     "omen_of_the_ancients": "orb_of_chance",
@@ -211,6 +239,8 @@ OMEN_POST_MODIFIERS = {
     "dextral_exaltation": lambda s: s,    # just targets suffix — state-wise same
     "sinistral_annulment": lambda s: s,   # targets prefix
     "dextral_annulment": lambda s: s,     # targets suffix
+    "sinistral_crystallisation": lambda s: s,  # essence removes only prefixes
+    "dextral_crystallisation": lambda s: s,    # essence removes only suffixes
 }
 
 
@@ -423,12 +453,33 @@ def verify_recipe(recipe: dict, prolog_kb: str = "") -> VerificationResult:
                     not disabled,
                 ))
             # Check omen-currency pairing
+            # "essence" in the map means "any essence currency" (wildcard)
+            # "desecration" means "any desecration currency" (preserved_cranium, etc.)
             expected_currency = OMEN_CURRENCY_MAP.get(omen)
-            if expected_currency and expected_currency != currency:
-                sr.checks.append(Check(
-                    f"Omen '{omen}' pairs with '{expected_currency}', not '{currency}'",
-                    False,
-                ))
+            if expected_currency:
+                if expected_currency == "essence":
+                    # Wildcard: any essence-type currency is valid
+                    is_essence = ("essence" in currency or currency in CURRENCY_RULES
+                                  and CURRENCY_RULES.get(currency, {}).get("pre", {}).get("rarity") in (["normal", "magic"], ["normal", "magic", "rare"]))
+                    if not is_essence and "essence" not in currency:
+                        sr.checks.append(Check(
+                            f"Omen '{omen}' pairs with any essence, not '{currency}'",
+                            False,
+                        ))
+                elif expected_currency == "desecration":
+                    # Wildcard: any desecration currency is valid
+                    is_desecration = ("cran" in currency or "desecrat" in currency
+                                      or currency in CURRENCY_RULES)
+                    if not is_desecration:
+                        sr.checks.append(Check(
+                            f"Omen '{omen}' pairs with any desecration currency, not '{currency}'",
+                            False,
+                        ))
+                elif expected_currency != currency:
+                    sr.checks.append(Check(
+                        f"Omen '{omen}' pairs with '{expected_currency}', not '{currency}'",
+                        False,
+                    ))
 
         # 3c: Check currency preconditions against current state
         if currency in CURRENCY_RULES:

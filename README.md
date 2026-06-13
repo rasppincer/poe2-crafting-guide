@@ -33,26 +33,49 @@ Each recipe declares its optimization goal and is validated against it. A recipe
 | r/pathofexile2 | https://www.reddit.com/r/pathofexile2/ | Community discoveries, crafting showcases |
 | PoE 2 Build Discords | various | Real-time crafting theorycrafting |
 
+## API Server
+
+This project is a **pure JSON API** — no frontend. The UI lives in the
+[One Ring](https://github.com/rasppincer/one-ring) dashboard.
+
+**Standalone** (direct access):
+```
+http://localhost:8322/api/database?game=poe2
+http://localhost:8322/api/recipes
+http://localhost:8322/api/optimize
+http://localhost:8322/health
+```
+
+**Via nginx** (through One Ring hub):
+```
+http://localhost/poe2-crafting/api/database?game=poe2
+http://localhost/poe2-crafting/api/recipes
+```
+
+Full API docs: `http://localhost:8322/` (returns endpoint list) or see
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
 ## Structure
 
 ```
 poe2-crafting-guide/
 ├── README.md                  ← you are here
+├── app.py                     ← Flask API server (no templates)
+├── poe2_crafting.pl           ← Prolog knowledge base
+├── optimizer.py               ← Recipe optimization engine
+├── verifier.py                ← State-tracking recipe verification
+├── resources/                 ← Source data + Prolog data files
+│   ├── mods_*.json            ← Raw scraped mod data from poe2db
+│   ├── mods_*.pl              ← Prolog mod data (consulted at startup)
+│   ├── omens.json
+│   ├── alloys.json
+│   └── *.md                   ← Mechanics documentation
+├── recipes/                   ← Saved recipes (JSON, from Recipe Builder)
+├── tests/                     ← pytest test suite (89 tests)
 ├── mechanics/                 ← how each crafting system works
-│   ├── currency.md
-│   ├── essences.md
-│   ├── omens.md
-│   ├── recombinators.md
-│   └── bench-crafts.md
 ├── algorithms/                ← step-by-step craft recipes
-│   ├── <item-type>/<specific-craft>.md
-│   └── ...
 ├── theorycraft/               ← probability, cost analysis, comparisons
-│   ├── expected-cost-methods.md
-│   └── mod-weight-math.md
 └── resources/                 ← reference tables, mod lists, links
-    ├── mod-tags.md
-    └── ilvl-breakpoints.md
 ```
 
 ## Conventions

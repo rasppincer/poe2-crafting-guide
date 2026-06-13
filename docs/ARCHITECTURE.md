@@ -2,14 +2,17 @@
 
 ## Overview
 
-The project has three layers:
+The project has three layers. **This is a pure API server** — no frontend.
+The UI lives in the [One Ring](../../one-ring/) dashboard project.
 
 ```
 ┌─────────────────────────────────────────────┐
-│  Web UI (Flask, port 8322)                  │  app.py + templates/index.html
-│  DB Explorer / Recipes / Recipe Tester      │
+│  API Server (Flask, port 8322)              │  app.py
+│  JSON endpoints for DB, recipes, optimizer  │
+│  Standalone: http://localhost:8322/api/     │
+│  Via nginx:  /poe2-crafting/api/            │
 ├─────────────────────────────────────────────┤
-│  Tests (pytest, 58 tests)                   │  tests/test_crafting_kb.py
+│  Tests (pytest, 89 tests)                   │  tests/test_crafting_kb.py
 │  Data integrity / Recipe validation / Omen  │  tests/test_recipes.py
 │  versioning / Mod pool verification         │
 ├─────────────────────────────────────────────┤
@@ -22,10 +25,25 @@ The project has three layers:
 └─────────────────────────────────────────────┘
 ```
 
+## API Architecture Pattern
+
+This project follows the **API-only** pattern from the One Ring hub:
+
+- **Sub-projects** (this one, dax-losers, etc.) = pure API servers, no frontend
+- **One Ring** = the frontend/dashboard layer that consumes APIs
+- **nginx** = reverse proxy, routes requests to the right backend
+
+Benefits:
+- Each API is testable via curl/CLI, no browser needed
+- nginx config is simple proxy_pass, no URL rewriting (sub_filter)
+- Frontend is centralized — one place to update UI across all projects
+- APIs work standalone (dev/testing) or through nginx (production)
+
 ## File Inventory
 
 | File | Purpose |
 |------|---------|
+| `app.py` | Flask API server (no templates, no static files) |
 | `poe2_crafting.pl` | Main Prolog KB — primitives, currency rules, engine |
 | `resources/mods_*.pl` | Per-category mod data (consulted by main file) |
 | `resources/mods_*.json` | Raw scraped data from poe2db (source of truth) |
@@ -35,10 +53,33 @@ The project has three layers:
 | `resources/version_050_changes.md` | 0.5.0 patch changes |
 | `resources/patch_050_status.md` | Current system status |
 | `primitives.md` | Human-readable primitive definitions (12 sections) |
-| `app.py` | Flask web server |
-| `templates/index.html` | Single-page web UI |
+| `recipes/` | Saved recipes (JSON, from Recipe Builder API) |
+| `optimizer.py` | Recipe optimization engine |
+| `verifier.py` | State-tracking recipe verification |
 | `tests/test_crafting_kb.py` | Data integrity + Prolog syntax tests |
 | `tests/test_recipes.py` | Recipe validation tests |
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Service info + available endpoints |
+| `/health` | GET | Health check (returns mod_groups count) |
+| `/api/database?game=poe1\|poe2\|all` | GET | Full DB dump (mod groups, omens, alloys, currencies) |
+| `/api/database/refresh` | POST | Reload data from disk |
+| `/api/recipes` | GET | All recipes (test fixtures + saved) |
+| `/api/recipes/<name>` | GET | Single recipe by name |
+| `/api/recipe/verify` | POST | Verify recipe steps against KB |
+| `/api/optimize` | GET | Evaluate all recipes |
+| `/api/optimize/<name>` | GET | Evaluate single recipe |
+| `/api/mod_pool/<category>` | GET | Mod groups for a category |
+| `/api/mod_probability/<cat>/<mod>` | GET | Probability of rolling a mod |
+| `/api/prolog` | GET | Raw Prolog content |
+| `/api/recipe-builder/list` | GET | List saved builder recipes |
+| `/api/recipe-builder/save` | POST | Save a recipe |
+| `/api/recipe-builder/load/<file>` | GET | Load a saved recipe |
+| `/api/recipe-builder/delete/<file>` | DELETE | Delete a saved recipe |
+| `/api/recipe-builder/export-prolog` | POST | Export recipe as Prolog facts |
 
 ## Prolog KB Structure
 
@@ -149,3 +190,4 @@ weapon × str_dex → weapon_sword
 4. **Quality NOT in item_state** — it's a post-roll multiplier, not a state
 5. **Consulted .pl files** — data files loaded at startup, not hardcoded
 6. **Recipes live in test files** — not in Prolog (yet), validated by pytest
+7. **API-only, no frontend** — UI lives in One Ring dashboard, this project serves JSON

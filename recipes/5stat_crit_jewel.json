@@ -1,0 +1,85 @@
+{
+  "name": "5-Stat Crit Jewel (OneManLeft, 0.5.0)",
+  "game": "poe2",
+  "goal": "maximum_values",
+  "base": "ruby_jewel",
+  "category": "jewel",
+  "source": "https://www.youtube.com/watch?v=7L9vNqEvr4s",
+  "starting_state": "rare jewel with 2 desired suffixes (e.g., crit chance + crit multi)",
+  "target": "5-stat jewel with 3 locked suffixes at 1.6x effect + 1 effect prefix + 1 chaos-rolled prefix",
+  "notes": [
+    "Adapted from OneManLeft's 0.5.0 jewel crafting discovery.",
+    "KEY MECHANIC: Liquid Contempt adds +1 suffix/prefix as a crafted mod. Only 1 crafted mod allowed.",
+    "KEY INSIGHT: When item has 3 suffixes and NO +1 suffix line, chaos orbs CANNOT touch suffixes.",
+    "The chaos orb tries to remove a suffix, can't add one back (full), so it blocks. On retry, it picks a prefix instead.",
+    "This makes prefix rolling completely deterministic after locking suffixes.",
+    "Liquid Ferocity adds (40-60)% increased Effect of Suffixes (as prefix). Guaranteed because it can't remove suffixes.",
+    "Total expected cost: ~30-50 divines for endgame mirror-tier jewels.",
+    "Works with Adorned for even more power."
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "apply_currency",
+      "currency": "liquid_contempt",
+      "precondition": "Rare jewel with 2 desired suffixes (e.g., crit chance + crit multi), has at least 1 mod to remove",
+      "result": "Removes 1 random non-crafted mod, adds +1 Suffix Modifier allowed as crafted prefix (50/50 to hit suffix removal)",
+      "note": "Potent Liquid Contempt removes 1 mod and adds +1 suffix as a crafted prefix. If it removes the wrong suffix, start over with a new jewel. Cost: ~1.5 div per attempt + jewel base (~20 exalts)."
+    },
+    {
+      "step": 2,
+      "action": "apply_with_omen",
+      "currency": "preserved_cranium",
+      "omen": "dextral_necromancy",
+      "precondition": "Rare jewel with 2 desired suffixes + crafted +1 suffix prefix, open suffix slot",
+      "result": "Guaranteed desecrated suffix mod added (omen forces suffix slot)",
+      "note": "Preserved Cranium is a desecration currency for jewels. Dextral Necromancy omen guarantees the desecrated mod goes to suffix. This fills suffix slot 3."
+    },
+    {
+      "step": 3,
+      "action": "apply_with_omen",
+      "currency": "preserved_cranium",
+      "omen": "omen_of_abyssal_echoes",
+      "precondition": "Rare jewel with desecrated suffix from step 2, want to reroll the desecrated mod",
+      "result": "Rerolls the desecrated mod options — repeat until desired suffix appears",
+      "note": "Abyssal Echoes omen lets you reroll desecrated options when revealing. Keep going until you hit the desired 3rd suffix (e.g., crit multi). Each attempt costs a cranium + omen."
+    },
+    {
+      "step": 4,
+      "action": "apply_with_omen",
+      "currency": "orb_of_annulment",
+      "omen": "sinistral_annulment",
+      "precondition": "Rare jewel with 3 locked suffixes + crafted +1 suffix prefix that needs removal",
+      "result": "Removes the crafted +1 suffix prefix — jewel now has 3 suffixes and NO +1 suffix line",
+      "note": "This is the critical step. After removing the +1 suffix crafted prefix, the jewel has 3 natural suffixes and 0-2 prefixes. The +1 suffix line is gone, which locks chaos orbs to prefix-only rolling."
+    },
+    {
+      "step": 5,
+      "action": "spam",
+      "currency": "chaos_orb",
+      "precondition": "Rare jewel with 3 suffixes, no +1 suffix line, 1-2 prefixes to reroll",
+      "goal": "Desired prefix mod (e.g., spell damage, flat damage)",
+      "until": "Prefix contains desired mod",
+      "note": "CHAOS ORBS CAN ONLY AFFECT PREFIXES. When the jewel has 3 suffixes and no +1 suffix line, the chaos orb tries to remove a suffix, finds it can't add one back (full), and blocks. On retry it picks a prefix instead. This is deterministic prefix-only rolling."
+    },
+    {
+      "step": 6,
+      "action": "apply_currency",
+      "currency": "liquid_ferocity",
+      "precondition": "Rare jewel with 3 locked suffixes + 2 good prefixes",
+      "result": "Removes 1 prefix, adds (40-60)% increased Effect of Suffixes as crafted prefix",
+      "note": "Potent Liquid Ferocity removes a random mod and adds 'increased Effect of Suffixes' as a prefix. It CANNOT remove a suffix (same lock trick). So it always removes a prefix and adds the effect mod. Divine to 60% for max power."
+    }
+  ],
+  "cost_analysis": {
+    "liquid_contempt": "~1.5 div per attempt (50/50 to hit suffix removal)",
+    "jewel_base": "~20 exalts for 2-suffix rare jewel",
+    "preserved_cranium": "varies — desecration currency for jewels",
+    "dextral_necromancy_omen": "~1 div",
+    "abyssal_echoes_attempts": "~2-5 attempts to hit desired suffix",
+    "sinistral_annulment_omen": "~1 div",
+    "chaos_for_prefixes": "cheap — chaos orbs only",
+    "liquid_ferocity": "~1.5 div",
+    "total_expected": "~30-50 divines for endgame mirror-tier jewel"
+  }
+}

@@ -1,15 +1,16 @@
-"""PoE 2 Crafting Guide — Web UI
+"""PoE 2 Crafting Guide — API Server
 
-Serves a single-page app with three tabs:
-  1. Database Explorer — browse mod groups, currencies, omens, alloys, quality
-  2. Recipes — list of crafting recipes with details
-  3. Recipe Tester — step through a recipe, adjust steps, test preconditions
+Pure JSON API for PoE 2 crafting data, recipes, and optimization.
+No frontend — consumed by One Ring dashboard or direct API clients.
+
+Standalone: http://localhost:8322/api/database?game=poe2
+Via nginx:  http://localhost/poe2-crafting/api/database?game=poe2
 """
 
 import json
 import re
 from pathlib import Path
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 ROOT = Path(__file__).parent
@@ -178,7 +179,23 @@ DATA = get_all_data()
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    """API info endpoint."""
+    return jsonify({
+        "service": "poe2-crafting-guide",
+        "version": "0.5.0",
+        "description": "PoE 2 Crafting Guide API — no frontend, use One Ring dashboard",
+        "endpoints": {
+            "database": "/api/database?game=poe1|poe2|all",
+            "recipes": "/api/recipes",
+            "optimize": "/api/optimize",
+            "health": "/health",
+        },
+    })
+
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok", "mod_groups": len(DATA["mod_groups"])})
 
 
 @app.route("/api/database")

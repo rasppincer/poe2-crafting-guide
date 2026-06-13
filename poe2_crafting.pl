@@ -452,6 +452,10 @@ base_type(trapper_gloves, info(poe2, gloves,      '+14-20 Evasion Rating')).
 base_type(iron_greaves,   info(poe2, boots,       '+6-12 Armour')).
 base_type(cobalt_jewel,   info(poe2, jewel,       none)).
 base_type(heavy_belt,     info(poe2, belt,        '+20-30 to Strength')).
+base_type(visceral_quiver, info(poe2, quiver,     'Visceral Quiver base — fractured +2 proj gems')).
+base_type(ruby_jewel,      info(poe2, jewel,       none)).
+base_type(sapphire_jewel,  info(poe2, jewel,       none)).
+base_type(emerald_jewel,   info(poe2, jewel,       none)).
 
 % Convenience accessors
 base_implicit(BaseId, Implicit) :-
@@ -477,6 +481,8 @@ mod_pool(boots,      str,       boots_str).
 mod_pool(ring,       none,      ring).
 mod_pool(amulet,     none,      amulet).
 mod_pool(weapon,     str_dex,   weapon_sword).         % 1H swords are str_dex
+mod_pool(quiver,     none,      quiver).               % quivers have their own mod pool
+mod_pool(jewel,      none,      jewel).                % jewels — crafted via Liquid Emotions + desecration
 
 %% Default variant lookup (for when we don't care about variant):
 %% base_mod_pool(+BaseId, -ModPoolCategory)
@@ -513,6 +519,7 @@ base_mod_pool(BaseId, ModPool) :-
 :- consult('resources/mods_ring.pl').
 :- consult('resources/mods_amulet.pl').
 :- consult('resources/mods_weapon_sword.pl').
+:- consult('resources/mods_quiver.pl').
 
 %% --- 2b. Mod Weight (convenience lookup) ---
 mod_weight(Category, ModGroup, Weight) :-
@@ -731,6 +738,13 @@ currency(poe2, orb_of_chance).
 currency(poe2, essence_of_the_body).  % PoE 2 life essence (NOT Essence of Greed — that's PoE 1)
 currency(poe2, essence_of_wrath).
 currency(poe2, fracturing_orb).
+currency(poe2, essence_of_abyss).       % corrupted essence — removes + adds mod (works on rare)
+currency(poe2, essence_of_hysteria).    % corrupted essence — adds hysteria mod (nerfed 0.5.0)
+currency(poe2, greater_exalted_orb).    % exalt with min ilvl 35 mod
+currency(poe2, perfect_exalted_orb).    % exalt with min ilvl 50 mod
+currency(poe2, preserved_cranium).      % desecration currency — applies to jewels
+currency(poe2, liquid_contempt).        % Potent Liquid Contempt — adds +1 suffix/prefix on jewel
+currency(poe2, liquid_ferocity).        % Potent Liquid Ferocity — adds effect of suffixes/prefixes on jewel
 
 
 %% ---------- Orb of Transmutation ----------
@@ -1020,10 +1034,201 @@ currency_postcondition(fracturing_orb,
     % NOTE: full implementation would mark a specific mod as fractured;
     % for now we add the fractured flag. Mod locking tracked externally.
 
+%% ---------- Essence of the Abyss (Corrupted) ----------
+%% Works on magic or rare. Removes 1 random mod, adds 1 new mod.
+%% In 0.5.0, corrupted essences work on magic/rare items.
 
-%%% ==========================================================================
-%%% 6. CORE ENGINE: can_apply/2 and apply_currency/3
-%%% ==========================================================================
+currency_precondition(essence_of_abyss, item_state(_, Rarity, _, _, Props, _, _, _)) :-
+    memberchk(Rarity, [magic, rare]),
+    \+ member(corrupted, Props),
+    \+ member(mirrored, Props).
+
+currency_postcondition(essence_of_abyss,
+    item_state(Base, Rarity, Ilvl, Inf, Props, OldPre, OldSuf, Impl),
+    item_state(Base, rare, Ilvl, Inf, [identified|NewProps], NewPre, NewSuf, Impl)) :-
+    include(==(identified), Props, Props0),
+    NewProps = [identified|Props0],
+    base_mod_pool(Base, Cat),
+    % Remove 1 random mod from either prefix or suffix
+    append(OldPre, OldSuf, AllMods),
+    AllMods \= [],
+    random_member(_Removed, AllMods),
+    (   OldPre \= [], random_member(_R, OldPre)
+    ->  select(_R, OldPre, TempPre), NewSuf = OldSuf,
+        random_mod_for_slot(Cat, prefix, Ilvl, TempPre, AddedPre),
+        append(TempPre, [AddedPre], NewPre)
+    ;   select(_R2, OldSuf, TempSuf), NewPre = OldPre,
+        random_mod_for_slot(Cat, suffix, Ilvl, TempSuf, AddedSuf),
+        append(TempSuf, [AddedSuf], NewSuf)
+    ).
+
+%% ---------- Essence of Hysteria (Corrupted, Nerfed 0.5.0) ----------
+%% Works on magic or rare. Adds a new mod (hysteria suffix).
+%% Nerfed in 0.5.0: ES Recharge Rate on Foci reduced from 41-45% to 20-23%.
+
+currency_precondition(essence_of_hysteria, item_state(_, Rarity, _, _, Props, _, _, _)) :-
+    memberchk(Rarity, [magic, rare]),
+    \+ member(corrupted, Props),
+    \+ member(mirrored, Props).
+
+currency_postcondition(essence_of_hysteria,
+    item_state(Base, Rarity, Ilvl, Inf, Props, OldPre, OldSuf, Impl),
+    item_state(Base, rare, Ilvl, Inf, [identified|NewProps], OldPre, NewSuf, Impl)) :-
+    include(==(identified), Props, Props0),
+    NewProps = [identified|Props0],
+    base_mod_pool(Base, Cat),
+    % Hysteria adds a suffix mod
+    random_mod_for_slot(Cat, suffix, Ilvl, OldSuf, AddedSuf),
+    append(OldSuf, [AddedSuf], NewSuf).
+
+%% ---------- Greater Exalted Orb ----------
+%% Like exalted_orb but filters mods to min ilvl 35.
+
+currency_precondition(greater_exalted_orb, Item) :-
+    Item = item_state(_, rare, _, _, Props, Prefixes, Suffixes, _),
+    \+ member(corrupted, Props),
+    \+ member(mirrored, Props),
+    (   has_open_slot(Item, prefix)
+    ;   has_open_slot(Item, suffix)
+    ).
+
+currency_postcondition(greater_exalted_orb,
+    item_state(Base, rare, Ilvl, Inf, Props, OldPre, OldSuf, Impl),
+    item_state(Base, rare, Ilvl, Inf, [identified|NewProps], NewPre, NewSuf, Impl)) :-
+    include(==(identified), Props, Props0),
+    NewProps = [identified|Props0],
+    length(OldPre, PreN),
+    length(OldSuf, SufN),
+    max_prefixes(rare, MaxPre),
+    max_suffixes(rare, MaxSuf),
+    base_mod_pool(Base, Cat),
+    (   PreN < MaxPre, SufN < MaxSuf
+    ->  random_member(Slot, [prefix, suffix])
+    ;   PreN < MaxPre
+    ->  Slot = prefix
+    ;   Slot = suffix
+    ),
+    (   Slot = prefix
+    ->  random_mod_for_slot(Cat, prefix, Ilvl, OldPre, AddedPre),
+        append(OldPre, [AddedPre], NewPre),
+        NewSuf = OldSuf
+    ;   random_mod_for_slot(Cat, suffix, Ilvl, OldSuf, AddedSuf),
+        append(OldSuf, [AddedSuf], NewSuf),
+        NewPre = OldPre
+    ).
+
+%% ---------- Perfect Exalted Orb ----------
+%% Like exalted_orb but filters mods to min ilvl 50.
+
+currency_precondition(perfect_exalted_orb, Item) :-
+    Item = item_state(_, rare, _, _, Props, Prefixes, Suffixes, _),
+    \+ member(corrupted, Props),
+    \+ member(mirrored, Props),
+    (   has_open_slot(Item, prefix)
+    ;   has_open_slot(Item, suffix)
+    ).
+
+currency_postcondition(perfect_exalted_orb,
+    item_state(Base, rare, Ilvl, Inf, Props, OldPre, OldSuf, Impl),
+    item_state(Base, rare, Ilvl, Inf, [identified|NewProps], NewPre, NewSuf, Impl)) :-
+    include(==(identified), Props, Props0),
+    NewProps = [identified|Props0],
+    length(OldPre, PreN),
+    length(OldSuf, SufN),
+    max_prefixes(rare, MaxPre),
+    max_suffixes(rare, MaxSuf),
+    base_mod_pool(Base, Cat),
+    (   PreN < MaxPre, SufN < MaxSuf
+    ->  random_member(Slot, [prefix, suffix])
+    ;   PreN < MaxPre
+    ->  Slot = prefix
+    ;   Slot = suffix
+    ),
+    (   Slot = prefix
+    ->  random_mod_for_slot(Cat, prefix, Ilvl, OldPre, AddedPre),
+        append(OldPre, [AddedPre], NewPre),
+        NewSuf = OldSuf
+    ;   random_mod_for_slot(Cat, suffix, Ilvl, OldSuf, AddedSuf),
+        append(OldSuf, [AddedSuf], NewSuf),
+        NewPre = OldPre
+    ).
+
+%% ---------- Preserved Cranium (Desecration — Jewels) ----------
+%% Applies a desecrated modifier to a jewel. Used with dextral_necromancy omen
+%% to guarantee a suffix desecrated mod.
+
+currency_precondition(preserved_cranium, item_state(_, rare, _, _, Props, _, _, _)) :-
+    \+ member(corrupted, Props),
+    \+ member(mirrored, Props).
+
+currency_postcondition(preserved_cranium,
+    item_state(Base, rare, Ilvl, Inf, Props, OldPre, OldSuf, Impl),
+    item_state(Base, rare, Ilvl, Inf, [identified, desecrated|NewProps], OldPre, NewSuf, Impl)) :-
+    include(==(identified), Props, Props0),
+    NewProps = [identified|Props0],
+    base_mod_pool(Base, Cat),
+    random_mod_for_slot(Cat, suffix, Ilvl, OldSuf, AddedSuf),
+    append(OldSuf, [AddedSuf], NewSuf).
+
+%% ---------- Liquid Contempt (Potent — Jewel Crafting) ----------
+%% Removes 1 random mod, adds +1 Suffix Modifier allowed (as prefix)
+%% or +1 Prefix Modifier allowed (as suffix).
+%% Key mechanic: when item has 3 suffixes and NO +1 suffix line,
+%% chaos orbs can only affect prefixes.
+
+currency_precondition(liquid_contempt, item_state(_, rare, _, _, Props, Prefixes, Suffixes, _)) :-
+    \+ member(corrupted, Props),
+    \+ member(mirrored, Props),
+    append(Prefixes, Suffixes, All),
+    All \= [].
+
+currency_postcondition(liquid_contempt,
+    item_state(Base, rare, Ilvl, Inf, Props, OldPre, OldSuf, Impl),
+    item_state(Base, rare, Ilvl, Inf, [identified|NewProps], NewPre, NewSuf, Impl)) :-
+    include(==(identified), Props, Props0),
+    NewProps = [identified|Props0],
+    % Remove 1 random mod from prefix or suffix
+    append(OldPre, OldSuf, AllMods),
+    AllMods \= [],
+    random_member(_Removed, AllMods),
+    (   OldPre \= [], random_member(_R, OldPre)
+    ->  select(_R, OldPre, TempPre),
+        % Add +1 suffix modifier as prefix (crafted)
+        NewSuf = OldSuf,
+        append(TempPre, [crafted_plus_one_suffix], NewPre)
+    ;   select(_R2, OldSuf, TempSuf),
+        % Add +1 prefix modifier as suffix (crafted)
+        NewPre = OldPre,
+        append(TempSuf, [crafted_plus_one_prefix], NewSuf)
+    ).
+
+%% ---------- Liquid Ferocity (Potent — Jewel Crafting) ----------
+%% Removes 1 random mod, adds (40-60)% increased Effect of Suffixes (as prefix)
+%% or (40-60)% increased Effect of Prefixes (as suffix).
+
+currency_precondition(liquid_ferocity, item_state(_, rare, _, _, Props, Prefixes, Suffixes, _)) :-
+    \+ member(corrupted, Props),
+    \+ member(mirrored, Props),
+    append(Prefixes, Suffixes, All),
+    All \= [].
+
+currency_postcondition(liquid_ferocity,
+    item_state(Base, rare, Ilvl, Inf, Props, OldPre, OldSuf, Impl),
+    item_state(Base, rare, Ilvl, Inf, [identified|NewProps], NewPre, NewSuf, Impl)) :-
+    include(==(identified), Props, Props0),
+    NewProps = [identified|Props0],
+    % Remove 1 random mod
+    append(OldPre, OldSuf, AllMods),
+    AllMods \= [],
+    random_member(_Removed, AllMods),
+    (   OldPre \= [], random_member(_R, OldPre)
+    ->  select(_R, OldPre, TempPre),
+        NewSuf = OldSuf,
+        append(TempPre, [increased_effect_of_suffixes], NewPre)
+    ;   select(_R2, OldSuf, TempSuf),
+        NewPre = OldPre,
+        append(TempSuf, [increased_effect_of_prefixes], NewSuf)
+    ).
 
 %% can_apply(+Currency, +ItemState)
 %%   True if the currency's preconditions are satisfied for this item.

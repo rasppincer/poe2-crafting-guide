@@ -1,0 +1,82 @@
+{
+  "name": "Widowhale Quiver (One Mana Left, 0.5.0)",
+  "game": "poe2",
+  "goal": "maximum_values",
+  "base": "visceral_quiver",
+  "category": "quiver",
+  "source": "https://www.youtube.com/watch?v=w3X0ejq_wpo",
+  "starting_state": "rare, fractured +2 Projectile Skills prefix, 4+ mods",
+  "target": "Fractured +2 Projectile Skills quiver with T1 flat lightning, projectile speed, and double crit suffixes",
+  "notes": [
+    "Adapted from One Mana Left's 0.3.0 Widowhale Amazon quiver craft for 0.5.0.",
+    "Key difference from Deadeye version: +2 proj gems (exponential scaling) instead of attack speed (linear).",
+    "Step 1 is the creator's original tech — omen-assisted prefix slam can skip the 1-in-4 entirely.",
+    "Step 3 (essence of abyss + dextral crystallisation) removes a suffix deterministically.",
+    "Step 4 (essence of hysteria) adds the hysteria suffix mod.",
+    "Step 5 (same-type omen + perfect exalt) finishes with double crit.",
+    "Total expected cost: ~20 divines for prefixes, suffixes add ~5-10 more.",
+    "0.5.0 note: Essence of Hysteria was nerfed (ES Recharge Rate reduced) but still usable.",
+    "STARTING POINT: Buy a fractured +2 proj gems visceral quiver (ilvl 82+) from trade. Already rare."
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "spam",
+      "currency": "chaos_orb",
+      "precondition": "Rare quiver with fractured +2 proj prefix, open prefix slots available",
+      "goal": "T1 flat lightning damage to attacks (AddsFlatLightningDamageToAttacks)",
+      "until": "Prefixes contain T1 flat lightning damage",
+      "note": "In PoE 2, Chaos Orb removes 1 random non-fractured mod and adds 1 new mod of the same type (prefix→prefix, suffix→suffix). T1 lightning is ~1 in 260 chaos per hit, costing ~5-7 divines average. Chaos are cheap (~50:1 div)."
+    },
+    {
+      "step": 2,
+      "action": "apply_with_omen",
+      "currency": "exalted_orb",
+      "omen": "sinistral_exaltation",
+      "precondition": "Rare quiver with fractured +2 proj, T1 lightning prefix, open prefix slot",
+      "result": "Guaranteed prefix slam — 50/50 chance to hit projectile speed prefix",
+      "note": "Creator's key tech: omen guarantees prefix slot, so the exalt can only roll proj speed (the only other prefix group). If it hits, skip to step 5."
+    },
+    {
+      "step": 2.1,
+      "action": "apply_currency",
+      "currency": "greater_exalted_orb",
+      "precondition": "Rare quiver with open prefix slot (proj speed NOT hit in step 2)",
+      "result": "Prefix slam with min ilvl 35 filter — ~1/7-8 for T1-T2 proj speed",
+      "note": "Creator's original tech: Greater Exalt costs ~12 exalts (cheap). Filters low-ilvl mods, dramatically boosting proj speed odds. If this hits, skip to step 5. This is how the creator succeeded on attempt 3."
+    },
+    {
+      "step": 3,
+      "action": "apply_with_omen",
+      "currency": "essence_of_abyss",
+      "omen": "dextral_crystallisation",
+      "precondition": "Rare quiver after steps 1-2, proj speed NOT hit, has suffixes to manipulate",
+      "result": "Removes a suffix deterministically (omen controls slot), adds new mod",
+      "note": "Essence of Abyss is a corrupted essence (works on magic/rare in 0.5.0). Dextral Crystallisation omen makes it remove only suffixes. Opens a suffix slot for hysteria."
+    },
+    {
+      "step": 4,
+      "action": "apply_currency",
+      "currency": "essence_of_hysteria",
+      "precondition": "Rare quiver with open suffix slot",
+      "result": "Adds Hysteria suffix mod",
+      "note": "Corrupted essence, nerfed in 0.5.0 (ES Recharge Rate: 41-45% → 20-23%) but still usable."
+    },
+    {
+      "step": 5,
+      "action": "apply_currency",
+      "currency": "perfect_exalted_orb",
+      "precondition": "Rare quiver with open suffix slot(s)",
+      "result": "Suffix slam with min ilvl 50 filter — targets crit mods",
+      "note": "Perfect Exalt filters to ilvl 50+ mods. With attack/critical tags, targets crit chance and crit multi. Attack speed is also valid (highest DPS but mana-hungry). ~1/3 to hit a crit mod."
+    }
+  ],
+  "cost_analysis": {
+    "chaos_for_t1_lightning": "~260 chaos (~5-7 divines)",
+    "exalted_orbs": "2-3",
+    "greater_exalted_orb": "~12 exalts",
+    "perfect_exalted_orb": "~3 divines",
+    "omens": "2-3 divines total",
+    "total_expected": "~20-30 divines"
+  }
+}
