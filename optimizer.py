@@ -28,14 +28,14 @@ def load_mod_data():
     """Load all mod group data from Prolog files."""
     pl = PROLOG_FILE.read_text()
     # Load consulted data files
-    for consult in re.findall(r":- consult\('([^']+)'\)", pl):
+    for consult in re.findall(r":- (?:consult|load_files)\('([^']+)'", pl):
         data_path = PROJECT_ROOT / consult
         if data_path.exists():
             pl += "\n" + data_path.read_text()
 
     mod_groups = []
     for m in re.finditer(
-        r"mod_group\((\w+),\s*(\w+),\s*'([^']*)',\s*\[([^\]]*)\],\s*(\d+),\s*(\d+),\s*(\d+),\s*(\w+)\)",
+        r"mod_group\((\w+),\s*'?([^',]+)'?,\s*'([^']*)',\s*\[([^\]]*)\],\s*(\d+),\s*(\d+),\s*(\d+),\s*(\w+)\)",
         pl
     ):
         tags = [t.strip() for t in m.group(4).split(",") if t.strip()]

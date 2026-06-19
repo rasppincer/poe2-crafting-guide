@@ -64,6 +64,10 @@
     mod_pool_weight_sum/3,
     roll_probability/3,
 
+    % --- exclusions ---
+    exclusion_group/4,
+    modifier_exclusion/4,
+
     % --- influence ---
     influence_type/1,
 
@@ -80,7 +84,8 @@
     currency_postcondition/3,
 
     % --- core engine ---
-    item_state/8,
+    % --- item state (used as compound term, not stored facts) ---
+    % item_state/8 is a data structure, not a predicate — no export needed
     can_apply/2,
     apply_currency/3,
 
@@ -93,6 +98,11 @@
     roll_suffixes/4,
     random_mod_for_slot/5
 ]).
+
+%% Suppress SWI-Prolog warnings for multi-file predicates
+:- multifile mod_pool_weight_sum/3, mod_group/8, exclusion_group/4, modifier_exclusion/4.
+:- discontiguous currency_precondition/2.
+:- discontiguous currency_postcondition/3.
 
 
 %% ==========================================================================
@@ -162,8 +172,9 @@ nerfed(essence, perfect_essence_of_battle, '0.5.0',
        'Attack skill levels reduced from +5/+3 to +3/+2').
 nerfed(essence, essence_of_hysteria,       '0.5.0',
        'ES Recharge Rate on Foci reduced from 41-45% to 20-23%').
-nerfed(omen, uhtreds_saga,                '0.5.0',
-       'Skill levels reduced from +3 to +2').
+%% TODO: verify omen name — no matching omen/5 fact exists for uhtreds_saga
+%% nerfed(omen, uhtreds_saga,               '0.5.0',
+%%        'Skill levels reduced from +3 to +2').
 
 % --- Validity Queries ---
 
@@ -226,18 +237,18 @@ item_property(desecrated).        % has desecrated modifiers
 quality_type(poe2, armourer_scrap,   [armour, evasion, energy_shield, runic_ward]).
 quality_type(poe2, blacksmith_whetstone, [physical]).
 quality_type(poe2, arcanist_etcher,  [gem_level]).
-quality_type(poe2, flesh_catalyst,   [life]).
-quality_type(poe2, neural_catalyst,  [mana]).
-quality_type(poe2, carapace_catalyst,[armour, evasion, energy_shield]).
-quality_type(poe2, uul_netol_catalyst, [physical]).
-quality_type(poe2, xophs_catalyst,   [fire]).
-quality_type(poe2, tuls_catalyst,    [cold]).
-quality_type(poe2, eshs_catalyst,    [lightning]).
-quality_type(poe2, chayulas_catalyst,[chaos]).
+quality_type(poe2, flesh_catalyst,   [life, maximum_life]).
+quality_type(poe2, neural_catalyst,  [mana, maximum_mana, resource]).
+quality_type(poe2, carapace_catalyst,[defences, armour, evasion, energy_shield]).
+quality_type(poe2, uul_netol_catalyst, [physical, physical_damage]).
+quality_type(poe2, xophs_catalyst,   [fire, fire_damage]).
+quality_type(poe2, tuls_catalyst,    [cold, cold_damage]).
+quality_type(poe2, eshs_catalyst,    [lightning, lightning_damage]).
+quality_type(poe2, chayulas_catalyst,[chaos, chaos_damage]).
 quality_type(poe2, reaver_catalyst,  [attack]).
-quality_type(poe2, sibilant_catalyst,[caster]).
-quality_type(poe2, skittering_catalyst, [speed]).
-quality_type(poe2, adaptive_catalyst,[attribute]).
+quality_type(poe2, sibilant_catalyst,[caster, spell]).
+quality_type(poe2, skittering_catalyst, [speed, attack_speed, cast_speed]).
+quality_type(poe2, adaptive_catalyst,[attribute, strength, dexterity, intelligence]).
 
 %% Quality caps by item type
 quality_max(ring,              20).
@@ -273,10 +284,11 @@ quality_effect(QualityPct, ModTags, CatalystType, Multiplier) :-
 % Sinistral/Dextral pairs — the core of deterministic crafting
 omen(poe2, sinistral_erasure,     chaos_orb,      removes_only_prefixes,       prefix).
 omen(poe2, dextral_erasure,       chaos_orb,      removes_only_suffixes,       suffix).
-omen(poe2, sinistral_alchemy,  % DISABLED 0.3-0.5     orb_of_alchemy, max_prefixes,                prefix).
-omen(poe2, dextral_alchemy,  % DISABLED 0.3-0.5       orb_of_alchemy, max_suffixes,                suffix).
-omen(poe2, sinistral_coronation,  % DISABLED 0.3-0.5  regal_orb,      adds_only_prefixes,          prefix).
-omen(poe2, dextral_coronation,  % DISABLED 0.3-0.5    regal_orb,      adds_only_suffixes,          suffix).
+% DISABLED 0.3-0.5
+omen(poe2, sinistral_alchemy,     orb_of_alchemy, max_prefixes,                prefix).
+omen(poe2, dextral_alchemy,       orb_of_alchemy, max_suffixes,                suffix).
+omen(poe2, sinistral_coronation,  regal_orb,      adds_only_prefixes,          prefix).
+omen(poe2, dextral_coronation,    regal_orb,      adds_only_suffixes,          suffix).
 omen(poe2, sinistral_exaltation,  exalted_orb,    adds_only_prefixes,          prefix).
 omen(poe2, dextral_exaltation,    exalted_orb,    adds_only_suffixes,          suffix).
 omen(poe2, sinistral_annulment,   orb_of_annulment, removes_only_prefixes,     prefix).
@@ -288,9 +300,10 @@ omen(poe2, dextral_necromancy,    desecration,    adds_only_suffixes,          s
 
 % Power omens
 omen(poe2, greater_exaltation,    exalted_orb,    adds_two_mods,               both).
-omen(poe2, greater_annulment,  % DISABLED 0.3-0.5     orb_of_annulment, removes_two_mods,          both).
-omen(poe2, homogenising_exaltation,  % DISABLED 0.3-0.5 exalted_orb,  adds_same_tag_mod,           both).
-omen(poe2, homogenising_coronation,  % DISABLED 0.3-0.5 regal_orb,    adds_same_tag_mod,           both).
+% DISABLED 0.3-0.5
+omen(poe2, greater_annulment,        orb_of_annulment, removes_two_mods,          both).
+omen(poe2, homogenising_exaltation,  exalted_orb,      adds_same_tag_mod,         both).
+omen(poe2, homogenising_coronation,  regal_orb,        adds_same_tag_mod,         both).
 omen(poe2, catalysing_exaltation, exalted_orb,    consumes_quality_for_targeting, both).
 omen(poe2, whittling,             chaos_orb,      removes_lowest_level_mod,    both).
 
@@ -299,10 +312,12 @@ omen(poe2, omen_of_chance,        orb_of_chance,  wont_destroy_item,           b
 omen(poe2, omen_of_the_ancients,  orb_of_chance,  upgrades_to_random_unique,   both).
 omen(poe2, omen_of_blessed,       divine_orb,     rerolls_implicit_only,       both).
 omen(poe2, omen_of_sanctification, divine_orb,    sanctifies_item,             both).
-omen(poe2, omen_of_corruption,  % DISABLED 0.3-0.5    vaal_orb,       always_changes,              both).
+% DISABLED 0.3-0.5
+omen(poe2, omen_of_corruption,       vaal_orb,       always_changes,              both).
 omen(poe2, omen_of_light,         orb_of_annulment, removes_desecrated_only,   both).
 omen(poe2, omen_of_putrefaction,  desecration,    replaces_all_mods_and_corrupts, both).
-omen(poe2, omen_of_recombination,  % DISABLED 0.3-0.5 recombination,  enables_recombination,       both).
+% DISABLED 0.3-0.5
+omen(poe2, omen_of_recombination,  recombination,  enables_recombination,       both).
 
 % Abyssal desecration omens
 omen(poe2, omen_of_sovereign,     desecration,    guarantees_ulaman_mod,       both).
@@ -318,26 +333,30 @@ omen(poe2, omen_of_abyssal_echoes, desecration,   reroll_desecrated_options,   b
 %%   Excludes disabled omens (can still exist in Standard but cannot drop).
 can_use_omen(Game, OmenName, Currency) :-
     omen(Game, OmenName, Currency, _, _),
-    \\+ omen_disabled(OmenName, _).
+    \+ omen_disabled(OmenName, _).
 can_use_omen(Game, OmenName, Currency) :-
     omen(Game, OmenName, any_currency, _, _),
-    \\+ omen_disabled(OmenName, _).
+    \+ omen_disabled(OmenName, _).
 
 %% omen_active(+Game, +OmenName, -Effect, -SlotRestriction)
 %%   Only returns omens that can still drop in 0.5.0.
 omen_active(Game, OmenName, Effect, Slot) :-
     omen(Game, OmenName, _, Effect, Slot),
-    \\+ omen_disabled(OmenName, _).
+    \+ omen_disabled(OmenName, _).
 
 %% omen_crafting_pairs(+Game, +Currency, -Sinistral, -Dextral)
 %%   Returns the sinistral/dextral pair for a currency, if both are active.
 omen_crafting_pairs(Game, Currency, Sinistral, Dextral) :-
-    omen_active(Game, sinistral_omen, removes_only_prefixes, prefix),
-    omen_active(Game, dextral_omen, removes_only_suffixes, suffix),
-    omen(Game, sinistral_omen, Currency, removes_only_prefixes, prefix),
-    omen(Game, dextral_omen, Currency, removes_only_suffixes, suffix),
-    Sinistral = sinistral_omen,
-    Dextral = dextral_omen.
+    omen(Game, Sinistral, Currency, removes_only_prefixes, prefix),
+    omen(Game, Dextral, Currency, removes_only_suffixes, suffix),
+    omen_active(Game, Sinistral, removes_only_prefixes, prefix),
+    omen_active(Game, Dextral, removes_only_suffixes, suffix).
+
+omen_crafting_pairs(Game, Currency, Sinistral, Dextral) :-
+    omen(Game, Sinistral, Currency, adds_only_prefixes, prefix),
+    omen(Game, Dextral, Currency, adds_only_suffixes, suffix),
+    omen_active(Game, Sinistral, adds_only_prefixes, prefix),
+    omen_active(Game, Dextral, adds_only_suffixes, suffix).
 
 %% --- 1b4. Alloys ---
 %% Alloys are a PoE 2 patch 0.5 crafting currency.
@@ -473,16 +492,60 @@ base_category(BaseId, Category) :-
 %%   For items without variants (rings, amulets), variant = none.
 
 mod_pool(body_armour, str,       body_armour_str).
-mod_pool(body_armour, dex,       body_armour_dex).     % not yet scraped
-mod_pool(body_armour, int,       body_armour_int).     % not yet scraped
+mod_pool(body_armour, dex,       body_armour_dex).
+mod_pool(body_armour, int,       body_armour_int).
+mod_pool(body_armour, str_dex,   body_armour_str_dex).
+mod_pool(body_armour, str_int,   body_armour_str_int).
+mod_pool(body_armour, dex_int,   body_armour_dex_int).
 mod_pool(helmet,     str,       helmet_str).
+mod_pool(helmet,     dex,       helmet_dex).
+mod_pool(helmet,     int,       helmet_int).
+mod_pool(helmet,     str_dex,   helmet_str_dex).
+mod_pool(helmet,     str_int,   helmet_str_int).
+mod_pool(helmet,     dex_int,   helmet_dex_int).
 mod_pool(gloves,     str,       gloves_str).
+mod_pool(gloves,     dex,       gloves_dex).
+mod_pool(gloves,     int,       gloves_int).
+mod_pool(gloves,     str_dex,   gloves_str_dex).
+mod_pool(gloves,     str_int,   gloves_str_int).
+mod_pool(gloves,     dex_int,   gloves_dex_int).
 mod_pool(boots,      str,       boots_str).
+mod_pool(boots,      dex,       boots_dex).
+mod_pool(boots,      int,       boots_int).
+mod_pool(boots,      str_dex,   boots_str_dex).
+mod_pool(boots,      str_int,   boots_str_int).
+mod_pool(boots,      dex_int,   boots_dex_int).
 mod_pool(ring,       none,      ring).
 mod_pool(amulet,     none,      amulet).
-mod_pool(weapon,     str_dex,   weapon_sword).         % 1H swords are str_dex
-mod_pool(quiver,     none,      quiver).               % quivers have their own mod pool
-mod_pool(jewel,      none,      jewel).                % jewels — crafted via Liquid Emotions + desecration
+mod_pool(belt,       none,      belt).
+mod_pool(jewel,      none,      jewel).
+mod_pool(talisman,   none,      talisman).
+mod_pool(weapon,     str_dex,   weapon_sword).
+mod_pool(weapon,     str,       one_hand_mace).
+mod_pool(weapon,     str,       two_hand_mace).
+mod_pool(weapon,     str,       sceptre).
+mod_pool(weapon,     dex,       bow).
+mod_pool(weapon,     dex,       crossbow).
+mod_pool(weapon,     dex,       spear).
+mod_pool(weapon,     int,       wand).
+mod_pool(weapon,     int,       fire_wand).
+mod_pool(weapon,     int,       ice_wand).
+mod_pool(weapon,     int,       lightning_wand).
+mod_pool(weapon,     int,       chaos_wand).
+mod_pool(weapon,     int,       physical_wand).
+mod_pool(weapon,     int,       staff).
+mod_pool(weapon,     int,       fire_staff).
+mod_pool(weapon,     int,       ice_staff).
+mod_pool(weapon,     int,       lightning_staff).
+mod_pool(weapon,     int,       chaos_staff).
+mod_pool(weapon,     int,       physical_staff).
+mod_pool(weapon,     str_int,   warstaff).
+mod_pool(shield,     str,       shield_str).
+mod_pool(shield,     str_dex,   shield_str_dex).
+mod_pool(shield,     str_int,   shield_str_int).
+mod_pool(offhand,    none,      buckler).
+mod_pool(offhand,    none,      focus).
+mod_pool(quiver,     none,      quiver).
 
 %% Default variant lookup (for when we don't care about variant):
 %% base_mod_pool(+BaseId, -ModPoolCategory)
@@ -506,20 +569,71 @@ base_mod_pool(BaseId, ModPool) :-
 %%%
 %%% Per-category data files are in resources/mods_*.pl.
 %%% Load the ones you need:
-%%%   :- consult('resources/mods_ring.pl').
-%%%   :- consult('resources/mods_amulet.pl').
+%%%   :- load_files('resources/mods_ring.pl', [module(poe2_crafting)]).
+%%%   :- load_files('resources/mods_amulet.pl', [module(poe2_crafting)]).
 %%%   etc.
 
-%% --- 2a. Load all category data files ---
+%% --- 2a. Load all category data files (55 categories) ---
 
-:- consult('resources/mods_body_armour_str.pl').
-:- consult('resources/mods_helmet_str.pl').
-:- consult('resources/mods_gloves_str.pl').
-:- consult('resources/mods_boots_str.pl').
-:- consult('resources/mods_ring.pl').
-:- consult('resources/mods_amulet.pl').
-:- consult('resources/mods_weapon_sword.pl').
-:- consult('resources/mods_quiver.pl').
+:- load_files('resources/mods_amulet.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_belt.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_body_armour_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_body_armour_dex_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_body_armour_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_body_armour_str.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_body_armour_str_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_body_armour_str_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_boots_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_boots_dex_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_boots_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_boots_str.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_boots_str_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_boots_str_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_bow.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_buckler.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_chaos_staff.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_chaos_wand.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_crossbow.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_fire_staff.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_fire_wand.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_focus.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_gloves_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_gloves_dex_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_gloves_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_gloves_str.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_gloves_str_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_gloves_str_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_helmet_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_helmet_dex_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_helmet_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_helmet_str.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_helmet_str_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_helmet_str_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_ice_staff.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_ice_wand.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_jewel.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_lightning_staff.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_lightning_wand.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_one_hand_mace.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_physical_staff.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_physical_wand.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_quiver.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_ring.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_sceptre.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_shield_str.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_shield_str_dex.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_shield_str_int.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_spear.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_staff.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_talisman.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_two_hand_mace.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_wand.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_warstaff.pl', [module(poe2_crafting)]).
+:- load_files('resources/mods_weapon_sword.pl', [module(poe2_crafting)]).
+
+%% --- 1d. Exclusion groups & modifier exclusions ---
+:- load_files('resources/exclusion_groups.pl', [module(poe2_crafting)]).
+:- load_files('resources/modifier_exclusions.pl', [module(poe2_crafting)]).
 
 %% --- 2b. Mod Weight (convenience lookup) ---
 mod_weight(Category, ModGroup, Weight) :-
@@ -991,8 +1105,8 @@ currency_postcondition(orb_of_chance,
 %% Upgrades magic → rare, guarantees a life-tagged prefix.
 
 currency_precondition(essence_of_the_body, item_state(_, magic, _, _, Props, _, _, _)) :-
-    \\+ member(corrupted, Props),
-    \\+ member(mirrored, Props).
+    \+ member(corrupted, Props),
+    \+ member(mirrored, Props).
 
 currency_postcondition(essence_of_the_body,
     item_state(Base, magic, Ilvl, Inf, Props, _, Suffixes, Impl),
@@ -1004,13 +1118,14 @@ currency_postcondition(essence_of_the_body,
 
 %% ---------- Essence of Wrath ----------
 %% Guarantees a lightning-tagged suffix.
+%% Requires magic rarity (upgrades to rare).
 
-currency_precondition(essence_of_wrath, item_state(_, _, _, _, Props, _, _, _)) :-
+currency_precondition(essence_of_wrath, item_state(_, magic, _, _, Props, _, _, _)) :-
     \+ member(corrupted, Props),
     \+ member(mirrored, Props).
 
 currency_postcondition(essence_of_wrath,
-    item_state(Base, _, Ilvl, Inf, Props, Prefixes, _, Impl),
+    item_state(Base, magic, Ilvl, Inf, Props, Prefixes, _, Impl),
     item_state(Base, rare, Ilvl, Inf, [identified|NewProps], Prefixes, [lightning_resistance|NewSuf], Impl)) :-
     include(\==(identified), Props, Props0),
     NewProps = [identified|Props0],

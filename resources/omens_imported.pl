@@ -1,0 +1,32 @@
+%%% Omen data — imported from POE2-PathOfCrafting
+
+omen(poe2, whittling, chaos_orb, custom, both).
+omen(poe2, sinistral_erasure, chaos_orb, removes_only_prefixes, prefix).
+omen(poe2, dextral_erasure, chaos_orb, removes_only_suffixes, suffix).
+omen(poe2, omen_of_chaotic_rarity, chaos_orb, custom, both).
+omen(poe2, omen_of_chaotic_quantity, chaos_orb, custom, both).
+omen(poe2, sinistral_alchemy, orb_of_alchemy, custom, prefix).
+omen(poe2, dextral_alchemy, orb_of_alchemy, custom, suffix).
+omen(poe2, sinistral_coronation, regal_orb, adds_only_prefixes, prefix).
+omen(poe2, dextral_coronation, regal_orb, adds_only_suffixes, suffix).
+omen(poe2, homogenising_coronation, regal_orb, custom, both).
+omen(poe2, greater_exaltation, exalted_orb, custom, both).
+omen(poe2, sinistral_exaltation, exalted_orb, adds_only_prefixes, prefix).
+omen(poe2, dextral_exaltation, exalted_orb, adds_only_suffixes, suffix).
+omen(poe2, homogenising_exaltation, exalted_orb, custom, both).
+omen(poe2, catalysing_exaltation, exalted_orb, custom, both).
+omen(poe2, greater_annulment, orb_of_annulment, custom, both).
+omen(poe2, sinistral_annulment, orb_of_annulment, removes_only_prefixes, prefix).
+omen(poe2, dextral_annulment, orb_of_annulment, removes_only_suffixes, suffix).
+omen(poe2, omen_of_light, orb_of_annulment, custom, both).
+omen(poe2, omen_of_corruption, vaal_orb, custom, both).
+omen(poe2, omen_of_chance, orb_of_chance, custom, both).
+omen(poe2, omen_of_the_ancients, orb_of_chance, custom, both).
+omen(poe2, omen_of_recombination, recombination, custom, both).
+omen(poe2, omen_of_sanctification, any_currency, custom, both).
+omen(poe2, dextral_crystallisation, any_currency, removes_only_suffixes, suffix).
+omen(poe2, sinistral_crystallisation, any_currency, removes_only_prefixes, prefix).
+omen(poe2, omen_of_abyssal_echoes, desecration, custom, both).
+omen(poe2, sinistral_necromancy, desecration, adds_only_prefixes, prefix).
+omen(poe2, dextral_necromancy, desecration, adds_only_suffixes, suffix).
+omen(poe2, omen_of_putrefaction, desecration, custom, both).

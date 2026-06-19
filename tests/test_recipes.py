@@ -505,17 +505,17 @@ class TestRecipeModPoolVerification:
     def test_life_exists_in_ring_pool(self):
         """increased_life should be a prefix mod in the ring pool."""
         pl = (PROJECT_ROOT / "resources" / "mods_ring.pl").read_text()
-        assert "mod_group(ring, FlattoMaximumLife," in pl
+        assert "mod_group(ring, 'FlattoMaximumLife'," in pl
 
     def test_fire_res_exists_in_ring_pool(self):
         """fire_resistance should be a suffix mod in the ring pool."""
         pl = (PROJECT_ROOT / "resources" / "mods_ring.pl").read_text()
-        assert "mod_group(ring, PercentToFireResistance," in pl
+        assert "mod_group(ring, 'PercentToFireResistance'," in pl
 
     def test_life_exists_in_body_armour_pool(self):
         """increased_life should be a prefix mod in body_armour_str pool."""
         pl = (PROJECT_ROOT / "resources" / "mods_body_armour_str.pl").read_text()
-        assert "mod_group(body_armour_str, FlattoMaximumLife," in pl
+        assert "mod_group(body_armour_str, 'FlattoMaximumLife'," in pl
 
     def test_attack_mods_exist_in_weapon_pool(self):
         """weapon_sword should have attack-tagged prefix mods."""
@@ -527,7 +527,7 @@ class TestRecipeModPoolVerification:
         """Life prefix on ring should be ~13.5% (1000/7400)."""
         pl = (PROJECT_ROOT / "resources" / "mods_ring.pl").read_text()
         life_match = re.search(
-            r"mod_group\(ring, FlattoMaximumLife, .+?, .+?, (\d+),", pl
+            r"mod_group\(ring, 'FlattoMaximumLife', .+?, .+?, (\d+),", pl
         )
         assert life_match, "FlattoMaximumLife not found in ring pool"
         life_weight = int(life_match.group(1))

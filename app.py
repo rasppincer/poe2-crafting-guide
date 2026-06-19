@@ -42,7 +42,7 @@ def parse_mod_groups(pl_content):
     sums = parse_weight_sums(pl_content)
     groups = []
     for m in re.finditer(
-        r"mod_group\((\w+),\s*(\w+),\s*'([^']*)',\s*\[([^\]]*)\],\s*(\d+),\s*(\d+),\s*(\d+),\s*(\w+)\)",
+        r"mod_group\((\w+),\s*'?([^',]+)'?,\s*'([^']*)',\s*\[([^\]]*)\],\s*(\d+),\s*(\d+),\s*(\d+),\s*(\w+)\)",
         pl_content
     ):
         tags = [t.strip() for t in m.group(4).split(",") if t.strip()]
@@ -147,7 +147,7 @@ def get_all_data():
 
     # Also load all consulted .pl data files
     all_pl = pl
-    for consult in re.findall(r":- consult\('([^']+)'\)", pl):
+    for consult in re.findall(r":- (?:consult|load_files)\('([^']+)'", pl):
         data_path = ROOT / consult
         if data_path.exists():
             all_pl += "\n" + data_path.read_text()
@@ -659,6 +659,146 @@ recipe({safe_name}, poe2, {goal}, [
 
 
 # ============================================================================
+# ============================================================================
+# Simulator API
+# ============================================================================
+
+@app.route("/api/simulate", methods=["POST"])
+def api_simulate():
+    """Run Monte Carlo simulation of a crafting sequence.
+
+    POST body:
+        {
+            "base": "ring",
+            "ilvl": 80,
+            "steps": [
+                {"action": "apply_currency", "currency": "orb_of_alchemy"},
+                {"action": "spam", "currency": "chaos_orb", "max_iterations": 20,
+                 "until": {"type": "has_mod", "mod_group": "FlattoMaximumLife"}}
+            ],
+            "n": 1000,
+            "success_condition": {"type": "has_mod", "mod_group": "FlattoMaximumLife"},
+            "seed": null
+        }
+    """
+    from monte_carlo import MonteCarloRunner
+
+    data = request.get_json(force=True)
+    base = data.get("base")
+    ilvl = data.get("ilvl", 80)
+    steps = data.get("steps", [])
+    n = min(data.get("n", 1000), 10000)
+    success_condition = data.get("success_condition")
+    seed = data.get("seed")
+
+    if not base:
+        return jsonify({"error": "base is required"}), 400
+    if not steps:
+        return jsonify({"error": "steps is required"}), 400
+
+    runner = MonteCarloRunner(seed=seed)
+    result = runner.run(base, ilvl, steps, n=n, success_condition=success_condition)
+
+    return jsonify({
+        "n_runs": result.n_runs,
+        "success_count": result.success_count,
+        "failure_count": result.failure_count,
+        "success_rate": result.success_count / result.n_runs if result.n_runs else 0,
+        "cost": {
+            "average": round(result.avg_cost, 1),
+            "median": int(result.median_cost),
+            "p10": int(result.p10_cost),
+            "p25": int(result.p25_cost),
+            "p75": int(result.p75_cost),
+            "p90": int(result.p90_cost),
+            "min": result.min_cost,
+            "max": result.max_cost,
+        },
+        "most_common_mods": [
+            {"group": mod, "count": count, "pct": round(count / result.n_runs * 100, 1)}
+            for mod, count in result.most_common_mods
+        ],
+        "cost_histogram": _build_histogram(result.all_costs),
+        "cheapest_run": _run_to_dict(result.cheapest_run) if result.cheapest_run else None,
+        "most_expensive_run": _run_to_dict(result.most_expensive_run) if result.most_expensive_run else None,
+    })
+
+
+@app.route("/api/simulate/step", methods=["POST"])
+def api_simulate_step():
+    """Execute a single crafting step and return the result.
+
+    POST body:
+        {
+            "base": "ring",
+            "ilvl": 80,
+            "currency": "orb_of_transmutation",
+            "current_state": null  // or previous item state for chaining
+        }
+    """
+    from simulator import CraftingSimulator
+
+    data = request.get_json(force=True)
+    base = data.get("base")
+    ilvl = data.get("ilvl", 80)
+    currency = data.get("currency")
+
+    if not base or not currency:
+        return jsonify({"error": "base and currency are required"}), 400
+
+    sim = CraftingSimulator()
+    item = sim.create_item(base, ilvl)
+    success = sim.apply_currency(item, currency)
+
+    return jsonify({
+        "success": success,
+        "item": {
+            "category": item.category,
+            "ilvl": item.ilvl,
+            "rarity": item.rarity,
+            "prefixes": [{"group": m.group, "description": m.description, "slot": m.slot, "roll": m.roll} for m in item.prefixes],
+            "suffixes": [{"group": m.group, "description": m.description, "slot": m.slot, "roll": m.roll} for m in item.suffixes],
+        },
+        "history": item.history,
+    })
+
+
+def _build_histogram(costs: list[int], bins: int = 20) -> list[dict]:
+    """Build a histogram from cost data."""
+    if not costs:
+        return []
+    min_c, max_c = min(costs), max(costs)
+    if min_c == max_c:
+        return [{"range": f"{min_c}", "count": len(costs)}]
+
+    bin_width = max(1, (max_c - min_c) // bins)
+    buckets = {}
+    for c in costs:
+        bucket = (c // bin_width) * bin_width
+        buckets[bucket] = buckets.get(bucket, 0) + 1
+
+    return [
+        {"range": f"{k}-{k + bin_width}", "count": v}
+        for k, v in sorted(buckets.items())
+    ]
+
+
+def _run_to_dict(run) -> dict:
+    """Convert a RunResult to a serializable dict."""
+    return {
+        "total_cost": run.total_cost,
+        "steps_count": len(run.steps),
+        "final_item": {
+            "category": run.final_item.category,
+            "ilvl": run.final_item.ilvl,
+            "rarity": run.final_item.rarity,
+            "prefixes": [{"group": m.group, "description": m.description, "roll": m.roll} for m in run.final_item.prefixes],
+            "suffixes": [{"group": m.group, "description": m.description, "roll": m.roll} for m in run.final_item.suffixes],
+        },
+        "history": run.final_item.history,
+    }
+
+
 # Main
 # ============================================================================
 
